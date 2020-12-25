@@ -1,4 +1,4 @@
-const deepMerge = require('../../lib/helpers/deep-merge')
+const deepMerge = require('../../../lib/db/helpers/deep-merge')
 
 const objA = {
     id: 1,

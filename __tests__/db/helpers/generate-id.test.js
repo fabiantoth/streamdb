@@ -1,4 +1,4 @@
-const generateId = require('../../lib/helpers/generate-id')
+const generateId = require('../../../lib/db/helpers/generate-id')
 const uid = generateId.uid 
 const incr = generateId.incr
 const length = 11

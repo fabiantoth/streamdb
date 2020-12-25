@@ -1,6 +1,6 @@
-const getCollectionResources = require('../../lib/helpers/get-col-resources')
+const getCollectionResources = require('../../../lib/db/helpers/get-col-resources')
 
-const streamDb = require('../../lib/index')
+const streamDb = require('../../../lib/index')
 const DB = streamDb.DB
 
 const dbSettings = {
