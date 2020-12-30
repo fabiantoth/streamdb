@@ -260,7 +260,7 @@ test('Collection: (where/setProperty) Should return value of update', async (don
             .where('id = 6')
             .setProperty('email', 'daf-duck@email.com')
             .then(res => {
-                expect(res).toBe('daf-duck@email.com')
+                expect(res).toBe('Documents updated successfully.')
                 done()
             })
       }, 50)
