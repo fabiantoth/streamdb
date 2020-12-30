@@ -195,7 +195,7 @@ $ node server.js
 
 Your new collection is live at ``http://localhost:3000/api/users``
 
-
+**[back to top](#readme)**
 
 ## Directories Overview
 
@@ -351,6 +351,9 @@ These are just simple starter routes. You may add/remove/use/or improve them as 
 }
 ```
 
+**[back to top](#readme)**
+
+
 # Schemas
 
 If you choose to work with schema models, whether it's for more comprehensive validation, or to better organize your document data and relationships, you will need to decide:
@@ -371,6 +374,10 @@ streamDb.createDb({
 - Deleting models automatically requires `initSchemas` to be set to true. 
 - It is preferable you set both fields, as well as leave `initRoutes` default settings to true, because files and collections are searched interchangeably based on specific name conventions (i.e., plural 'users' collection becomes a singular 'User' model and vice versa). 
 - If you choose to manually setup the files you will have to follow that naming convention, as well as camel-casing collection directory and file names
+
+
+**[back to top](#readme)**
+
 
 ## The Models Directory
 
@@ -409,6 +416,10 @@ This will scaffold a User model under the models folder and the directory tree w
     └── streamDb.meta.json
 
 </pre>
+
+
+**[back to top](#readme)**
+
 
 ## The Document Model
 
@@ -478,6 +489,9 @@ Or with the 'type' keyword inside an object with the rule parameters:
   }
 }
 ```
+
+**[back to top](#readme)**
+
 
 ## Schema Rules
 
@@ -591,6 +605,8 @@ const Detail = require('./Detail')  // import the model
   ArrayEmbArray: [Array]  // or [[]]; will only validate the embedded items are of array type
 }
 ```
+
+**[back to top](#readme)**
 
 
 
@@ -731,6 +747,9 @@ Returns:
 > **NOTE:** This method is deliberately separated, as you may construct your own array lookup methods. [See whereArrayParams](https://github.com/fabiantoth/streamdb-v1/blob/30f4b5b8222b6853eb2bb4d855b5c37f686593bf/lib/chain-query.js#L63)
 
 
+**[back to top](#readme)**
+
+
 ## Launching DB Server
 
 ### $ streamDb.server('dbName', 'routesDir', port, corsOptions)
@@ -790,6 +809,8 @@ app.listen(PORT, () => {
     console.log(`Development Server running on port: ${PORT}`)
 })
 ```
+
+**[back to top](#readme)**
 
 
 
@@ -918,6 +939,9 @@ Returns:
 - Object with the collection resources 
 
 
+**[back to top](#readme)**
+
+
 ## Set Custom Schema Model
 Use a custom schema model if you do not wish to setup model files or bypass existing model
 
@@ -978,6 +1002,8 @@ usersRef.insertOne(doc)
   .catch()
 
 ```
+
+**[back to top](#readme)**
 
 
 
@@ -1068,6 +1094,10 @@ Params:
 
 Returns: 
 - Promise. Array containing id's of deleted documents
+
+
+**[back to top](#readme)**
+
 
 ## Queries & Query Chains
 
@@ -1259,6 +1289,9 @@ Params:
 
 Returns:
 - Nothing. Adds to query chain
+
+
+**[back to top](#readme)**
 
 
 
