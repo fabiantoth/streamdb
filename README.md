@@ -34,7 +34,6 @@
 
 ## Getting Started
 Basic requirements:
-  - Git installed
   - Node (v12.7.0 or higher)
   - NPM (v6.14.2 or higher)
   - [Read this stability disclaimer](#stability-disclaimer)

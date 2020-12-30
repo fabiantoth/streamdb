@@ -1,5 +1,5 @@
 const rewire = require("rewire")
-const setQueryParams = rewire('../../lib/helpers/set-query-params')
+const setQueryParams = rewire('../../../lib/db/helpers/set-query-params')
 
 const sortData = setQueryParams.__get__('sortData')
 const setParams = setQueryParams.__get__('setQueryParams')
