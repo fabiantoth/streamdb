@@ -1137,7 +1137,7 @@ Params:
 - `value` **{Any}**: (required) the value to set the property to  
 
 Returns: 
-- Promise  
+- Promise. Array containing document objects matching params
 
 > **Note:**  using setProperty will replace the entire property value with the new value
 
@@ -1150,7 +1150,7 @@ Params:
 - `propertyPath` **{String}**: (required) the 'path.to.property'  
 
 Returns: 
-- Promise. Success msg
+- Promise. Array containing document objects matching params
 
 ### $ insertInto(propertyPath, \[arrValues\])
 
@@ -1162,7 +1162,7 @@ Params:
 - `arrValues` **{Array\<Any\>}**: (required) the items to insert into array  
 
 Returns: 
-- Promise. Success msg
+- Promise. Array containing document objects matching params
 
 ### $ removeFrom(propertyPath, \[arrValues\])
 
@@ -1176,7 +1176,7 @@ Params:
 - `arrValues` **{Array\<Any\>}**: (required) the items to remove from array  
 
 Returns: 
-- Promise. Success msg
+- Promise. Array containing document objects matching params
 
 ### $ updateArray(propertyPath, updateFn)
 
@@ -1189,7 +1189,7 @@ Params:
 - `updateFn` **{Function(arr)}**: (required) the callback function to run and update array items  
 
 Returns: 
-- Promise. Success msg
+- Promise. Array containing document objects matching params
 
 ### $ where(exp, filterFn\[optional\])
 
@@ -1211,7 +1211,7 @@ Params:
 - `filterFn` **{Function(arr)}**: (optional) a callback function to run lookup filter in array  
 
 Returns: 
-- Nothing. Starts or adds to query chain
+- Nothing. Starts or adds to query chain filter
 
 ### $ and(exp)
 
@@ -1221,7 +1221,7 @@ Params:
 - `expression` **{String}**: (required) the string must follow '[path] [oper] [value]'  
 
 Returns:
-- Nothing. Adds to query chain
+- Nothing. Adds to query chain filter
 
 ### $ or(exp)
 
@@ -1231,7 +1231,7 @@ Params:
 - `expression` **{String}**: (required) the string must follow '[path] [oper] [value]'  
 
 Returns:
-- Nothing. Adds to query chain
+- Nothing. Adds to query chain filter
 
 ### $ sort(sortBy, sortOrder)
 
@@ -1242,7 +1242,7 @@ Params:
 - `sortOrder` **{String}**: (optional) accepts either 'asc' (default) or 'desc'  
 
 Returns:
-- Nothing. Adds to query chain
+- Nothing. Adds to query chain, applied when you call .find()
 
 ### $ limit(num)
 
@@ -1252,7 +1252,7 @@ Params:
 - `num` **{Number}**: (required) the number of results to limit return to  
 
 Returns:
-- Nothing. Adds to query chain
+- Nothing. Adds to query chain, applied when you call .find()
 
 ### $ offset(num)
 
@@ -1262,7 +1262,7 @@ Params:
 - `num` **{Number}**: (required) the number of results to offset starting results from  
 
 Returns:
-- Nothing. Adds to query chain
+- Nothing. Adds to query chain, applied when you call .find()
 
 ### $ include(\[arr\])
 
@@ -1275,7 +1275,7 @@ Params:
 - `arr` **{Array\<String\>}**: (required) the doc properties you wish to include in the result  
 
 Returns:
-- Nothing. Adds to query chain
+- Nothing. Adds to query chain and is applied towards the return data
 
 ### $ exclude(\[arr\])
 
@@ -1288,7 +1288,7 @@ Params:
 - `arr` **{Array\<String\>}**: (required) the doc properties to exclude from the results  
 
 Returns:
-- Nothing. Adds to query chain
+- Nothing. Adds to query chain and is applied towards the return data
 
 
 **[back to top](#readme)**
