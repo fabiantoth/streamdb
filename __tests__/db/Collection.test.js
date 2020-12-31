@@ -255,24 +255,39 @@ test('Collection: (where/and) Should return 1 match', async (done) => {
 })
 
 test('Collection: (where/setProperty) Should return value of update', async (done) => {
+    const update = [{
+        id: 6,
+        email: "daf-duck@email.com", 
+        firstname: "Daffy",  
+        lastname: "Duck", 
+        tags: []
+    }]
+
     setTimeout(() => {
         db.collection('users')
             .where('id = 6')
             .setProperty('email', 'daf-duck@email.com')
             .then(res => {
-                expect(res).toBe('daf-duck@email.com')
+                expect(res).toMatchObject(update)
                 done()
             })
       }, 50)
 })
 
 test('Collection: (where/deleteProperty) Should return success msg', async (done) => {
+    const update = [{
+        id: 6, 
+        firstname: "Daffy",  
+        lastname: "Duck", 
+        tags: []
+    }]
+
     setTimeout(() => {
         db.collection('users')
             .where('id = 6')
             .deleteProperty('email')
             .then(res => {
-                expect(res).toEqual('Documents updated successfully')
+                expect(res).toMatchObject(update)
                 done()
             })
       }, 50)
@@ -280,13 +295,19 @@ test('Collection: (where/deleteProperty) Should return success msg', async (done
 
 test('Collection: (where/insertInto) Should success msg', async (done) => {
     const tagValues = ['string', 55, { testObj: 'value1' }]
+    const update = [{
+        id: 6, 
+        firstname: "Daffy",  
+        lastname: "Duck", 
+        tags: ["string", 55, {testObj: "value1"} ]
+    }]
 
     setTimeout(() => {
         db.collection('users')
             .where('id = 6')
             .insertInto('tags', tagValues)
             .then(res => {
-                expect(res).toEqual('Documents updated successfully')
+                expect(res).toMatchObject(update)
                 done()
             })
       }, 50)
@@ -294,13 +315,19 @@ test('Collection: (where/insertInto) Should success msg', async (done) => {
 
 test('Collection: (where/removeFrom) Should return success msg', async (done) => {
     const tagValues = [55]
+    const update = [{
+        id: 6, 
+        firstname: "Daffy",  
+        lastname: "Duck", 
+        tags: ["string", 55, {testObj: "value1"}, 55 ]
+    }]
 
     setTimeout(() => {
         db.collection('users')
             .where('id = 6')
             .insertInto('tags', tagValues)
             .then(res => {
-                expect(res).toEqual('Documents updated successfully')
+                expect(res).toMatchObject(update)
                 done()
             })
       }, 50)
@@ -308,19 +335,27 @@ test('Collection: (where/removeFrom) Should return success msg', async (done) =>
 
 test('Collection: (where/updateArray) Should return success msg', async (done) => {
     const updateFn = (arr) => {
-        return arr.map(item => {
+        return arr.filter(item => {
             if (Object.prototype.toString.call(item) === '[object Object]') {
                 item.testObj = 'updated value'
             }
+            return item
         })
     }
+
+    const update = [{
+        id: 6, 
+        firstname: "Daffy",  
+        lastname: "Duck", 
+        tags: ["string", 55, { testObj: "updated value" }, 55 ]
+    }]
 
     setTimeout(() => {
         db.collection('users')
             .where('id = 6')
             .updateArray('tags', updateFn)
             .then(res => {
-                expect(res).toEqual('Documents updated successfully')
+                expect(res).toMatchObject(update)
                 done()
             })
       }, 50)
