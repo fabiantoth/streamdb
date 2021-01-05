@@ -22,8 +22,8 @@ test('chainQuery: (convertArray) Converts a query string array into an array wit
 
 test('chainQuery: (constructWhere) Should return an array of objects containing method and expression', () => {
     const query = 'id,>,2' 
-    const query2 = [ 'id,>,2', 'and', 'email,!=,$not' ] 
-    const query3 = [ 'id,>,2', 'or', 'email,!=,$not' ] 
+    const query2 = [ 'id,>,2', 'and', 'email,!=,$undefined' ] 
+    const query3 = [ 'id,>,2', 'or', 'email,!=,$undefined' ] 
 
     const constWhere = constructWhere(query)
     const constWhere2 = constructWhere(query2)
@@ -32,11 +32,11 @@ test('chainQuery: (constructWhere) Should return an array of objects containing 
     const expected = [ { method: 'where', expression: [ 'id', '>', '2' ] } ]
     const expected2 = [
         { method: 'where', expression: [ 'id', '>', '2' ] },
-        { method: 'and', expression: [ 'email', '!=', '$not' ] }
+        { method: 'and', expression: [ 'email', '!=', '$undefined' ] }
       ]
     const expected3 = [
         { method: 'where', expression: [ 'id', '>', '2' ] },
-        { method: 'or', expression: [ 'email', '!=', '$not' ] }
+        { method: 'or', expression: [ 'email', '!=', '$undefined' ] }
       ]
 
     expect(constWhere).toEqual(expected)
@@ -54,7 +54,7 @@ test('chainQuery: (constructWhereArray) Should return an array of objects contai
     expect(constWhereArray).toEqual(expected)
 })
 
-test('chainQuery: (constructWhereArray) Should fail if function does not return an array', () => {
+test('chainQuery: (constructWhereArray) Should fail if function does undefined return an array', () => {
     const filterFunction = () => {
         return null
     }

@@ -1193,21 +1193,31 @@ Returns:
 
 ### $ where(exp, filterFn\[optional\])
 
-Starts a filter query chain. Exp options:  
+Starts a filter query chain. Equality checks are made using loose equality `(==)` comparison which performs a type conversion (the string `'1'` will equal the number `1`).  
 
-- 'path = value'
-- 'path != value'
-- 'path >= value'
-- 'path <= value'
-- 'path < value'
-- 'path > value'
-- 'path != $not' ($not kw signifies undefined, so not equal to undefined)
-- 'path = $not' (property equal to undefined)
-- 'arr.length != $not' (length of array not equal to undefined)
-- 
+Exp options:  
+
+- `'path = value'` (equal)
+- `'path != value'` (not equal)
+- `'path >= value'` (greater than or equal)
+- `'path <= value'` (less than or equal)
+- `'path < value'` (less than)
+- `'path > value'` (greater than)
+- `'path != $undefined'` (not equal to `undefined`, see available keywords below)
+- `'path = $true'` (property value equal to `true`)
+- `'arr.length > 0'` (can also use length property of strings/arrays)
+
+#### Query Keywords
+
+Keywords used within the query string used to denote data types inside **`where()`**, **`and()`**, and **`or()`** methods
+
+* **`$undefined`:** signifies `undefined` (ex., 'path != $undefined')
+* **`$null`:** signifies `null` (ex., 'path = $null')
+* **`$true`:** signifies `true` (ex., 'path = $true')
+* **`$false`:** signifies `false` (ex., 'path != $false')
 
 Params:
-- `expression` **{String}**: (required) the string must follow '[path] [oper] [value]' 
+- `expression` **{String}**: (required) the string must follow **'[path] [oper] [value]'** 
 - `filterFn` **{Function(arr)}**: (optional) a callback function to run lookup filter in array  
 
 Returns: 
@@ -1218,7 +1228,7 @@ Returns:
 Chain && filter condition logic to where()/and()/or() methods, only takes in an expression.  
 
 Params:
-- `expression` **{String}**: (required) the string must follow '[path] [oper] [value]'  
+- `expression` **{String}**: (required) the string must follow **'[path] [oper] [value]'**  
 
 Returns:
 - Nothing. Adds to query chain filter
@@ -1228,7 +1238,7 @@ Returns:
 Chain || filter condition logic to where()/and()/or() methods, only takes in an expression.  
 
 Params:
-- `expression` **{String}**: (required) the string must follow '[path] [oper] [value]'  
+- `expression` **{String}**: (required) the string must follow **'[path] [oper] [value]'**  
 
 Returns:
 - Nothing. Adds to query chain filter
