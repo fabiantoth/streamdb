@@ -38,7 +38,7 @@ beforeAll(async (done) => {
             lastname: 'Bunny',
             email: 'bbunny@email.com',
             age: 16,
-            emptyArray: [1,2,2],
+            emptyArray: [1,2,3],
             nullValue: null,
             active: true,
             joined: date1,
@@ -83,7 +83,7 @@ beforeAll(async (done) => {
             email: 'jmouse@email.com',
             age: 19,
             emptyArray: [],
-            nullValue: 1,
+            nullValue: 2,
             active: false,
             joined: date4,
             info: {
@@ -103,6 +103,22 @@ afterAll(async (done) => {
     done()
 })
 
+test('Queries: throw error when where() arguments are incorrect data types', async (done) => {
+    setTimeout(async () => {
+        expect(() => db.collection('users').where(1).find()).toThrow(`[typeError]: first where() argument must be a string, received: ${typeof 1}`)
+        expect(() => db.collection('users').where(`access = member`, `access = member`).find()).toThrow('[typeError]: second where() argument must be a function')
+        done()
+      }, 50)
+})
+
+test('Queries: throw error when .and()/.or() methods are added before where()', async (done) => {
+
+    setTimeout(async () => {
+        expect(() => db.collection('users').and(`access = member`).find()).toThrow(`[validationError]: and() methods cannot be used before opening where()`)
+        expect(() => db.collection('users').or(`access = member`).find()).toThrow(`[validationError]: or() methods cannot be used before opening where()`)
+        done()
+      }, 50)
+})
 
 test('Queries: where() string and number data types', async (done) => {
     let date1 = new Date(2020, 11, 23)
@@ -116,7 +132,7 @@ test('Queries: where() string and number data types', async (done) => {
             email: 'jmouse@email.com',
             age: 19,
             emptyArray: [],
-            nullValue: 1,
+            nullValue: 2,
             active: false,
             joined: date1.toJSON(),
             info: {
@@ -191,7 +207,7 @@ test('Queries: where() boolean, null, and undefined data types', async (done) =>
             email: 'jmouse@email.com',
             age: 19,
             emptyArray: [],
-            nullValue: 1,
+            nullValue: 2,
             active: false,
             joined: date1.toJSON(),
             info: {
@@ -264,6 +280,105 @@ test('Queries: where() date data types', async (done) => {
 
         let res4 = await db.collection('users').where(`joined != ${date.toJSON()}`).find()
         expect(res4.length).toBe(3)
+
+        done()
+      }, 50)
+})
+
+test('Queries: where() array data types with filterFn', async (done) => {
+    const filterFn1 = (arr) => {
+        return arr.filter(item => item === 2)
+    }
+
+    const filterFn2 = (arr) => {
+        return arr.filter(item => item === 3)
+    }
+
+    const filterFn3 = (arr) => {
+        return arr.filter(item => item === 1)
+    }
+
+    setTimeout(async () => {
+        let res1 = await db.collection('users').where(`emptyArray`, filterFn1).find()
+        expect(res1.length).toBe(2)
+
+        let res2 = await db.collection('users').where(`emptyArray`, filterFn2).find()
+        expect(res2.length).toBe(1)
+
+        let res3 = await db.collection('users').where(`emptyArray`, filterFn3).find()
+        expect(res3.length).toBe(3)
+
+        done()
+      }, 50)
+})
+
+test('Queries: .and() query chains', async (done) => {
+    let date = new Date(2020, 11, 21)
+    let date2 = new Date(2020, 11, 22)
+
+    setTimeout(async () => {
+        let res1 = await db.collection('users').where(`age >= 18`).and('active = $true').find()
+        expect(res1.length).toBe(1)
+
+        let res2 = await db.collection('users').where('nullValue = $null').and('emptyArray.length > 2').find()
+        expect(res2.length).toBe(1)
+
+        let res3 = await db.collection('users').where(`joined >= ${date.toJSON()}`).and('access = member').find()
+        expect(res3.length).toBe(1)
+
+        let res4 = await db.collection('users').where('active = $true').and('access = member').find()
+        expect(res4.length).toBe(2)
+
+        let res5 = await db.collection('users').where('active = $false').and('access = $undefined').find()
+        expect(res5.length).toBe(1)
+
+        let res6 = await db.collection('users').where('access = $undefined').and(`joined > ${date2.toJSON()}`).find()
+        expect(res6.length).toBe(1)
+
+        let res7 = await db.collection('users').where('age > 18').and(`info.name != "Bugs Buny"`).find()
+        expect(res7.length).toBe(1)
+
+        let res8 = await db.collection('users').where(`joined >= ${date.toJSON()}`).and(`age <= 18`).and('access = member').find()
+        expect(res8.length).toBe(1)
+
+        let res9 = await db.collection('users').where(`joined >= ${date.toJSON()}`).and(`age <= 18`).and('emptyArray.length > 1').find()
+        expect(res9.length).toBe(1)
+
+        done()
+      }, 50)
+})
+
+test('Queries: .or() query chains', async (done) => {
+    let date1 = new Date(2020, 11, 20)
+    let date2 = new Date(2020, 11, 21)
+
+    setTimeout(async () => {
+        let res1 = await db.collection('users').where(`access = member`).or('active = $true').find()
+        expect(res1.length).toBe(3)
+
+        let res2 = await db.collection('users').where('nullValue = $null').or('active = $true').find()
+        expect(res2.length).toBe(3)
+
+        let res3 = await db.collection('users').where('nullValue != $null').or('emptyArray.length <= 2').find()
+        expect(res3.length).toBe(3)
+
+        let res4 = await db.collection('users').where('nullValue = $null').or('nullValue > 1').find()
+        expect(res4.length).toBe(3)
+
+        let res5 = await db.collection('users').where('active = $false').or('nullValue = 1').or(`joined = ${date2.toJSON()}`).find()
+        expect(res5.length).toBe(3)
+
+        done()
+      }, 50)
+})
+
+test('Queries: .and()/.or() combo query chains', async (done) => {
+    let date1 = new Date(2020, 11, 20)
+    let date2 = new Date(2020, 11, 21)
+
+    setTimeout(async () => {
+        let res1 = await db.collection('users').where(`joined > ${date1.toJSON()}`).or('active = $true').and(`access = member`).find()
+        expect(res1.length).toBe(2)
 
         done()
       }, 50)
