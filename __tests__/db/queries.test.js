@@ -312,6 +312,36 @@ test('Queries: where() array data types with filterFn', async (done) => {
       }, 50)
 })
 
+test('Queries: where() array data types with filterFn and chained and()/or() methods', async (done) => {
+    const filterFn1 = (arr) => {
+        return arr.filter(item => item === 2)
+    }
+
+    const filterFn2 = (arr) => {
+        return arr.filter(item => item === 3)
+    }
+
+    const filterFn3 = (arr) => {
+        return arr.filter(item => item === 1)
+    }
+
+    setTimeout(async () => {
+        let res = await db.collection('users').where(`emptyArray`, filterFn1).and('age > 18').find()
+        expect(res.length).toBe(0)
+
+        let res1 = await db.collection('users').where(`emptyArray`, filterFn1).and('active = $false').find()
+        expect(res1.length).toBe(0)
+
+        let res2 = await db.collection('users').where(`emptyArray`, filterFn2).or('active = $false').find()
+        expect(res2.length).toBe(2)
+
+        let res3 = await db.collection('users').where(`emptyArray`, filterFn3).and('nullValue = $null').find()
+        expect(res3.length).toBe(2)
+
+        done()
+      }, 50)
+})
+
 test('Queries: .and() query chains', async (done) => {
     let date = new Date(2020, 11, 21)
     let date2 = new Date(2020, 11, 22)
@@ -344,6 +374,9 @@ test('Queries: .and() query chains', async (done) => {
         let res9 = await db.collection('users').where(`joined >= ${date.toJSON()}`).and(`age <= 18`).and('emptyArray.length > 1').find()
         expect(res9.length).toBe(1)
 
+        let res10 = await db.collection('users').where(`joined >= ${date.toJSON()}`).and(`age <= 18`).and('access = member').and('firstname = Bugs').find()
+        expect(res10.length).toBe(0)
+
         done()
       }, 50)
 })
@@ -368,6 +401,9 @@ test('Queries: .or() query chains', async (done) => {
         let res5 = await db.collection('users').where('active = $false').or('nullValue = 1').or(`joined = ${date2.toJSON()}`).find()
         expect(res5.length).toBe(3)
 
+        let res6 = await db.collection('users').where('active = $false').or('nullValue = 1').or(`joined = ${date1.toJSON()}`).or(`joined = ${date2.toJSON()}`).find()
+        expect(res6.length).toBe(4)
+
         done()
       }, 50)
 })
@@ -379,6 +415,20 @@ test('Queries: .and()/.or() combo query chains', async (done) => {
     setTimeout(async () => {
         let res1 = await db.collection('users').where(`joined > ${date1.toJSON()}`).or('active = $true').and(`access = member`).find()
         expect(res1.length).toBe(2)
+
+        done()
+      }, 50)
+})
+
+test('Queries: multiple where() combo query chains', async (done) => {
+    let date1 = new Date(2020, 11, 21)
+
+    setTimeout(async () => {
+        let res1 = await db.collection('users').where(`joined > ${date1.toJSON()}`).where('active = $true').find()
+        expect(res1.length).toBe(1)
+
+        let res2 = await db.collection('users').where(`access = member`).where('active = $true').find()
+        expect(res2.length).toBe(2)
 
         done()
       }, 50)
