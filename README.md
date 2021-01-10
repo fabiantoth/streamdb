@@ -286,12 +286,12 @@ These files are simple ON PURPOSE, built with familiar Express framework and lef
 
 Each new collection comes with the following basic routes:
 
-* **`GET /api/collection/_q/`:** ----- Run compound queries, comes with added chainQuery() helper method 
+* **`GET /api/collection/_q/`:** ----- Run compound queries, comes with added `chainQuery()`, and `whereArray()` helper methods 
 * **`GET /api/collection/:id`:** ----- Get document by id
 * **`GET /api/collection`:** --------- Get all documents in collection
 * **`POST /api/collection`:** -------- Insert many documents into collection
-* **`PUT /api/collection/:id`:** ----- Update document by id
-* **`DELETE /api/collection/:id`:** -- delete document by id
+* **`PUT /api/collection`:** --------- Update collection documents
+* **`DELETE /api/collection/:id`:** -- Delete document by id
 
 These are just simple starter routes. You may add/remove/use/or improve them as you wish, it is your app, and your routes - do as you please (except changing the file name)
 
