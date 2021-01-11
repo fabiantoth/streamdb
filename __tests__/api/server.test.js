@@ -1,7 +1,6 @@
 const request = require('supertest')
 const appServer = require('../../lib/api/server') // (dbName, routesDir, corsOptions)
 const streamDb = require('../../lib/index')
-const DB = streamDb.DB
 
 const dbSettings = {
     dbName: 'testDBFull',
