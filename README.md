@@ -709,7 +709,7 @@ router.get('/_q/', async (req, res) => {
     const query = req.query 
 
     if (query.whereArray) {   // see db.filterArray() method
-        query.whereArray = streamDb.whereArray(query.whereArray)
+        query.whereArray = streamDb.filterArray(query.whereArray)
     }
 
     try {
@@ -734,8 +734,25 @@ router.get('/_q/', async (req, res) => {
 A helper method to add a simple array filter to the query chain
 > See [collection queries](#-whereexp-filterfnoptional).
 
- - Query chains can be added after question mark (?) (ex, `/api/colName/_q/?whereArray=articles,[title,=,"article title"]`
- - This adds the equivalent of `where('articles, (arr) => arr.filter(item => item.title === 'article title)`
+ - Query chains can be added after question mark (?)  
+ - Use the **`$item`** keyword if you wish to filter values directly
+ - Allowed operators: **`'=', '!=', '<', '>', '>=', '<='`**
+ 
+ Example filtering array of objects:  
+
+ **`/api/colName/_q/?whereArray=articles,[title,=,"article title"]`**  
+
+Equivalent of:  
+`where('articles, (arr) => arr.filter(item => item.title == 'article title)`  
+
+Example filtering values with `$item` keyword:  
+
+**`/api/colName/_q/?whereArray=privilages,[$item,=,admin]`**  
+
+Equivalent of:  
+`where('privilages, (arr) => arr.filter(item => item == 'admin')`  
+
+
  > See [filterArray helper](https://github.com/fabiantoth/streamdb-v1/blob/30f4b5b8222b6853eb2bb4d855b5c37f686593bf/lib/filterArray.js#L12)
  
 Params:
