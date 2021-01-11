@@ -42,6 +42,8 @@ const documents = [
         email: 'bbunny@email.com',
         age: 16,
         emptyArray: [1,2,3],
+        strArr: ['one', 'two', 'three'],
+        objArr: [{ title: 'title 1' }, { title: 'title 2'}, { title: 'title 3'} ],
         nullValue: null,
         active: true,
         joined: date1,
@@ -57,6 +59,8 @@ const documents = [
         email: 'sdoo@email.com',
         age: 17,
         emptyArray: [1,2],
+        strArr: ['one', 'two'],
+        objArr: [{ title: 'title 1' }, { title: 'random title'} ],
         nullValue: null,
         active: true,
         joined: date2,
@@ -162,9 +166,6 @@ test('Server: GET /api/collection - Should get all 4 documents', async (done) =>
 })
 
 test('Server: PUT /api/collection - Should update 2 documents', async (done) => {
-    let date3 = new Date(2020, 11, 22)
-    let date4 = new Date(2020, 11, 23)
-
     const updates = [
         {
             id: 3,
@@ -204,6 +205,193 @@ test('Server: PUT /api/collection - Should update 2 documents', async (done) => 
             nullValue: expect(res2.nullValue).toBe(null),
             active: expect(res2.active).toBe(true)
         })
+
+        done()
+      }, 50)
+})
+
+test('Server: GET /api/collection/_q/? - where() queries', async (done) => {
+    const query = `Document with id "2" has been removed`
+
+    setTimeout(async () => {
+        let res1 = await request(appServer('testDBFull', 'api')).get('/api/users/_q/?where=id,=,1').expect(200)
+        let res2 = await request(appServer('testDBFull', 'api')).get('/api/users/_q/?where=id,!=,1').expect(200)
+        let res3 = await request(appServer('testDBFull', 'api')).get('/api/users/_q/?where=id,>,1').expect(200)
+        let res4 = await request(appServer('testDBFull', 'api')).get('/api/users/_q/?where=id,>=,1').expect(200)
+        let res5 = await request(appServer('testDBFull', 'api')).get('/api/users/_q/?where=id,<,2').expect(200)
+
+        expect(res1.body.length).toBe(1)
+        expect(res2.body.length).toBe(3)
+        expect(res3.body.length).toBe(3)
+        expect(res4.body.length).toBe(4)
+        expect(res5.body.length).toBe(1)
+        done()
+      }, 50)
+})
+
+test('Server: GET /api/collection/_q/? - where().and() queries', async (done) => {
+    const query = '?where=id,!=,1&where=and&where=age,>,18'
+    const query1 = '?where=id,!=,1&where=and&where=active,=,$true'
+    const query2 = '?where=id,!=,1&where=and&where=nullValue,=,$null'
+    const query3 = '?where=id,!=,$undefined&where=and&where=emptyArray.length,>=,1'
+    const query4 = '?where=info.name,=,"Jerry Mouse"'
+
+    setTimeout(async () => {
+        let res = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query}`).expect(200)
+        let res1 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query1}`).expect(200)
+        let res2 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query2}`).expect(200)
+        let res3 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query3}`).expect(200)
+        let res4 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query4}`).expect(200)
+
+        expect(res.body.length).toBe(1)
+        expect(res1.body.length).toBe(2)
+        expect(res2.body.length).toBe(1)
+        expect(res3.body.length).toBe(3)
+        expect(res4.body.length).toBe(1)
+        done()
+      }, 50)
+})
+
+test('Server: GET /api/collection/_q/? - where().or() queries', async (done) => {
+    const query = '?where=nullValue,=,$null&where=or&where=active,=,$false'
+
+    setTimeout(async () => {
+        let res = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query}`).expect(200)
+
+        expect(res.body.length).toBe(3)
+        done()
+      }, 50)
+})
+
+test('Server: GET /api/collection/_q/? - where().and().or() queries', async (done) => {
+    const query = '?where=active,=,$true&where=and&where=emptyArray.length,>,2&where=or&where=age,=,18'
+
+    setTimeout(async () => {
+        let res = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query}`).expect(200)
+
+        expect(res.body.length).toBe(2)
+        done()
+      }, 50)
+})
+
+test('Server: GET /api/collection/_q/? - where(exp, filterFn) queries', async (done) => {
+    const query = '?whereArray=objArr,[title,=,"title 1"]'
+    const query1 = '?whereArray=emptyArray,[$item,=,2]'
+    const query2 = '?whereArray=emptyArray,[$item,>,2]'
+    const query3 = '?whereArray=strArr,[$item,=,three]'
+    const query4 = '?whereArray=strArr,[$item,=,one]'
+
+    setTimeout(async () => {
+        let res = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query}`).expect(200)
+        let res1 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query1}`).expect(200)
+        let res2 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query2}`).expect(200)
+        let res3 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query3}`).expect(200)
+        let res4 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query4}`).expect(200)
+
+        expect(res.body.length).toBe(2)
+        expect(res1.body.length).toBe(2)
+        expect(res2.body.length).toBe(1)
+        expect(res3.body.length).toBe(1)
+        expect(res4.body.length).toBe(2)
+
+        done()
+      }, 50)
+})
+
+test('Server: GET /api/collection/_q/? - where(exp, filterFn).where() queries', async (done) => {
+    const query = `?whereArray=objArr,[title,=,"title 1"]&where=age,>,16`
+    const query1 = '?where=age,>,16&whereArray=objArr,[title,=,"title 1"]'
+    const query2 = '?where=age,>,16&where=and,&where=id,>=,1&whereArray=objArr,[title,=,"title 1"]'
+
+    setTimeout(async () => {
+        let res = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query}`).expect(200)
+        let res1 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query1}`).expect(200)
+        let res2 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query2}`).expect(200)
+
+        expect(res.body.length).toBe(1)
+        expect(res1.body.length).toBe(1)
+        expect(res2.body.length).toBe(1)
+
+        done()
+      }, 50)
+})
+
+test('Server: GET /api/collection/_q/? - where()/.include()/.exclude() queries', async (done) => {
+    const query = "?where=id,=,1&include=[firstname,lastname,age]"
+    const query1 = '?whereArray=objArr,[title,=,"title 3"]&include=[firstname,lastname,age]'
+    const query2 = '?where=id,=,1&exclude=[email,emptyArray,strArr,objArr,nullValue,active,joined,access,info]'
+    const query3 = '?whereArray=objArr,[title,=,"title 3"]&exclude=[emptyArray,strArr,objArr,nullValue,active,joined,access,info]'
+
+    const expected = [{
+        firstname: 'Bugs',
+        lastname: 'Bunny',
+        age: 16
+    }]
+
+    const expected2 = [{
+        firstname: 'Bugs',
+        lastname: 'Bunny',
+        email: 'bbunny@email.com',
+        age: 16
+    }]
+
+    setTimeout(async () => {
+        let res = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query}`).expect(200)
+        let res1 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query1}`).expect(200)
+        let res2 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query2}`).expect(200)
+        let res3 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query3}`).expect(200)
+
+        expect(res.body.length).toBe(1)
+        expect(res1.body.length).toBe(1)
+        expect(res2.body.length).toBe(1)
+        expect(res3.body.length).toBe(1)
+        
+        expect(res.body).toMatchObject(expected)
+        expect(res1.body).toMatchObject(expected)
+        expect(res2.body).toMatchObject(expected)
+        expect(res3.body).toMatchObject(expected2)
+
+        done()
+      }, 50)
+})
+
+test('Server: GET /api/collection/_q/? - where()/.limit()/.offset() queries', async (done) => {
+    const query = '?where=id,>,0&limit=2'
+    const query1 = '?where=id,>,0&offset=3'
+    const query2 = '?where=id,>,0&offset=2&limit=1'
+
+    setTimeout(async () => {
+        let res = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query}`).expect(200)
+        let res1 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query1}`).expect(200)
+        let res2 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query2}`).expect(200)
+
+        expect(res.body.length).toBe(2)
+        expect(res1.body.length).toBe(1)
+        expect(res2.body.length).toBe(1)
+
+        done()
+      }, 50)
+})
+
+test('Server: GET /api/collection/_q/? - where()/sort() queries', async (done) => {
+    const query = '?where=id,>,0&sortBy=id'
+    const query1 = '?where=id,>,0&sortBy=id&sortOrder=desc'
+    const query2 = '?where=id,>,0&sortBy=id&sortOrder=asc'
+    const query3 = '?where=id,>,0&sortBy=age&sortOrder=desc'
+    const query4 = '?where=id,>,0&sortBy=lastname&sortOrder=desc'
+
+    setTimeout(async () => {
+        let res = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query}`).expect(200)
+        let res1 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query1}`).expect(200)
+        let res2 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query2}`).expect(200)
+        let res3 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query3}`).expect(200)
+        let res4 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query4}`).expect(200)
+
+        expect(res.body[0].id).toBe(1)
+        expect(res1.body[0].id).toBe(4)
+        expect(res2.body[0].id).toBe(1)
+        expect(res3.body[0].id).toBe(4)
+        expect(res4.body[0].id).toBe(4)
 
         done()
       }, 50)

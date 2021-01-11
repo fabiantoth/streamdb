@@ -106,14 +106,14 @@ test('chainQuery: (constructWhereArray) Should fail if function does undefined r
 
 test('chainQuery: (constructIncExc) Should return an include array of objects containing method, and expression', () => {
     const incl = "[id, name, email]" 
-    const constIncl = constructIncExc(incl, undefined)
+    const constIncl = constructIncExc(incl, null)
     const expected = [ { method: 'include', expression: [ 'id', 'name', 'email' ] } ]
     expect(constIncl).toEqual(expected)
 })
 
 test('chainQuery: (constructIncExc) Should return an exclude array of objects containing method, and expression', () => {
     const excl = "[detail]" 
-    const constExcl = constructIncExc(undefined, excl)
+    const constExcl = constructIncExc(null, excl)
     const expected = [ { method: 'exclude', expression: [ 'detail' ] } ]
     expect(constExcl).toEqual(expected)
 })
