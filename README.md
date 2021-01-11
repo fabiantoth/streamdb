@@ -684,7 +684,7 @@ A helper method added to chain req queries
 
  - The default collection query route is `/api/colName/_q/
  - Query chains can be added after question mark (?) (ex, `/api/colName/_q/?where=id,>=,50&limit=20`
-> See [options and query examples](https://github.com/fabiantoth/streamdb-v1/blob/b0205b6202411002bf4fb2524b7b62eed8212daf/lib/chain-query.js#L10)
+> See [options and query examples](https://github.com/fabiantoth/streamdb/blob/ef21f2bfe016630ddb386289818856a30f164d7c/lib/api/chainQuery.js#L2)
  
 Params:
 - `colRef` **{Object}**: (required) the db collection reference
@@ -738,22 +738,22 @@ A helper method to add a simple array filter to the query chain
  - Use the **`$item`** keyword if you wish to filter values directly
  - Allowed operators: **`'=', '!=', '<', '>', '>=', '<='`**
  
- Example filtering array of objects:  
+#### Filtering object arrays:  
 
  **`/api/colName/_q/?whereArray=articles,[title,=,"article title"]`**  
 
-Equivalent of:  
-`where('articles, (arr) => arr.filter(item => item.title == 'article title)`  
+Translates to api call:  
+`where('articles, (arr) => arr.filter(item => item.title == 'article title')`  
 
-Example filtering values with `$item` keyword:  
+#### Filtering values with `$item` keyword: 
 
 **`/api/colName/_q/?whereArray=privilages,[$item,=,admin]`**  
 
-Equivalent of:  
+Translates to api call  
 `where('privilages, (arr) => arr.filter(item => item == 'admin')`  
 
 
- > See [filterArray helper](https://github.com/fabiantoth/streamdb-v1/blob/30f4b5b8222b6853eb2bb4d855b5c37f686593bf/lib/filterArray.js#L12)
+ > See [filterArray helper](https://github.com/fabiantoth/streamdb/blob/ef21f2bfe016630ddb386289818856a30f164d7c/lib/api/filterArray.js#L12)
  
 Params:
 - `whereQuery` **{String|Array\<String\>}**: (required) the whereArray string (or array of strings) req.query.whereArray value
@@ -761,7 +761,7 @@ Params:
 Returns: 
 - Nothing. Adds a where() array lookup filter to the query chain
 
-> **NOTE:** This method is deliberately separated, as you may construct your own array lookup methods. [See whereArrayParams](https://github.com/fabiantoth/streamdb-v1/blob/30f4b5b8222b6853eb2bb4d855b5c37f686593bf/lib/chain-query.js#L63)
+> **NOTE:** This method is deliberately separated, as you may construct your own array lookup methods. [See whereArrayParams](https://github.com/fabiantoth/streamdb/blob/ef21f2bfe016630ddb386289818856a30f164d7c/lib/api/chainQuery.js#L22)
 
 
 **[back to top](#readme)**
