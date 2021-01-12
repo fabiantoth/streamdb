@@ -81,10 +81,6 @@ Save and run script:
 $ node setup.js
 ```
 
-Leaving `createDb()` empty will just scaffold the default settings. 
-
-> See how to change db settings in [DB Settings Options](#db-settings-options). 
-
 This will scaffold the following directory structure in your root directory:
 
 <pre>
@@ -95,6 +91,14 @@ This will scaffold the following directory structure in your root directory:
     ├── <b>models</b>
     └── streamDb.meta.json
 </pre>
+
+
+#### What you need to know
+
+Leaving `createDb()` empty will just scaffold the default settings. 
+
+> See how to change db settings in [DB Settings Options](#db-settings-options). 
+
 
 
 ### 2. Create Collection:
@@ -118,11 +122,7 @@ db.addCollection('users')
 Save and run script:
 ```sh
 $ node run.js
-```
-
-Passing only 1 argument in `addCollection('users')` will scaffold the default settings. 
-
-> See how to change collection settings in [Collection Settings Options](#collection-settings-options).  
+``` 
 
 This will update the db directory as follows:
 
@@ -142,6 +142,14 @@ This will update the db directory as follows:
     └── streamDb.meta.json
 
 </pre>
+
+
+#### What you need to know
+
+Passing only 1 argument in `addCollection('users')` will scaffold the default settings. 
+
+> See how to change collection settings in [Collection Settings Options](#collection-settings-options). 
+
 
 
 ### 3. Add Sample Data:
@@ -191,7 +199,14 @@ Save and run script:
 $ node run.js
 ```
 
-If you examine the ``users.0.json`` and ``users.meta.json`` files located in the **`/collections/users`** directory, you will see the new data.   
+If you examine the ``users.0.json`` and ``users.meta.json`` files located in the **`/collections/users`** directory, you will see the new data. 
+
+#### What you need to know
+
+- You may change/edit the data directly in the collection json file, the meta file will update when you run the next query. 
+- However, the collection data must remain in an array and all document objects are required to have a unique & valid id field.
+- You may edit the meta file as well, but keep edits to storeMax values, try not to change other settings after you already have data in collection unless you know what you're doing
+- You can always just delete the entire db directory and restart (it's pain free!!)
 
 ### 3. Launch Server:
 
@@ -212,6 +227,11 @@ Save and launch the server:
 ```sh
 $ node server.js
 ```
+
+#### What you need to know
+
+- The first 2 arguments ('streamDB', & 'api' in this example) are based on the `dbName` and `routesDir` in the db settings. 
+- If you change those 2 default values make sure to replace them when you run `server()`
 
 **That's it!!**
 
