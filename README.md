@@ -16,6 +16,8 @@
 
 ## Table of Contents
 - [Getting Started](#getting-started)
+  - [Installation](#install)
+  - [2-Minute Quickstart](#2-minute-quickstart)
 - [Directories Overview](#directories-overview)
 - [Schemas](#schemas)
   - [The Models Directory](#the-models-directory)
@@ -33,22 +35,35 @@
 
 
 ## Getting Started
+
+## Install:
+
 Basic requirements:
   - Node (v12.7.0 or higher)
   - NPM (v6.14.2 or higher)
-  - [Read this stability disclaimer](#stability-disclaimer)
+  - [Read this stability disclaimer](#stability-disclaimer)  
   
-
-## Install:
 > Install with [npm](https://www.npmjs.com/)
 
 ```sh
 $ npm i streamdb
 ```
 
+## 2-Minute Quickstart
+
+To see how easy it is to use streamDB, follow this quickstart example which will get your backend setup and launched in under 2 minutes.  
+
+In this example we will:  
+
+1. Setup the DB
+2. Create a collection
+3. Add sample data
+4. Launch the server
+
 
 ### 1. DB Setup:
-Simple default settings example - create a new file in your root directory to initialize the DB directories: 
+
+Create a new file in your root directory to initialize the DB directories:  
 
 - **setup.js**: run this just once for initial setup (call it whatever you wish, it doesn't matter)
 
@@ -66,11 +81,7 @@ Save and run script:
 $ node setup.js
 ```
 
-Leaving `createDb()` empty will just scaffold the default settings. 
-
-> See the full [DB Settings Options](#db-settings-options). 
-
-This will scaffold the following directory structure in your root folder:
+This will scaffold the following directory structure in your root directory:
 
 <pre>
 ─ streamDB
@@ -81,10 +92,20 @@ This will scaffold the following directory structure in your root folder:
     └── streamDb.meta.json
 </pre>
 
-### 2. Add Collection/Documents:
-Next let's create our first empty collection, using the default settings. Create a separate file :
 
-- **run.js**: to run some basic examples, create collections/add documents, etc.
+#### What you need to know
+
+Leaving `createDb()` empty will just scaffold the default settings. 
+
+> See how to change db settings in [DB Settings Options](#db-settings-options). 
+
+
+
+### 2. Create Collection:
+
+Next, let's create our first collection. Create a separate file:
+
+- **run.js**: to run our basic examples (create collection & add data) 
 
 
 ```js
@@ -101,11 +122,7 @@ db.addCollection('users')
 Save and run script:
 ```sh
 $ node run.js
-```
-
-Not including a settings object in `addCollection('users', settings)` will scaffold the default settings. 
-
-> See the different [Collection Settings Options](#collection-settings-options).  
+``` 
 
 This will update the db directory as follows:
 
@@ -126,7 +143,18 @@ This will update the db directory as follows:
 
 </pre>
 
-And finally, let's add some dummy data: 
+
+#### What you need to know
+
+Passing only 1 argument in `addCollection('users')` will scaffold the default settings. 
+
+> See how to change collection settings in [Collection Settings Options](#collection-settings-options). 
+
+
+
+### 3. Add Sample Data:
+
+And finally, let's add some dummy data. Comment out the addCollection() code and paste in the rest as shown below:   
 
 ```js
 // run.js
@@ -171,12 +199,20 @@ Save and run script:
 $ node run.js
 ```
 
-If you examine the ``users.0.json`` and ``users.meta.json`` files you will see the new data. 
+If you examine the ``users.0.json`` and ``users.meta.json`` files located in the **`/collections/users`** directory, you will see the new data. 
 
-### 3. Setup/run Server:
-The last step is to get our endpoints running on a server. Create and add the following code to your file:
+#### What you need to know
 
-- **server.js**: to launch server with new endpoints
+- You may change/edit the data directly in the collection json file, the meta file will update when you run the next query. 
+- However, the collection data must remain in an array and all document objects are required to have a unique & valid id field.
+- You may edit the meta file as well, but keep edits to storeMax values, try not to change other settings after you already have data in collection unless you know what you're doing
+- You can always just delete the entire db directory and restart (it's pain free!!)
+
+### 3. Launch Server:
+
+The last step is to get our endpoints running on the server. Create and add the following code to your file:
+
+- **server.js**: to launch localhost server with new endpoints
 
 ```js
 // server.js
@@ -187,13 +223,21 @@ const api = streamDb.server('streamDB', 'api', 3000)
 ```
 
 Save and launch the server:
+
 ```sh
 $ node server.js
 ```
 
+#### What you need to know
+
+- The first 2 arguments ('streamDB', & 'api' in this example) are based on the `dbName` and `routesDir` in the db settings. 
+- If you change those 2 default values make sure to replace them when you run `server()`
+
 **That's it!!**
 
-Your new collection is live at ``http://localhost:3000/api/users``
+Your new backend is live with endpoints at: 
+- db: ``http://localhost:3000/api/db``
+- users collection: ``http://localhost:3000/api/users``
 
 **[back to top](#readme)**
 
@@ -286,12 +330,12 @@ These files are simple ON PURPOSE, built with familiar Express framework and lef
 
 Each new collection comes with the following basic routes:
 
-* **`GET /api/collection/_q/`:** ----- Run compound queries, comes with added chainQuery() helper method 
+* **`GET /api/collection/_q/`:** ----- Run compound queries, comes with added `chainQuery()`, and `whereArray()` helper methods 
 * **`GET /api/collection/:id`:** ----- Get document by id
 * **`GET /api/collection`:** --------- Get all documents in collection
 * **`POST /api/collection`:** -------- Insert many documents into collection
-* **`PUT /api/collection/:id`:** ----- Update document by id
-* **`DELETE /api/collection/:id`:** -- delete document by id
+* **`PUT /api/collection`:** --------- Update collection documents
+* **`DELETE /api/collection/:id`:** -- Delete document by id
 
 These are just simple starter routes. You may add/remove/use/or improve them as you wish, it is your app, and your routes - do as you please (except changing the file name)
 
@@ -684,7 +728,7 @@ A helper method added to chain req queries
 
  - The default collection query route is `/api/colName/_q/
  - Query chains can be added after question mark (?) (ex, `/api/colName/_q/?where=id,>=,50&limit=20`
-> See [options and query examples](https://github.com/fabiantoth/streamdb-v1/blob/b0205b6202411002bf4fb2524b7b62eed8212daf/lib/chain-query.js#L10)
+> See [options and query examples](https://github.com/fabiantoth/streamdb/blob/ef21f2bfe016630ddb386289818856a30f164d7c/lib/api/chainQuery.js#L2)
  
 Params:
 - `colRef` **{Object}**: (required) the db collection reference
@@ -709,7 +753,7 @@ router.get('/_q/', async (req, res) => {
     const query = req.query 
 
     if (query.whereArray) {   // see db.filterArray() method
-        query.whereArray = streamDb.whereArray(query.whereArray)
+        query.whereArray = streamDb.filterArray(query.whereArray)
     }
 
     try {
@@ -734,9 +778,26 @@ router.get('/_q/', async (req, res) => {
 A helper method to add a simple array filter to the query chain
 > See [collection queries](#-whereexp-filterfnoptional).
 
- - Query chains can be added after question mark (?) (ex, `/api/colName/_q/?whereArray=articles,[title,=,"article title"]`
- - This adds the equivalent of `where('articles, (arr) => arr.filter(item => item.title === 'article title)`
- > See [filterArray helper](https://github.com/fabiantoth/streamdb-v1/blob/30f4b5b8222b6853eb2bb4d855b5c37f686593bf/lib/filterArray.js#L12)
+ - Query chains can be added after question mark (?)  
+ - Use the **`$item`** keyword if you wish to filter values directly
+ - Allowed operators: **`'=', '!=', '<', '>', '>=', '<='`**
+ 
+#### Filtering object arrays:  
+
+ **`/api/colName/_q/?whereArray=articles,[title,=,"article title"]`**  
+
+Translates to api call:  
+`where('articles, (arr) => arr.filter(item => item.title == 'article title')`  
+
+#### Filtering values with `$item` keyword: 
+
+**`/api/colName/_q/?whereArray=privilages,[$item,=,admin]`**  
+
+Translates to api call  
+`where('privilages, (arr) => arr.filter(item => item == 'admin')`  
+
+
+ > See [filterArray helper](https://github.com/fabiantoth/streamdb/blob/ef21f2bfe016630ddb386289818856a30f164d7c/lib/api/filterArray.js#L12)
  
 Params:
 - `whereQuery` **{String|Array\<String\>}**: (required) the whereArray string (or array of strings) req.query.whereArray value
@@ -744,7 +805,7 @@ Params:
 Returns: 
 - Nothing. Adds a where() array lookup filter to the query chain
 
-> **NOTE:** This method is deliberately separated, as you may construct your own array lookup methods. [See whereArrayParams](https://github.com/fabiantoth/streamdb-v1/blob/30f4b5b8222b6853eb2bb4d855b5c37f686593bf/lib/chain-query.js#L63)
+> **NOTE:** This method is deliberately separated, as you may construct your own array lookup methods. [See whereArrayParams](https://github.com/fabiantoth/streamdb/blob/ef21f2bfe016630ddb386289818856a30f164d7c/lib/api/chainQuery.js#L22)
 
 
 **[back to top](#readme)**
