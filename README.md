@@ -16,6 +16,8 @@
 
 ## Table of Contents
 - [Getting Started](#getting-started)
+  - [Installation](#install)
+  - [2-Minute Quickstart](#2-minute-quickstart)
 - [Directories Overview](#directories-overview)
 - [Schemas](#schemas)
   - [The Models Directory](#the-models-directory)
@@ -33,22 +35,35 @@
 
 
 ## Getting Started
+
+## Install:
+
 Basic requirements:
   - Node (v12.7.0 or higher)
   - NPM (v6.14.2 or higher)
-  - [Read this stability disclaimer](#stability-disclaimer)
+  - [Read this stability disclaimer](#stability-disclaimer)  
   
-
-## Install:
 > Install with [npm](https://www.npmjs.com/)
 
 ```sh
 $ npm i streamdb
 ```
 
+## 2-Minute Quickstart
+
+To see how easy it is to use streamDB, follow this quickstart example which will get your backend setup and launched in under 2 minutes.  
+
+In this example we will:  
+
+1. Setup the DB
+2. Create a collection
+3. Add sample data
+4. Launch the server
+
 
 ### 1. DB Setup:
-Simple default settings example - create a new file in your root directory to initialize the DB directories: 
+
+Create a new file in your root directory to initialize the DB directories:  
 
 - **setup.js**: run this just once for initial setup (call it whatever you wish, it doesn't matter)
 
@@ -68,9 +83,9 @@ $ node setup.js
 
 Leaving `createDb()` empty will just scaffold the default settings. 
 
-> See the full [DB Settings Options](#db-settings-options). 
+> See how to change db settings in [DB Settings Options](#db-settings-options). 
 
-This will scaffold the following directory structure in your root folder:
+This will scaffold the following directory structure in your root directory:
 
 <pre>
 ─ streamDB
@@ -81,10 +96,12 @@ This will scaffold the following directory structure in your root folder:
     └── streamDb.meta.json
 </pre>
 
-### 2. Add Collection/Documents:
-Next let's create our first empty collection, using the default settings. Create a separate file :
 
-- **run.js**: to run some basic examples, create collections/add documents, etc.
+### 2. Create Collection:
+
+Next, let's create our first collection. Create a separate file:
+
+- **run.js**: to run our basic examples (create collection & add data) 
 
 
 ```js
@@ -103,9 +120,9 @@ Save and run script:
 $ node run.js
 ```
 
-Not including a settings object in `addCollection('users', settings)` will scaffold the default settings. 
+Passing only 1 argument in `addCollection('users')` will scaffold the default settings. 
 
-> See the different [Collection Settings Options](#collection-settings-options).  
+> See how to change collection settings in [Collection Settings Options](#collection-settings-options).  
 
 This will update the db directory as follows:
 
@@ -126,7 +143,10 @@ This will update the db directory as follows:
 
 </pre>
 
-And finally, let's add some dummy data: 
+
+### 3. Add Sample Data:
+
+And finally, let's add some dummy data. Comment out the addCollection() code and paste in the rest as shown below:   
 
 ```js
 // run.js
@@ -171,12 +191,13 @@ Save and run script:
 $ node run.js
 ```
 
-If you examine the ``users.0.json`` and ``users.meta.json`` files you will see the new data. 
+If you examine the ``users.0.json`` and ``users.meta.json`` files located in the **`/collections/users`** directory, you will see the new data.   
 
-### 3. Setup/run Server:
-The last step is to get our endpoints running on a server. Create and add the following code to your file:
+### 3. Launch Server:
 
-- **server.js**: to launch server with new endpoints
+The last step is to get our endpoints running on the server. Create and add the following code to your file:
+
+- **server.js**: to launch localhost server with new endpoints
 
 ```js
 // server.js
@@ -187,13 +208,16 @@ const api = streamDb.server('streamDB', 'api', 3000)
 ```
 
 Save and launch the server:
+
 ```sh
 $ node server.js
 ```
 
 **That's it!!**
 
-Your new collection is live at ``http://localhost:3000/api/users``
+Your new backend is live with endpoints at: 
+- db: ``http://localhost:3000/api/db``
+- users collection: ``http://localhost:3000/api/users``
 
 **[back to top](#readme)**
 
