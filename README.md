@@ -330,9 +330,9 @@ This would affect your base API directory name, for example:
 
 There are 2 router templates from which router files are generated, one for the db (`db.js`) and one for collection (`collectionName.js`) routers.  
 
-> See the [db.js Router Template](/blob/main/lib/templates/db-router-template.js).  
+> See the [db.js Router Template](/lib/templates/db-router-template.js).  
 
-> See the [collection.js Router Template](/blob/main/lib/templates/col-router-template.js).  
+> See the [collection.js Router Template](/lib/templates/col-router-template.js).  
 
 <br>
 
