@@ -17,7 +17,12 @@ const defaultMeta = {
     routes: [
         'db.js'
     ],
-    collections: []
+    collections: [],
+    defaultModel: { 
+        type: 'default', 
+        id: '$incr', 
+        maxValue: 10000
+    }
 }
 
 const customSettings = {
