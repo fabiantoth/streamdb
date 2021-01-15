@@ -280,12 +280,12 @@ Each **Collection directory** contains:
 Whenever the data in a single store file reaches your set storeMax value, a new store file split occurs and is incremented starting at 0. The data reads from all store files as if it was just 1 single collection file.  
 <br>
 
-### The db meta file
+### 1. The db.meta.json File:
 
 The dbMeta is generated when you create the db, contains path information, collections, and storeMax and validation model default values.  
 
 <details>
-  <summary><strong>See example of Annotated Database Metafile</strong></summary>
+  <summary>See example of a <strong>database meta file</strong></summary>
 <br>
 <pre>
 // sample newly created 'streamDB' db json meta file
@@ -316,11 +316,10 @@ The dbMeta is generated when you create the db, contains path information, colle
 
 </pre>
 
-</details>  
+</details>   
 
-<br>
-
-### The /api (or /controllers) directory  
+ 
+### 2. The API (controllers) Directory:  
 
 The routes directory contains the router controller, and if `initRoutes` is set to `true`, they will be automatically generated into this folder. The default name is `‘api’`, however you could rename it by setting the `routesDir` value in the db settings.  
 
@@ -334,16 +333,16 @@ There are 2 router templates from which router files are generated, one for the 
 
 > See the [collection.js Router Template](/lib/templates/col-router-template.js).  
 
-<br>
 
-### The /collection directory  
+
+### 3. The Collections Directory:    
 
 This is where your data is stored. Each collection receives its own directory where the store files containing the data, and the collection meta file will be generated.  
 This is the only directory/file setup that isn’t customizable. You may however edit the files themselves.  
 The meta file contains path information, store size, number of stores, validation model, and the id of every document that is in that file/store, including a count of incremented id type.  
 
 <details>
-  <summary><strong>See example of Annotated Collection Metafile</strong></summary>
+  <summary>See example of a <strong>Collection meta file</strong></summary>
 <br>
 <pre>
 // sample newly created 'users' collection json meta file
@@ -375,9 +374,9 @@ The meta file contains path information, store size, number of stores, validatio
 
 </details>  
 
-<br>
 
-### The /models directory  
+
+### 2. The Models Directory:   
 
 Lastly, you have the models directory. If `initSchemas: true`, this is where the model files will be generated with a starting schema scaffold you will need to edit based on the desired model for your documents.  
 
