@@ -31,7 +31,7 @@
     - [Custom Model](#set-custom-schema-model)
   - [Collection Methods](#collection-methods)
   - [Queries & Query Chains](#queries--query-chains)
-  
+- <a target="_blank" href="CHANGELOG.md">CHANGELOG (new!)</a>
 
 
 ## Getting Started
@@ -1392,8 +1392,9 @@ Returns:
 
 
 ## Stability Disclaimer
+- A [CHANGELOG](CHANGELOG.md) has been added as of v0.0.7 
 - Please don't use sensitive or valuable data (data you don't want to lose).
-- Keep in mind, early updates and changes will probably be breaking, experimental and may be temporary (a proper changelog most likely won't be maintained while this disclaimer is still up).
+- Keep in mind, early updates and changes will probably be breaking, experimental and may be temporary (although progress is being made slowly but surely).
 
 This project grew out of a less ambitious desire to just have a MUCH simpler way to support prototyping without being tied to an env or dealing with account limits...in short, this was not a planned library.  
 
