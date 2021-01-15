@@ -279,6 +279,103 @@ Each **Collection directory** contains:
 
 Whenever the data in a single store file reaches your set storeMax value, a new store file split occurs and is incremented starting at 0. The data reads from all store files as if it was just 1 single collection file.
 
+### 1. The `dbMeta` File
+
+The dbMeta is generated when you create the db, contains path information, collections, and storeMax and validation model default values.  
+
+<details>
+  <summary><strong>See example of Annotated Database Metafile</strong></summary>
+<br>
+<pre>
+// sample newly created 'streamDB' db json meta file
+{
+  "dbName": "streamDB",                       // db name                                  [default='streamDB']
+  "dbPath": "./streamDB",                     // db directory path
+  "metaPath": "./streamDB/streamDB.meta.json",  // location of the db meta file
+  "storePath": "./streamDB/collections",      // location of all collections
+  "routesPath": "./streamDB/api",             // location of api routes
+  "modelsPath": "./streamDB/models",          // location of schema models
+  "initRoutes": true,                         // automatically scaffold API routes          [def=true] 
+  "initSchemas": false,                       // automatically scaffold models              [def=false]
+  "routesAutoDelete": true,                   // automatically delete routes on col delete  [def=true]
+  "modelsAutoDelete": false,                  // automatically delete models on col delete  [def=false]
+  "storesMax": 131072,                        // max store file size before split           [def=131072]
+  "total": 0,                                 // total # of collections
+  "routes": [                         
+    "db.js"                                 // all current routes (db route automatically created with db
+  ],
+  "collections": [],                         // all current collections
+  "defaultModel": {
+         "type": "default",                  // 2 options: ['default', 'schema']          [def='default']
+         "id": "$incr",                      // 2 options: ['$uid', '$incr']              [def='$incr']
+         "maxValue": 10000,                  // if ($incr) sets idMaxCount, if ($uid) sets uidLength (max=36)
+    }                                        // the default min values are 0 for $incr, and 6 for $uid
+
+}
+
+</pre>
+  <br>
+</details>  
+
+### 2. The `/api` (or `/controllers`) Directory  
+
+The routes directory contains the router controller, and if `initRoutes` is set to `true`, they will be automatically generated into this folder. The default name is `‘api’`, however you could rename it by setting the `routesDir` value in the db settings.  
+
+This would affect your base API directory name, for example:
+
+`routesDir = ‘testAPI’` would mean your users collection, for instance, would be located at: `/testAPI/users` instead of `/api/users`  
+
+There are 2 router templates from which router files are generated, one for the db (`db.js`) and one for collection (`collectionName.js`) routers.  
+
+> See the [db.js Router Template](/blob/main/lib/templates/db-router-template.js).  
+
+> See the [collection.js Router Template](/blob/main/lib/templates/col-router-template.js).  
+
+### 3. The `/collection` Directory  
+
+This is where your data is stored. Each collection receives its own directory where the store files containing the data, and the collection meta file will be generated.  
+This is the only directory/file setup that isn’t customizable. You may however edit the files themselves.  
+The meta file contains path information, store size, number of stores, validation model, and the id of every document that is in that file/store, including a count of incremented id type.  
+
+<details>
+  <summary><strong>See example of Annotated Collection Metafile</summary>
+<br>
+<pre>
+// sample newly created 'users' collection json meta file
+{
+  "colName": "users",                                         // collection name
+  "metaPath": "./streamDB/collections/users/users.meta.json", // col meta file location
+  "colPath": "./streamDB/collections/users",                  // col directory location
+  "storeMax": 131072,                                         // max store file size before split  [def=dbMetaMax]  
+  "target": "./streamDB/collections/users/users.0.json",      // current target new docs are written to
+  "store": [                                                // store data
+    {
+      "$id": 0,                                             // store #
+      "size": 2,                                              // total file size in bytes
+      "path": "./streamDB/collections/users/users.0.json",    // store location
+      "documents": []                                         // all ids in this store
+    }
+  ],
+  "model": {                                                // validation model
+    "type": "schema",                                         // (example of schema $incr model)
+    "id": "$incr",                                            // id type
+    "name": "User",                                           // model name
+    "path": "./streamDB/models/User.js"                       // model location
+    "idCount": 0,                                             // curr id count
+    "idMaxCount": 10000                                       // max id count for this collection
+  }
+}
+
+</pre>
+<br>
+</details>  
+
+### 4. The `/models` Directory  
+
+Lastly, you have the models directory. If `initSchemas: true`, this is where the model files will be generated with a starting schema scaffold you will need to edit based on the desired model for your documents.  
+
+
+
 ### API Routes Overview
 
 All routes are created and go in the `/api` (or your chosen routesDir name) directory. When you setup your db for the first time, the first router to be scaffolded is the db router. At this point, you may actually launch your server and start creating collections and adding documents by sending requests to the db endpoint.  
