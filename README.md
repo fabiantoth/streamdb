@@ -80,9 +80,15 @@ Save and run script:
 ```sh
 $ node setup.js
 ```
+ 
 
-This will scaffold the following directory structure in your root directory:
-
+<details>
+  <summary><strong>What you need to know</strong></summary>
+  
+<br>
+  This will scaffold the following directory structure in your root directory:
+<br><br>
+  
 <pre>
 ─ streamDB
     ├── <b>api</b>
@@ -91,14 +97,11 @@ This will scaffold the following directory structure in your root directory:
     ├── <b>models</b>
     └── streamDb.meta.json
 </pre>
-
-
-#### What you need to know
-
-Leaving `createDb()` empty will just scaffold the default settings. 
-
-> See how to change db settings in [DB Settings Options](#db-settings-options). 
-
+  
+  Leaving <code>createDb()</code> empty will just scaffold the default settings.
+<br>
+  <blockquote> See how to change db settings in <a href="#db-settings-options">DB Settings Options</a>. </blockquote>
+</details>
 
 
 ### 2. Create Collection:
@@ -124,7 +127,13 @@ Save and run script:
 $ node run.js
 ``` 
 
-This will update the db directory as follows:
+
+<details>
+  <summary><strong>What you need to know</strong></summary>
+  
+<br>
+  This will update the db directory as follows:
+<br><br>
 
 <pre>
 ─ streamDB
@@ -143,13 +152,12 @@ This will update the db directory as follows:
 
 </pre>
 
+ Passing only 1 argument in <code>addCollection('users')</code> will scaffold the default settings. 
+<br>
 
-#### What you need to know
-
-Passing only 1 argument in `addCollection('users')` will scaffold the default settings. 
-
-> See how to change collection settings in [Collection Settings Options](#collection-settings-options). 
-
+  <blockquote> See how to change collection settings in <a href="#collection-settings-options">Collection Settings Options</a>. </blockquote>
+  
+</details>
 
 
 ### 3. Add Sample Data:
@@ -199,14 +207,23 @@ Save and run script:
 $ node run.js
 ```
 
-If you examine the ``users.0.json`` and ``users.meta.json`` files located in the **`/collections/users`** directory, you will see the new data. 
 
-#### What you need to know
+<details>
+  <summary><strong>What you need to know</strong></summary>
+  
+<br>
+  If you examine the <code>users.0.json</code> and <code>users.meta.json</code> files located in the <code>/collections/users</code> directory, you will see the new data.
+<br><br>
+<ul>
+  <li>The collection data in each json file must remain in an array.</li>
+  <li>All document objects are required to have a unique & valid id field.</li>
+  <li>You may change/edit the data directly in the collection json file, the meta file will update when you run the next query.</li>
+  <li>You may also edit the meta file, but be careful changing settings after adding data.</li>
+  <li>You can always just delete the entire db directory and restart (it's pain free!!)</li>
+</ul>
+  
+</details>
 
-- You may change/edit the data directly in the collection json file, the meta file will update when you run the next query. 
-- However, the collection data must remain in an array and all document objects are required to have a unique & valid id field.
-- You may edit the meta file as well, but keep edits to storeMax values, try not to change other settings after you already have data in collection unless you know what you're doing
-- You can always just delete the entire db directory and restart (it's pain free!!)
 
 ### 3. Launch Server:
 
@@ -228,16 +245,25 @@ Save and launch the server:
 $ node server.js
 ```
 
-#### What you need to know
-
-- The first 2 arguments ('streamDB', & 'api' in this example) are based on the `dbName` and `routesDir` in the db settings. 
-- If you change those 2 default values make sure to replace them when you run `server()`
-
-**That's it!!**
-
 Your new backend is live with endpoints at: 
 - db: ``http://localhost:3000/api/db``
 - users collection: ``http://localhost:3000/api/users``
+
+<details>
+  <summary><strong>What you need to know</strong></summary>
+  
+<br>
+
+<ul>
+  <li>The first 2 arguments ('streamDB', & 'api' in this example) are based on the <code>dbName</code> and <code>routesDir</code> in the db settings.</li>
+  <li>If you change those 2 default values make sure to replace them when you run <code>server()</code>.</li>
+</ul>
+  
+</details>
+
+**That's it!!**
+
+
 
 **[back to top](#readme)**
 
