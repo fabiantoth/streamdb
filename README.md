@@ -338,7 +338,7 @@ This is the only directory/file setup that isn’t customizable. You may however
 The meta file contains path information, store size, number of stores, validation model, and the id of every document that is in that file/store, including a count of incremented id type.  
 
 <details>
-  <summary><strong>See example of Annotated Collection Metafile</summary>
+  <summary><strong>See example of Annotated Collection Metafile</strong></summary>
 <br>
 <pre>
 // sample newly created 'users' collection json meta file
