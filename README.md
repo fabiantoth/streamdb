@@ -735,13 +735,13 @@ Returns:
 - Promise, deletes db directory & returns success/err msg
 
 
-### $ streamDb.model(modelName, schemaObj, colMeta)
+### $ streamDb.model('modelName', schemaObj, colMeta[optional])
 Generate a document model from existing model file or from a custom schema 
 
 Params:
 - `modelName` **{String}**: (required) name of model - should match the file path and schema object name
 - `schemaObj` **{Object}**: (required) the schema instance (new Schema({}) containing schema and settings objects
-- `colMeta` **{Object}**: (optional) the schema instance (new Schema({}) containing schema and settings objects
+- `colMeta` **{Object}**: (optional) the colMeta object - For test purposes only
 
 Returns: 
 - The model resource object
@@ -1032,12 +1032,12 @@ Returns:
 ## Set Custom Schema Model
 Use a custom schema model if you do not wish to setup model files or bypass existing model
 
-### $ db.collection('colName').setModel('modelName', model)
+### $ db.collection('colName').setModel('modelName', schemaObj)
 Chain `setModel()` to collection before chaining other methods (must be added every time you wish to use the schema)
 
 Params:
 - `modelName` **{String}**: (required) name of model, must be singular version of collection: `users` => `User`
-- `model` **{Object}**: (required) the model object containing the Schema instance
+- `schemaObj` **{Object}**: (required) the new Schema instance object
 
 Returns: 
 - Sets the validation model and returns the updated object with the collection reference
@@ -1052,7 +1052,7 @@ const DB = streamdb.DB
 const Schema = streamDb.Schema
 const db = new DB('streamDB')
 
-const User = new Schema({       // define your schema, settings
+const UserSchema = new Schema({       // define your schema, settings
     id: streamDb.Types.$incr,
     name: {
       type: String,
@@ -1074,21 +1074,20 @@ const User = new Schema({       // define your schema, settings
     }
 })
 
-const model = streamDb.model('User', User)  // get model
-
 const doc = {
   name: 'John Smith',
   age: 20
 }
 
 // this schema will now be used as the validation model for all your queries..
-let usersRef = db.collection('users').setModel('User', model)
+let usersRef = db.collection('users').setModel('User', UserSchema)
 
 usersRef.insertOne(doc)
-  .then()
-  .catch()
+  .then(res => console.log(res))
+  .catch(e = console.log(e))
 
 ```
+
 
 **[back to top](#readme)**
 
