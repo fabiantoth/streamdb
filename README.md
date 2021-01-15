@@ -277,7 +277,7 @@ Each **Collection directory** contains:
 1. One **``collectionName.meta.json``** file
 2. The **``store.[#].json``** files (split up and incremented automatically)
 
-Whenever the data in a single store file reaches your set storeMax value, a new store file split occurs and is incremented starting at 0. The data reads from all store files as if it was just 1 single collection file.
+Whenever the data in a single store file reaches your set storeMax value, a new store file split occurs and is incremented starting at 0. The data reads from all store files as if it was just 1 single collection file.  
 <br>
 
 ### The db meta file
@@ -315,7 +315,7 @@ The dbMeta is generated when you create the db, contains path information, colle
 }
 
 </pre>
-  <br>
+
 </details>  
 
 <br>
@@ -372,7 +372,7 @@ The meta file contains path information, store size, number of stores, validatio
 }
 
 </pre>
-<br>
+
 </details>  
 
 <br>
