@@ -15,9 +15,8 @@
 - Basic Geo-Search support
 
 ## Table of Contents
-- [Getting Started](#getting-started)
-  - [Installation](#install)
-  - [2-Minute Quickstart](#2-minute-quickstart)
+- [Install](#install)
+- [2-Minute Quickstart](#2-minute-quickstart)
 - [Directories Overview](#directories-overview)
 - [Schemas](#schemas)
   - [The Models Directory](#the-models-directory)
@@ -34,7 +33,6 @@
 - <a target="_blank" href="CHANGELOG.md">CHANGELOG (new!)</a>
 
 
-## Getting Started
 
 ## Install:
 
