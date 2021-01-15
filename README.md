@@ -278,8 +278,9 @@ Each **Collection directory** contains:
 2. The **``store.[#].json``** files (split up and incremented automatically)
 
 Whenever the data in a single store file reaches your set storeMax value, a new store file split occurs and is incremented starting at 0. The data reads from all store files as if it was just 1 single collection file.
+<br>
 
-### 1. The `dbMeta` File
+### The db meta file
 
 The dbMeta is generated when you create the db, contains path information, collections, and storeMax and validation model default values.  
 
@@ -317,7 +318,9 @@ The dbMeta is generated when you create the db, contains path information, colle
   <br>
 </details>  
 
-### 2. The `/api` (or `/controllers`) Directory  
+<br>
+
+### The /api (or /controllers) directory  
 
 The routes directory contains the router controller, and if `initRoutes` is set to `true`, they will be automatically generated into this folder. The default name is `‘api’`, however you could rename it by setting the `routesDir` value in the db settings.  
 
@@ -331,7 +334,9 @@ There are 2 router templates from which router files are generated, one for the 
 
 > See the [collection.js Router Template](/blob/main/lib/templates/col-router-template.js).  
 
-### 3. The `/collection` Directory  
+<br>
+
+### The /collection directory  
 
 This is where your data is stored. Each collection receives its own directory where the store files containing the data, and the collection meta file will be generated.  
 This is the only directory/file setup that isn’t customizable. You may however edit the files themselves.  
@@ -370,11 +375,13 @@ The meta file contains path information, store size, number of stores, validatio
 <br>
 </details>  
 
-### 4. The `/models` Directory  
+<br>
+
+### The /models directory  
 
 Lastly, you have the models directory. If `initSchemas: true`, this is where the model files will be generated with a starting schema scaffold you will need to edit based on the desired model for your documents.  
 
-
+<br>
 
 ### API Routes Overview
 
@@ -390,58 +397,7 @@ Collection names are automatically camel-cased (`members-group` becomes `members
 
 **\*\*\*Do NOT change the naming of the files** manually, as the model/collection file names are used in locating each other based on this plural/singular relationship. If you do not have automated route/model generation, you will need to make sure your file/collection/model naming adheres to this convention.  
 
-If you are unsure, best to test generating a few test collections/models to get the idea around naming if you want to manually create your files.
-
-Here is what the **db router** file looks like:
-
-```js
-const express = require('express')
-const streamDb = require('streamdb')
-const db = new streamDb.DB('streamDB')
-
-const router = new express.Router()
-
-// @desc        Create a new collection
-// @route       POST /api/db/:name
-// @access      Public
-router.post('/:name', async (req, res) => {
-    const collection = req.params.name
-    const settings = req.body
-
-    try {
-        db.addCollection(`${collection}`, settings)
-            .then(data => {
-                res.send(data)
-            })
-            .catch(e => {
-                res.send(e)
-            })
-    } catch (e) {
-        res.status(500).send(e)
-    }
-  })
-
-// @desc        Remove a collection
-// @route       DELETE /api/db/:name
-// @access      Public
-router.delete('/:name', async (req, res) => {
-    const collection = req.params.name
-
-    try {
-        db.dropCollection(`${collection}`)
-            .then(data => {
-                res.send(data)
-            })
-            .catch(e => {
-                res.send(e)
-            })
-    } catch (e) {
-        res.status(500).send(e)
-    }
-  })
-
-module.exports = router
-```
+If you are unsure, best to test generating a few test collections/models to get the idea around naming if you want to manually create your files.  
 
 You may of course edit and modify or add routes/middleware as you wish (just keep them all in the same file). These are all simple Express router files, check out their documentation for customizing and handling this part.
 
@@ -460,61 +416,7 @@ Each new collection comes with the following basic routes:
 
 These are just simple starter routes. You may add/remove/use/or improve them as you wish, it is your app, and your routes - do as you please (except changing the file name)
 
-### Collection Model/Validation Settings
-> See the **2 available variations** for [Validation vs. Model](#collection-settings-options) collection settings
 
-### Database Metafile:
-
-```js
-// sample newly created 'streamDB' db json meta file
-{
-  "dbName": "streamDB",                       // db name                                  [default='streamDB']
-  "dbPath": "./streamDB",                     // db directory path
-  "metaPath": "./streamDB/streamDB.meta.json",  // location of the db meta file
-  "storePath": "./streamDB/collections",      // location of all collections
-  "routesPath": "./streamDB/api",             // location of api routes
-  "modelsPath": "./streamDB/models",          // location of schema models
-  "initRoutes": true,                         // automatically scaffold API routes          [def=true] 
-  "initSchemas": false,                       // automatically scaffold models              [def=false]
-  "routesAutoDelete": true,                   // automatically delete routes on col delete  [def=true]
-  "modelsAutoDelete": false,                  // automatically delete models on col delete  [def=false]
-  "storesMax": 131072,                        // max store file size before split           [def=131072]
-  "total": 0,                                 // total # of collections
-  "routes": [                         
-    "db.js"                                 // all current routes (db route automatically created with db
-  ],
-  "collections": []                         // all current collections
-}
-```
-
-### Collection Metafiles:
-
-```js
-// sample newly created 'users' collection json meta file
-{
-  "colName": "users",                                         // collection name
-  "metaPath": "./streamDB/collections/users/users.meta.json", // col meta file location
-  "colPath": "./streamDB/collections/users",                  // col directory location
-  "storeMax": 131072,                                         // max store file size before split  [def=dbMetaMax]  
-  "target": "./streamDB/collections/users/users.0.json",      // current target new docs are written to
-  "store": [                                                // store data
-    {
-      "$id": 0,                                             // store #
-      "size": 2,                                              // total file size in bytes
-      "path": "./streamDB/collections/users/users.0.json",    // store location
-      "documents": []                                         // all ids in this store
-    }
-  ],
-  "model": {                                                // validation model
-    "type": "schema",                                         // (example of schema $incr model)
-    "id": "$incr",                                            // id type
-    "name": "User",                                           // model name
-    "path": "./streamDB/models/User.js"                       // model location
-    "idCount": 0,                                             // curr id count
-    "idMaxCount": 10000                                       // max id count for this collection
-  }
-}
-```
 
 **[back to top](#readme)**
 
