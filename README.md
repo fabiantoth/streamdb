@@ -19,6 +19,7 @@
 - [2-Minute Quickstart](#2-minute-quickstart)
 - [Directories Overview](#directories-overview)
 - [DB Configuration](#db-configuration)
+- [Collections](#collections)
 - [Schemas](#schemas)
   - [The Models Directory](#the-models-directory)
   - [The Document Model](#the-document-model)
@@ -492,20 +493,45 @@ To drop a collection send a DELETE request with the name of the collection in th
 
 These files are simple ON PURPOSE, built with the familiar Express framework, and left for you to edit, modify, or add routes & middleware as you please (the endpoints must remain in this file).  
 
-**What you need to know**  
 
-1. You don’t have to use http requests if you don’t want to
-2. You can turn off route scaffolding by setting `initRoutes`/`routesAutoDelete` to `false` (although not required).
-3. If you wish to rename the `db.js` controller, make sure to also update the file name in the `routes` array in the db meta file.
-4. The `/collections` and `/models` directory names must not be altered.
-5.  The `/models` directory may remain empty if you do not wish to use schemas, but don’t delete it.
+### On Collection Naming:  
 
-#### A Note on Collection Naming:
-Collection names are automatically camel-cased (`members-group` becomes `membersGroup`, etc). When creating your collections and you plan on utilizing schemas, try to create plural collection names. For example, `users` collection becomes `User` model (as well as file name). However, if you do not use a plural collection name, for example `group`, the model name will become `GroupModel`.  
+Collection names and resulting folder/file names will be **camel-cased** (`group-members` becomes `groupMembers`, etc).  
 
-**\*\*\*Do NOT change the naming of the files** manually, as the model/collection file names are used in locating each other based on this plural/singular relationship. If you do not have automated route/model generation, you will need to make sure your file/collection/model naming adheres to this convention.  
 
-If you are unsure, best to test generating a few test collections/models to get the idea around naming if you want to manually create your files.  
+1. If you plan on utilizing schemas, try to create <strong><em>plural collection names</em></strong>.  
+	1. **Ex:** `users` collection becomes `User` model (as well as file name).  
+2. If name plurality isn't recognized, the model/file will become collection name (capitalized) + `Model`.  
+	1. **Ex:** naming your collection `group` (singular), will result in the model and file name, `GroupModel` and `models/GroupModel.js`.   
+3. **Do not change the model OR file name** - the model/collection file names are used interchangeably to locate each other based on this plural/singular relationship.  
+
+> *You do not have to remember this* **IF** `initSchema` is set to `true`.
+
+If your validation model type is `'schema'` AND you do NOT have automated model generation, attempting to run any queries without a corresponding Schema Model will *result in an error*.  
+
+You will need to make sure the model file exists, and that your file/collection/model naming adheres to this convention.
+
+**Alternatively...**  
+
+You have the option to manually set and circumvent any existing schema model with a custom schema object, chained to your collection method with `setModel()`.  
+
+> See how to [Set A Custom Schema](#set-custom-schema-model)  
+
+
+###  A Few Last Words About Your New DB
+
+1. You don’t have to use http requests to manage your data if you don’t want to...or schemas.
+2. You can turn off route scaffolding by setting `initRoutes`/`routesAutoDelete` to `false` (but it isn't necessary).
+3. The `/collections` and `/models` directories must not be altered (leave the `/models` directory empty if you do not wish to use schemas, do not delete it).
+4. Editing or even pasting in file contents is a normal and necessary part of the workflow, but manually altering directory structures, such as adding, deleting, or renaming files, isn't recommended (although possible).
+5. If you wish to rename the `db.js` controller (the only one you may safely alter manually), make sure to also update the file name in the `routes` array in the db meta file.
+6. When in doubt, it takes about 15 seconds to delete the entire db folder and start over (which is a beautiful experience)  
+
+
+**[back to top](#readme)**  
+
+
+## Collections
 
 
 ### Starter Collection Routes:
@@ -526,7 +552,7 @@ These are just simple starter routes. You may add/remove/use/or improve them as 
 **[back to top](#readme)**
 
 
-# Schemas
+## Schemas
 
 If you choose to work with schema models, whether it's for more comprehensive validation, or to better organize your document data and relationships, you will need to decide:
 
