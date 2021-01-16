@@ -377,9 +377,50 @@ The meta file contains path information, store size, number of stores, validatio
 
 
 
-### 2. The Models Directory:   
+### 4. The Models Directory:   
 
 Lastly, you have the models directory. If `initSchemas: true`, this is where the model files will be generated with a starting schema scaffold you will need to edit based on the desired model for your documents.  
+
+
+<details>
+  <summary>See example of a <strong>Schema Model file</strong></summary>
+<br>
+
+```js
+// User Model
+const streamDb = require('streamdb')
+const Schema = streamDb.Schema
+
+const User = new Schema({
+    id: streamDb.Types.$incr,
+    name: {
+    	type: String,
+	required: true,
+	capitalize: true
+    },
+    age: {
+    	type: Number,
+	min: 18,
+	required: true
+    },
+    active: {
+    	type: Boolean,
+	default: false
+    },
+    joined: Date
+}, 
+    {
+        strict: false,
+        timestamps: {
+            created_at: true,
+            updated_at: true
+    }
+})
+
+module.exports = streamDb.model('User', User)
+```
+
+</details> 
 
 
 **[back to top](#readme)**
