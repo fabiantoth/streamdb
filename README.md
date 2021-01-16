@@ -18,6 +18,7 @@
 - [Install](#install)
 - [2-Minute Quickstart](#2-minute-quickstart)
 - [Directories Overview](#directories-overview)
+- [DB Configuration](#db-configuration)
 - [Schemas](#schemas)
   - [The Models Directory](#the-models-directory)
   - [The Document Model](#the-document-model)
@@ -380,16 +381,83 @@ The meta file contains path information, store size, number of stores, validatio
 
 Lastly, you have the models directory. If `initSchemas: true`, this is where the model files will be generated with a starting schema scaffold you will need to edit based on the desired model for your documents.  
 
-<br>
 
-### API Routes Overview
+**[back to top](#readme)**
 
-All routes are created and go in the `/api` (or your chosen routesDir name) directory. When you setup your db for the first time, the first router to be scaffolded is the db router. At this point, you may actually launch your server and start creating collections and adding documents by sending requests to the db endpoint.  
 
-The db router comes with 2 scaffolded routes:
+## DB Configuration
 
-* A POST route: **`/api/db/:name`:** Create a new collection by sending a POST request with the name of the collection in the param and a settings object in the request body
-* A DELETE route: **`/api/db/:name`:** Send a DELETE request with the collection name to drop the collection
+Setting up a new db requires you to run `createDb()` only once. You may use the default settings as shown in the Quickstart, or you can specify which parameters you wish to change.    
+
+You may also edit your settings *directly in the db meta file* after you have created the db.  
+
+Here is an example containing all the available settings with their default values and available options:  
+
+```js
+const streamDb = require('streamdb')
+
+streamDb.createDb({
+  dbName: 'streamDB',		      // db name
+  storesMax: 131072,		      // default store max/file  
+  initRoutes: true, 		      // scaffold router files/new collection
+  initSchemas: false,		      // scaffold model files/new collection
+  routesAutoDelete: true, 	  // delete routers when dropping collection
+  modelsAutoDelete: false, 	  // delete models when dropping collection
+  routesDir: 'api', 		      // base dir name for your routes
+  defaultValidation: {
+	  type: ‘default’,		// ‘default’ or ‘schema’ 
+	  id: ‘$incr’,		    // ‘$incr’ or ‘$uid’
+	  maxValue: 10000		  // set idMaxCount(‘$incr’) or uidLength(‘$uid’)
+  }
+})
+.then(res => console.log(res))
+.catch(e => console.log(e))
+```  
+
+### defaultValidation (*new*)
+
+The newest feature as of `v0.0.7` is the ability to set a `defaultValidation` in the db settings so that every new collection will automatically have the same configuration. This field corresponds to the `model` field in collection settings and will populate it in the collection meta.  
+
+Any collection settings you set in the `model` field when adding a new collection will override the db defaults you have set if you wish to customize collection settings.  
+
+**NOTE:** the db `defaultValidation` object is different than the collection `model` settings in that it only takes 3 fields, and has a new `maxValue`. The (min, max) values will be based on the defaults for each id type:  
+
+- $incr - idCount(0)
+- $uid - minLength(6)
+
+If you do not specify a `maxValue`, then the default maximum values for each id type will be used:
+
+- $incr - idMaxCount(10000)
+- $uid - uidLength(11)  
+
+
+> See the [API documentation for createDb(settings)](#-streamdbcreatedbsettings).  
+
+
+
+### Starter DB Routes
+
+Once you have created your db, the `db.js` router file is scaffolded for you automatically (regardless of your `initRoutes` settings), and you may [launch the server](#launching-db-server) and directly send post/delete requests to add/remove collections at `dbName/api/db`.  
+
+The db router comes with 2 simple routes:  
+
+* **`POST /api/db/:name`:** ------- Create a new collection
+* **`DELETE /api/db/:name`:** ---- Drop/delete a collection 
+
+To add a new collection send a POST request with the name of the new collection in the param and a settings object in the request body (req.body).  
+To drop a collection send a DELETE request with the name of the collection in the param.  
+
+> Check out the [Express routing documentation](https://expressjs.com/en/guide/routing.html) to learn more.  
+
+These files are simple ON PURPOSE, built with the familiar Express framework, and left for you to edit, modify, or add routes & middleware as you please (the endpoints must remain in this file).  
+
+**What you need to know**  
+
+1. You don’t have to use http requests if you don’t want to
+2. You can turn off route scaffolding by setting `initRoutes`/`routesAutoDelete` to `false` (although not required).
+3. If you wish to rename the `db.js` controller, make sure to also update the file name in the `routes` array in the db meta file.
+4. The `/collections` and `/models` directory names must not be altered.
+5.  The `/models` directory may remain empty if you do not wish to use schemas, but don’t delete it.
 
 #### A Note on Collection Naming:
 Collection names are automatically camel-cased (`members-group` becomes `membersGroup`, etc). When creating your collections and you plan on utilizing schemas, try to create plural collection names. For example, `users` collection becomes `User` model (as well as file name). However, if you do not use a plural collection name, for example `group`, the model name will become `GroupModel`.  
@@ -398,9 +466,6 @@ Collection names are automatically camel-cased (`members-group` becomes `members
 
 If you are unsure, best to test generating a few test collections/models to get the idea around naming if you want to manually create your files.  
 
-You may of course edit and modify or add routes/middleware as you wish (just keep them all in the same file). These are all simple Express router files, check out their documentation for customizing and handling this part.
-
-These files are simple ON PURPOSE, built with familiar Express framework and left for you to do with as you please.
 
 ### Starter Collection Routes:
 
