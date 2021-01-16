@@ -288,7 +288,8 @@ The dbMeta is generated when you create the db, contains path information, colle
 <details>
   <summary>See example of a <strong>database meta file</strong></summary>
 <br>
-<pre>
+	
+```js
 // sample newly created 'streamDB' db json meta file
 {
   "dbName": "streamDB",                       // db name                                  [default='streamDB']
@@ -314,8 +315,7 @@ The dbMeta is generated when you create the db, contains path information, colle
     }                                        // the default min values are 0 for $incr, and 6 for $uid
 
 }
-
-</pre>
+```
 
 </details>   
 
@@ -345,7 +345,8 @@ The meta file contains path information, store size, number of stores, validatio
 <details>
   <summary>See example of a <strong>Collection meta file</strong></summary>
 <br>
-<pre>
+
+```js
 // sample newly created 'users' collection json meta file
 {
   "colName": "users",                                         // collection name
@@ -370,8 +371,7 @@ The meta file contains path information, store size, number of stores, validatio
     "idMaxCount": 10000                                       // max id count for this collection
   }
 }
-
-</pre>
+```
 
 </details>  
 
@@ -404,7 +404,7 @@ streamDb.createDb({
   routesAutoDelete: true, 	  // delete routers when dropping collection
   modelsAutoDelete: false, 	  // delete models when dropping collection
   routesDir: 'api', 		      // base dir name for your routes
-  defaultValidation: {
+  defaultModel: {
 	  type: ‘default’,		// ‘default’ or ‘schema’ 
 	  id: ‘$incr’,		    // ‘$incr’ or ‘$uid’
 	  maxValue: 10000		  // set idMaxCount(‘$incr’) or uidLength(‘$uid’)
@@ -414,13 +414,13 @@ streamDb.createDb({
 .catch(e => console.log(e))
 ```  
 
-### defaultValidation (*new*)
+### defaultModel (*new*)
 
-The newest feature as of `v0.0.7` is the ability to set a `defaultValidation` in the db settings so that every new collection will automatically have the same configuration. This field corresponds to the `model` field in collection settings and will populate it in the collection meta.  
+The newest feature as of `v0.0.7` is the ability to set a `defaultModel` in the db settings so that every new collection will automatically have the same configuration. This field corresponds to the `model` field in collection settings and will populate it in the collection meta.  
 
 Any collection settings you set in the `model` field when adding a new collection will override the db defaults you have set if you wish to customize collection settings.  
 
-**NOTE:** the db `defaultValidation` object is different than the collection `model` settings in that it only takes 3 fields, and has a new `maxValue`. The (min, max) values will be based on the defaults for each id type:  
+**NOTE:** the db `defaultModel` object is different than the collection `model` settings in that it only takes 3 fields, and has a new `maxValue`. The (min, max) values will be based on the defaults for each id type:  
 
 - $incr - idCount(0)
 - $uid - minLength(6)
@@ -765,9 +765,17 @@ All settings are optional and have the following (default) values:
 * **`initSchemas (false)`:** set to true to automatically scaffold models for each collection
 * **`routesAutoDelete (true)`:** set to false if you do not wish to automatically delete api routes when you delete collection through the removeCollection() api
 * **`modelsAutoDelete (false)`:** set to true to automatically delete model files when you delete collection through the removeCollection() api
-* **`routesDir ('api')`:** name your base api router directory name /streamdb/api/ 
+* **`routesDir ('api')`:** name your base api router directory name `localhost:3000/api/collection` 
+* **`defaultModel`:** 
+	* **`type ('default')`:** 'default' means no validation, set to 'schema' if you wish to define schema models to validate your docs
+	* **`id ('$incr')`:** choose auto-increment number id type, or set to $uid to generate/validate id field as strings
+	* **`maxValue (10000)`:** set the max string length ($uid), or maximum count ($incr)  
 
-This is equivalent to:
+
+
+<details>
+  <summary>click here to see the <strong>code equivalent:</strong></summary>
+<br>
 
 ```js
 const streamDb = require('streamdb')
@@ -779,9 +787,16 @@ streamDb.createDb({
   initSchemas: false,
   routesAutoDelete: true, 
   modelsAutoDelete: false, 
-  routesDir: 'api' 
+  routesDir: 'api',
+  defaultModel: {
+  	type: 'default',
+	id: '$incr',
+	maxValue: 10000
+  }
 })
 ```
+</details>  
+
 
 Once you have created your db, the db routes are automatically created and you may [launch the server](#launching-db-server) and directly send post/delete requests to add/remove collections at `dbName/api/db`.
 
