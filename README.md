@@ -533,7 +533,7 @@ You have the option to manually set and circumvent any existing schema model wit
 
 ## Collections
 
-At the heart of this project is the collections data store (`/collections`).  
+At the heart of the db is the collections data store (`/collections`).  
 
 It sits (suitably) between the remote access interface (`/api`), and the means to give some shape to your data that adheres to a set of stricter rules and defined relationships (`/models`), thereby making it a much more useful structure.  
 
@@ -554,7 +554,7 @@ Collection settings will be based on your db settings in the db meta file, but y
 
 Each new collection comes with the following basic routes:
 
-* **`GET /api/collection/_q/`:** ----- Run compound queries, comes with added `chainQuery()`, and `whereArray()` helper methods 
+* **`GET /api/collection/_q/`:** ----- Run compound queries, comes with added `chainQuery()`, and `filterArray()` helper methods 
 * **`GET /api/collection/:id`:** ----- Get document by id
 * **`GET /api/collection`:** --------- Get all documents in collection
 * **`POST /api/collection`:** -------- Insert many documents into collection
@@ -563,6 +563,7 @@ Each new collection comes with the following basic routes:
 
 These are just simple starter routes. You may add/remove/use/or improve them as you wish, it is your app, and your routes - do as you please (except changing the file name)
 
+> See the [collection.js Router Template](/lib/templates/col-router-template.js).  
 
 
 **[back to top](#readme)**
