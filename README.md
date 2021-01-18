@@ -533,6 +533,22 @@ You have the option to manually set and circumvent any existing schema model wit
 
 ## Collections
 
+At the heart of this project is the collections data store (`/collections`).  
+
+It sits (suitably) between the remote access interface (`/api`), and the means to give some shape to your data that adheres to a set of stricter rules and defined relationships (`/models`), thereby making it a much more useful structure.  
+
+From a development-workflow standpoint, you will probably spend the least amount of time editing files directly in this folder.  
+
+- The collection meta file gives a good high level overview of the collection data, size, and settings. 
+- Check store files to ensure data is being added and updated correctly 
+	- You can add/edit data directly (mind the id field requirements).
+	- Beware of your storeMax limits - if the data you wish to add is close to or surpasses it, use collection methods/calls instead.
+
+### Customizing Settings: 
+
+Collection settings will be based on your db settings in the db meta file, but you may customize the storeMax value, and validation model settings.  
+
+> See documentation for [Collection Settings Options](#collection-settings-options)
 
 ### Starter Collection Routes:
 
