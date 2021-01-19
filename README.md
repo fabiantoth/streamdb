@@ -21,10 +21,13 @@
 - [DB Configuration](#db-configuration)
 - [Collections](#collections)
 - [Schemas](#schemas)
-  - [The Models Directory](#the-models-directory)
-  - [The Document Model](#the-document-model)
-  - [Schema Types](#schema-types)
-  - [Schema Rules](#schema-rules)
+  - [Generating Models](#generating-models)
+  - [Data Types](#data-types)
+  - [Rules & Field Parameters](#rules-field-parameters)
+  - [$ref Objects](#ref-objects)
+  - [Nested Objects](#nested-objects)
+  - [Embedded Documents](#embedded-documents)
+  - [Array Embeds](#array-embeds)
 - [API](#api)
   - [DB Methods](#db-methods)
     - [Launching Server](#launching-db-server)
@@ -634,51 +637,36 @@ These are just simple starter routes. You may add/remove/use/or improve them as 
 **[back to top](#readme)**
 
 
-## Schemas
+## Schemas  
 
-If you choose to work with schema models, whether it's for more comprehensive validation, or to better organize your document data and relationships, you will need to decide:
+The features were largely inspired by the popular [Mongoose ODM library](https://mongoosejs.com/), including the settings, the field types, and options. There are a few differences, however, and the features are limited to validating documents with no middleware, hooks, or functions - just simple validation rules and parameters.  
 
-1. If you wish your model files to be automatically scaffolded (recommended)
-2. If you wish to have them automatically deleted when you drop a collection
+If you choose to work with schema models, whether it's for more comprehensive validation, or to better organize your document data and relationships you will need to decide:
+
+1. If you wish your model files to be automatically scaffolded, set `initSchemas` to `true` in db settings (recommended).
+2. If you wish to have them automatically deleted when you drop a collection, set `modelsAutoDelete` to `true` in db settings.
 3. Using an incremented number or string uid
 
-Numbers 1 & 2 are both addressed when you first create your db by setting `initSchemas` and `modlesAutoDelete` to true or false:
+Example:
 
 ```js
-streamDb.createDb({
+streamDB.createDb({
   initSchemas: true,
-  modelsAutoDelete: true
+  modelsAutoDelete: true,
+  defaultModel: {
+	type: ‘schema’,
+	id: ‘$incr’,	// or ‘$uid’
+	maxValue: 11
 })
 ```
 
-- Deleting models automatically requires `initSchemas` to be set to true. 
-- It is preferable you set both fields, as well as leave `initRoutes` default settings to true, because files and collections are searched interchangeably based on specific name conventions (i.e., plural 'users' collection becomes a singular 'User' model and vice versa). 
-- If you choose to manually setup the files you will have to follow that naming convention, as well as camel-casing collection directory and file names
+If you plan on using routes, It is preferable you also leave `initRoutes` default setting to `true`.
 
+### Generating Models
 
-**[back to top](#readme)**
+With the above db settings, creating a new collection (ex, ‘users’ ) will create the api/users.js route, the collections/users directory assets, and the models/User.js model. 
 
-
-## The Models Directory
-
-The 3rd step is declared when adding a collection, in the collection settings:
-
-```js
-const settings = {
-  model: {
-    type: 'schema',
-    id: '$incr',       // or $uid with uidLength, minLength
-    idCount: 0,          // default: 0
-    idMaxCount: 10000    // default: 10000
-  }
-}
-
-db.addCollection('users', settings)
-  .then(res => console.log(res))
-  .catch(e => console.log(e))
-```
-
-This will scaffold a User model under the models folder and the directory tree will now be:
+The directory tree will now look like this:  
 
 <pre>
 ─ streamDB
@@ -698,12 +686,9 @@ This will scaffold a User model under the models folder and the directory tree w
 </pre>
 
 
-**[back to top](#readme)**
+#### Starter Model Template
 
-
-## The Document Model
-
-Aside from the collection directory, files, and routers, executing the code above will generate a new file in the models directory: `testDB/models/User.js` and it will have the following starter template you may add to and edit:
+Continuing with the above example, the User model will have the following starter template you may add to and edit:  
 
 ```js
 // User Model
@@ -722,19 +707,16 @@ const User = new Schema({
 })
 
 module.exports = streamDb.model('User', User)
-```
-
-### Schema Settings
-The features were largely modeled after the Mongoose ORM library, including the settings, the field types, and options. There are a few differences, and the features are limited to validating documents with no middleware, hooks, or functions - just simple validation rules and parameters.
+```  
 
 - The id field isn't technically required, as it will be automatically generated and min/max rules will be based on the colMeta model settings.
-- When referencing id fields inside of `$ref` objects, use `Number` or `String` as the value instead of `$incr` or `$uid` types (use id Type only as the main document id)
-- In the settings argument: 
-  - you may set the model to `strict: true` if you wish no fields that are not set to be added when creating/updating documents
-  - leave either timestamp field to true to automatically generate/update them or set to false if you do not wish to add them
-  - you may remove the entire settings object if you do not wish to have those settings (equivalent to setting them all to false)
+- When referencing id fields inside of $ref objects, use Number or String as the value instead of $incr or $uid types (use id Type only as the main document id)
+- In document settings (2nd argument):
+	- you may set the model to strict: true if you wish no fields that are not set to be added when creating/updating documents.
+	- leave either timestamp field to true to automatically generate/update them or set to false if you do not wish to add them.
+	- you may remove the entire settings object if you do not wish to have those settings (equivalent to setting them all to false)
 
-## Schema Types 
+### Data Types
 
 Most types you are probably familiar with:
 
@@ -770,10 +752,7 @@ Or with the 'type' keyword inside an object with the rule parameters:
 }
 ```
 
-**[back to top](#readme)**
-
-
-## Schema Rules
+### Rules & Field Parameters
 
 Here the allowed keyword fields for each schema type:
 
@@ -792,7 +771,7 @@ Here the allowed keyword fields for each schema type:
 }
 ```
 
-### Field Parameters
+#### Field Parameters
 
 * **`default`:** set default value (accepts `null`, otherwise must match the field 'type')
 * **`required`:** set to true to require field
@@ -861,6 +840,7 @@ const Detail = require('./Detail')  // import the model
 **NOTE:** 
 - Updating the child documents separately will not update the parent document data, you will need to run a separate call
 - Updating the child document data with a parent document update WILL also update all embedded documents
+
 
 ### Array Embeds
 Array embeds fall into the following options:
