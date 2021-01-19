@@ -31,6 +31,7 @@
 - [API](#api)
   - [DB Methods](#db-methods)
     - [Launching Server](#launching-db-server)
+    - [Request Methods Helpers](#request-methods-helpers)
     - [DB Class](#db-class)
     - [Custom Model](#set-custom-schema-model)
   - [Collection Methods](#collection-methods)
@@ -953,6 +954,38 @@ Returns:
 - The model resource object
 
 
+## Launching DB Server
+
+### $ streamDb.server('dbName', 'routesDir', port, corsOptions)
+
+Launch your db server as a standalone by providing a port address or leave it empty if you wish to mount the routes on your express server. 
+
+Params:
+- `dbName` **{String}**: (required) db directory name
+- `routesDir` **{String}**: (required) directory name of your routes
+- `port` **{Number}**: (optional) port address to launch server and listen to
+- `corsOptions` **{Object}**: (optional) object containing custom options for the cors lib
+
+Returns: 
+- If port # is provided it returns the Express `server` instance and launches/listens to server at provided port
+- If port # is not provided it returns the `router` instance so you can mount it in your app (does not launch server)
+
+The default corsOptions are:
+
+```js
+const defaultOpts = {
+        origin: '*',
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        preflightContinue: false,
+        optionsSuccessStatus: 200
+      }
+```
+
+**NOTE:**  if you wish to pass your own custom options and not pass a port #, set port field to null : `('dbName', 'routesDir', null, corsOptions)`
+
+
+## Request Methods Helpers
+
 ### $ streamDb.chainQuery(colRef, query)
 
 A helper method added to chain req queries 
@@ -1016,14 +1049,14 @@ A helper method to add a simple array filter to the query chain
  
 #### Filtering object arrays:  
 
- **`/api/colName/_q/?whereArray=articles,[title,=,"article title"]`**  
+ *`/api/colName/_q/?whereArray=articles,[title,=,"article title"]`*  
 
 Translates to api call:  
 `where('articles, (arr) => arr.filter(item => item.title == 'article title')`  
 
 #### Filtering values with `$item` keyword: 
 
-**`/api/colName/_q/?whereArray=privilages,[$item,=,admin]`**  
+*`/api/colName/_q/?whereArray=privilages,[$item,=,admin]`*  
 
 Translates to api call  
 `where('privilages, (arr) => arr.filter(item => item == 'admin')`  
@@ -1040,37 +1073,6 @@ Returns:
 > **NOTE:** This method is deliberately separated, as you may construct your own array lookup methods. [See whereArrayParams](https://github.com/fabiantoth/streamdb/blob/ef21f2bfe016630ddb386289818856a30f164d7c/lib/api/chainQuery.js#L22)
 
 
-**[back to top](#readme)**
-
-
-## Launching DB Server
-
-### $ streamDb.server('dbName', 'routesDir', port, corsOptions)
-
-Launch your db server as a standalone by providing a port address or leave it empty if you wish to mount the routes on your express server. 
-
-Params:
-- `dbName` **{String}**: (required) db directory name
-- `routesDir` **{String}**: (required) directory name of your routes
-- `port` **{Number}**: (optional) port address to launch server and listen to
-- `corsOptions` **{Object}**: (optional) object containing custom options for the cors lib
-
-Returns: 
-- If port # is provided it returns the Express `server` instance and launches/listens to server at provided port
-- If port # is not provided it returns the `router` instance so you can mount it in your app (does not launch server)
-
-The default corsOptions are:
-
-```js
-const defaultOpts = {
-        origin: '*',
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-        preflightContinue: false,
-        optionsSuccessStatus: 200
-      }
-```
-
-**NOTE:**  if you wish to pass your own custom options and not pass a port #, set port field to null : `('dbName', 'routesDir', null, corsOptions)`
 
 ### Example of integrating into Express app:
 
