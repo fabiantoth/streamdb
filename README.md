@@ -32,8 +32,8 @@
   - [DB Methods](#db-methods)
     - [Launching Server](#launching-db-server)
     - [Request Methods Helpers](#request-methods-helpers)
-    - [DB Class](#db-class)
-    - [Custom Model](#set-custom-schema-model)
+  - [DB Class](#db-class)
+  - [Set Custom Model](#set-custom-schema-model)
   - [Collection Methods](#collection-methods)
   - [Queries & Query Chains](#queries--query-chains)
 - <a target="_blank" href="CHANGELOG.md">CHANGELOG (new!)</a>
