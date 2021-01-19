@@ -23,7 +23,7 @@
 - [Schemas](#schemas)
   - [Generating Models](#generating-models)
   - [Data Types](#data-types)
-  - [Rules & Field Parameters](#rules-field-parameters)
+  - [Rules & Field Parameters](#rules--field-parameters)
   - [$ref Objects](#ref-objects)
   - [Nested Objects](#nested-objects)
   - [Embedded Documents](#embedded-documents)
@@ -819,7 +819,8 @@ Schemas will validate up to one level nested objects:
 }
 ```
 
-### Embedded SchemaDocuments
+### Embedded Documents
+
 Schema documents can be imported and embedded into a schema:
   - The embedded document will be created and inserted in its own collection
   - The document data will be saved along with the embedded doc
