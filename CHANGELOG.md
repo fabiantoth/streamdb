@@ -17,7 +17,7 @@ All notable changes to this project will be documented in this file.
 </details>
 <br>
 
-## Version 0.0.7  - (Jan. 15, 2021)
+## Version 0.0.7  - (Jan. 18, 2021)
 
 - [Added] **[New Feature]:** defaultValidation: can now set default validation model for all collections in db settings and edit in dbMeta
 - [Added] CHANGELOG.md 
