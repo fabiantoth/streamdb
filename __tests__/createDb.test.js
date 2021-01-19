@@ -17,7 +17,12 @@ const defaultMeta = {
     routes: [
         'db.js'
     ],
-    collections: []
+    collections: [],
+    defaultModel: { 
+        type: 'default', 
+        id: '$incr', 
+        maxValue: 10000
+    }
 }
 
 const customSettings = {
@@ -27,7 +32,11 @@ const customSettings = {
     initSchemas: true,
     routesAutoDelete: true, 
     modelsAutoDelete: true, 
-    routesDir: 'api' 
+    routesDir: 'api' ,
+    defaultModel: { 
+        type: 'schema', 
+        id: '$uid'
+    }
 }
 
 const customMeta = {
@@ -46,7 +55,12 @@ const customMeta = {
     routes: [
         'db.js'
     ],
-    collections: []
+    collections: [],
+    defaultModel: { 
+        type: 'schema', 
+        id: '$uid', 
+        maxValue: 11
+    }
 }
 
 afterAll(async (done) => {

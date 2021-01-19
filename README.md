@@ -15,26 +15,30 @@
 - Basic Geo-Search support
 
 ## Table of Contents
-- [Getting Started](#getting-started)
-  - [Installation](#install)
-  - [2-Minute Quickstart](#2-minute-quickstart)
+- [Install](#install)
+- [2-Minute Quickstart](#2-minute-quickstart)
 - [Directories Overview](#directories-overview)
+- [DB Configuration](#db-configuration)
+- [Collections](#collections)
 - [Schemas](#schemas)
-  - [The Models Directory](#the-models-directory)
-  - [The Document Model](#the-document-model)
-  - [Schema Types](#schema-types)
-  - [Schema Rules](#schema-rules)
+  - [Generating Models](#generating-models)
+  - [Data Types](#data-types)
+  - [Rules & Field Parameters](#rules--field-parameters)
+  - [$ref Objects](#ref-objects)
+  - [Nested Objects](#nested-objects)
+  - [Embedded Documents](#embedded-documents)
+  - [Array Embeds](#array-embeds)
 - [API](#api)
   - [DB Methods](#db-methods)
     - [Launching Server](#launching-db-server)
-    - [DB Class](#db-class)
-    - [Custom Model](#set-custom-schema-model)
+    - [Request Methods Helpers](#request-methods-helpers)
+  - [DB Class](#db-class)
+  - [Set Custom Model](#set-custom-schema-model)
   - [Collection Methods](#collection-methods)
   - [Queries & Query Chains](#queries--query-chains)
-  
+- <a target="_blank" href="CHANGELOG.md">CHANGELOG (new!)</a>
 
 
-## Getting Started
 
 ## Install:
 
@@ -80,9 +84,15 @@ Save and run script:
 ```sh
 $ node setup.js
 ```
+ 
 
-This will scaffold the following directory structure in your root directory:
-
+<details>
+  <summary><strong>What you need to know</strong></summary>
+  
+<br>
+  This will scaffold the following directory structure in your root directory:
+<br><br>
+  
 <pre>
 ─ streamDB
     ├── <b>api</b>
@@ -91,14 +101,11 @@ This will scaffold the following directory structure in your root directory:
     ├── <b>models</b>
     └── streamDb.meta.json
 </pre>
-
-
-#### What you need to know
-
-Leaving `createDb()` empty will just scaffold the default settings. 
-
-> See how to change db settings in [DB Settings Options](#db-settings-options). 
-
+  
+  Leaving <code>createDb()</code> empty will just scaffold the default settings.
+<br>
+  <blockquote> See how to change db settings in <a href="#db-settings-options">DB Settings Options</a>. </blockquote>
+</details>
 
 
 ### 2. Create Collection:
@@ -124,7 +131,13 @@ Save and run script:
 $ node run.js
 ``` 
 
-This will update the db directory as follows:
+
+<details>
+  <summary><strong>What you need to know</strong></summary>
+  
+<br>
+  This will update the db directory as follows:
+<br><br>
 
 <pre>
 ─ streamDB
@@ -143,13 +156,12 @@ This will update the db directory as follows:
 
 </pre>
 
+ Passing only 1 argument in <code>addCollection('users')</code> will scaffold the default settings. 
+<br>
 
-#### What you need to know
-
-Passing only 1 argument in `addCollection('users')` will scaffold the default settings. 
-
-> See how to change collection settings in [Collection Settings Options](#collection-settings-options). 
-
+  <blockquote> See how to change collection settings in <a href="#collection-settings-options">Collection Settings Options</a>. </blockquote>
+  
+</details>
 
 
 ### 3. Add Sample Data:
@@ -199,14 +211,23 @@ Save and run script:
 $ node run.js
 ```
 
-If you examine the ``users.0.json`` and ``users.meta.json`` files located in the **`/collections/users`** directory, you will see the new data. 
 
-#### What you need to know
+<details>
+  <summary><strong>What you need to know</strong></summary>
+  
+<br>
+  If you examine the <code>users.0.json</code> and <code>users.meta.json</code> files located in the <code>/collections/users</code> directory, you will see the new data.
+<br><br>
+<ul>
+  <li>The collection data in each json file must remain in an array.</li>
+  <li>All document objects are required to have a unique & valid id field.</li>
+  <li>You may change/edit the data directly in the collection json file, the meta file will update when you run the next query.</li>
+  <li>You may also edit the meta file, but be careful changing settings after adding data.</li>
+  <li>You can always just delete the entire db directory and restart (it's pain free!!)</li>
+</ul>
+  
+</details>
 
-- You may change/edit the data directly in the collection json file, the meta file will update when you run the next query. 
-- However, the collection data must remain in an array and all document objects are required to have a unique & valid id field.
-- You may edit the meta file as well, but keep edits to storeMax values, try not to change other settings after you already have data in collection unless you know what you're doing
-- You can always just delete the entire db directory and restart (it's pain free!!)
 
 ### 3. Launch Server:
 
@@ -228,16 +249,25 @@ Save and launch the server:
 $ node server.js
 ```
 
-#### What you need to know
-
-- The first 2 arguments ('streamDB', & 'api' in this example) are based on the `dbName` and `routesDir` in the db settings. 
-- If you change those 2 default values make sure to replace them when you run `server()`
-
-**That's it!!**
-
 Your new backend is live with endpoints at: 
 - db: ``http://localhost:3000/api/db``
 - users collection: ``http://localhost:3000/api/users``
+
+<details>
+  <summary><strong>What you need to know</strong></summary>
+  
+<br>
+
+<ul>
+  <li>The first 2 arguments ('streamDB', & 'api' in this example) are based on the <code>dbName</code> and <code>routesDir</code> in the db settings.</li>
+  <li>If you change those 2 default values make sure to replace them when you run <code>server()</code>.</li>
+</ul>
+  
+</details>
+
+**That's it!!**
+
+
 
 **[back to top](#readme)**
 
@@ -253,97 +283,17 @@ Each **Collection directory** contains:
 1. One **``collectionName.meta.json``** file
 2. The **``store.[#].json``** files (split up and incremented automatically)
 
-Whenever the data in a single store file reaches your set storeMax value, a new store file split occurs and is incremented starting at 0. The data reads from all store files as if it was just 1 single collection file.
+Whenever the data in a single store file reaches your set storeMax value, a new store file split occurs and is incremented starting at 0. The data reads from all store files as if it was just 1 single collection file.  
+<br>
 
-### API Routes Overview
+### 1. The db.meta.json File:
 
-All routes are created and go in the `/api` (or your chosen routesDir name) directory. When you setup your db for the first time, the first router to be scaffolded is the db router. At this point, you may actually launch your server and start creating collections and adding documents by sending requests to the db endpoint.  
+The dbMeta is generated when you create the db, contains path information, collections, and storeMax and validation model default values.  
 
-The db router comes with 2 scaffolded routes:
-
-* A POST route: **`/api/db/:name`:** Create a new collection by sending a POST request with the name of the collection in the param and a settings object in the request body
-* A DELETE route: **`/api/db/:name`:** Send a DELETE request with the collection name to drop the collection
-
-#### A Note on Collection Naming:
-Collection names are automatically camel-cased (`members-group` becomes `membersGroup`, etc). When creating your collections and you plan on utilizing schemas, try to create plural collection names. For example, `users` collection becomes `User` model (as well as file name). However, if you do not use a plural collection name, for example `group`, the model name will become `GroupModel`.  
-
-**\*\*\*Do NOT change the naming of the files** manually, as the model/collection file names are used in locating each other based on this plural/singular relationship. If you do not have automated route/model generation, you will need to make sure your file/collection/model naming adheres to this convention.  
-
-If you are unsure, best to test generating a few test collections/models to get the idea around naming if you want to manually create your files.
-
-Here is what the **db router** file looks like:
-
-```js
-const express = require('express')
-const streamDb = require('streamdb')
-const db = new streamDb.DB('streamDB')
-
-const router = new express.Router()
-
-// @desc        Create a new collection
-// @route       POST /api/db/:name
-// @access      Public
-router.post('/:name', async (req, res) => {
-    const collection = req.params.name
-    const settings = req.body
-
-    try {
-        db.addCollection(`${collection}`, settings)
-            .then(data => {
-                res.send(data)
-            })
-            .catch(e => {
-                res.send(e)
-            })
-    } catch (e) {
-        res.status(500).send(e)
-    }
-  })
-
-// @desc        Remove a collection
-// @route       DELETE /api/db/:name
-// @access      Public
-router.delete('/:name', async (req, res) => {
-    const collection = req.params.name
-
-    try {
-        db.dropCollection(`${collection}`)
-            .then(data => {
-                res.send(data)
-            })
-            .catch(e => {
-                res.send(e)
-            })
-    } catch (e) {
-        res.status(500).send(e)
-    }
-  })
-
-module.exports = router
-```
-
-You may of course edit and modify or add routes/middleware as you wish (just keep them all in the same file). These are all simple Express router files, check out their documentation for customizing and handling this part.
-
-These files are simple ON PURPOSE, built with familiar Express framework and left for you to do with as you please.
-
-### Starter Collection Routes:
-
-Each new collection comes with the following basic routes:
-
-* **`GET /api/collection/_q/`:** ----- Run compound queries, comes with added `chainQuery()`, and `whereArray()` helper methods 
-* **`GET /api/collection/:id`:** ----- Get document by id
-* **`GET /api/collection`:** --------- Get all documents in collection
-* **`POST /api/collection`:** -------- Insert many documents into collection
-* **`PUT /api/collection`:** --------- Update collection documents
-* **`DELETE /api/collection/:id`:** -- Delete document by id
-
-These are just simple starter routes. You may add/remove/use/or improve them as you wish, it is your app, and your routes - do as you please (except changing the file name)
-
-### Collection Model/Validation Settings
-> See the **2 available variations** for [Validation vs. Model](#collection-settings-options) collection settings
-
-### Database Metafile:
-
+<details>
+  <summary>See example of a <strong>database meta file</strong></summary>
+<br>
+	
 ```js
 // sample newly created 'streamDB' db json meta file
 {
@@ -362,11 +312,44 @@ These are just simple starter routes. You may add/remove/use/or improve them as 
   "routes": [                         
     "db.js"                                 // all current routes (db route automatically created with db
   ],
-  "collections": []                         // all current collections
+  "collections": [],                         // all current collections
+  "defaultModel": {
+         "type": "default",                  // 2 options: ['default', 'schema']          [def='default']
+         "id": "$incr",                      // 2 options: ['$uid', '$incr']              [def='$incr']
+         "maxValue": 10000,                  // if ($incr) sets idMaxCount, if ($uid) sets uidLength (max=36)
+    }                                        // the default min values are 0 for $incr, and 6 for $uid
+
 }
 ```
 
-### Collection Metafiles:
+</details>   
+
+ 
+### 2. The API (controllers) Directory:  
+
+The routes directory contains the router controller, and if `initRoutes` is set to `true`, they will be automatically generated into this folder. The default name is `‘api’`, however you could rename it by setting the `routesDir` value in the db settings.  
+
+This would affect your base API directory name, for example:
+
+`routesDir = ‘testAPI’` would mean your users collection, for instance, would be located at: `/testAPI/users` instead of `/api/users`  
+
+There are 2 router templates from which router files are generated, one for the db (`db.js`) and one for collection (`collectionName.js`) routers.  
+
+> See the [db.js Router Template](/lib/templates/db-router-template.js).  
+
+> See the [collection.js Router Template](/lib/templates/col-router-template.js).  
+
+
+
+### 3. The Collections Directory:    
+
+This is where your data is stored. Each collection receives its own directory where the store files containing the data, and the collection meta file will be generated.  
+This is the only directory/file setup that isn’t customizable. You may however edit the files themselves.  
+The meta file contains path information, store size, number of stores, validation model, and the id of every document that is in that file/store, including a count of incremented id type.  
+
+<details>
+  <summary>See example of a <strong>Collection meta file</strong></summary>
+<br>
 
 ```js
 // sample newly created 'users' collection json meta file
@@ -395,54 +378,296 @@ These are just simple starter routes. You may add/remove/use/or improve them as 
 }
 ```
 
+</details>  
+
+
+
+### 4. The Models Directory:   
+
+Lastly, you have the models directory. If `initSchemas: true`, this is where the model files will be generated with a starting schema scaffold you will need to edit based on the desired model for your documents.  
+
+
+<details>
+  <summary>See example of a <strong>Schema Model file</strong></summary>
+<br>
+
+```js
+// User Model
+const streamDb = require('streamdb')
+const Schema = streamDb.Schema
+
+const User = new Schema({
+    id: streamDb.Types.$incr,
+    name: {
+    	type: String,
+	required: true,
+	capitalize: true
+    },
+    age: {
+    	type: Number,
+	min: 18,
+	required: true
+    },
+    active: {
+    	type: Boolean,
+	default: false
+    },
+    joined: Date
+}, 
+    {
+        strict: false,
+        timestamps: {
+            created_at: true,
+            updated_at: true
+    }
+})
+
+module.exports = streamDb.model('User', User)
+```
+
+</details> 
+
+
 **[back to top](#readme)**
 
 
-# Schemas
+## DB Configuration
 
-If you choose to work with schema models, whether it's for more comprehensive validation, or to better organize your document data and relationships, you will need to decide:
+Setting up a new db requires you to run `createDb()` only once. You may use the default settings as shown in the Quickstart, or you can specify which parameters you wish to change.    
 
-1. If you wish your model files to be automatically scaffolded (recommended)
-2. If you wish to have them automatically deleted when you drop a collection
-3. Using an incremented number or string uid
+You may also edit your settings *directly in the db meta file* after you have created the db.  
 
-Numbers 1 & 2 are both addressed when you first create your db by setting `initSchemas` and `modlesAutoDelete` to true or false:
+Here is an example containing all the available settings with their default values and available options:  
 
 ```js
+const streamDb = require('streamdb')
+
 streamDb.createDb({
+  dbName: 'streamDB',		      // db name
+  storesMax: 131072,		      // default store max/file  
+  initRoutes: true, 		      // scaffold router files/new collection
+  initSchemas: false,		      // scaffold model files/new collection
+  routesAutoDelete: true, 	  // delete routers when dropping collection
+  modelsAutoDelete: false, 	  // delete models when dropping collection
+  routesDir: 'api', 		      // base dir name for your routes
+  defaultModel: {
+	  type: ‘default’,		// ‘default’ or ‘schema’ 
+	  id: ‘$incr’,		    // ‘$incr’ or ‘$uid’
+	  maxValue: 10000		  // set idMaxCount(‘$incr’) or uidLength(‘$uid’)
+  }
+})
+.then(res => console.log(res))
+.catch(e => console.log(e))
+```  
+
+### defaultModel (*new*)
+
+The newest feature as of `v0.0.7` is the ability to set a `defaultModel` in the db settings so that every new collection will automatically have the same configuration. This field corresponds to the `model` field in collection settings and will populate it in the collection meta.  
+
+Any collection settings you set in the `model` field when adding a new collection will override the db defaults you have set if you wish to customize collection settings.  
+
+**NOTE:** the db `defaultModel` object is different than the collection `model` settings in that it only takes 3 fields, and has a new `maxValue`. The (min, max) values will be based on the defaults for each id type:  
+
+- $incr - idCount(0)
+- $uid - minLength(6)
+
+If you do not specify a `maxValue`, then the default maximum values for each id type will be used:
+
+- $incr - idMaxCount(10000)
+- $uid - uidLength(11)  
+
+
+> See the [API documentation for createDb(settings)](#-streamdbcreatedbsettings).  
+
+
+
+### Starter DB Routes
+
+Once you have created your db, the `db.js` router file is scaffolded for you automatically (regardless of your `initRoutes` settings), and you may [launch the server](#launching-db-server) and directly send post/delete requests to add/remove collections at `dbName/api/db`.  
+
+The db router comes with 2 simple routes:  
+
+* **`POST /api/db/:name`:** ------- Create a new collection
+* **`DELETE /api/db/:name`:** ---- Drop/delete a collection 
+
+To add a new collection send a POST request with the name of the new collection in the param and a settings object in the request body (req.body).  
+To drop a collection send a DELETE request with the name of the collection in the param.  
+
+> Check out the [Express routing documentation](https://expressjs.com/en/guide/routing.html) to learn more.  
+
+These files are simple ON PURPOSE, built with the familiar Express framework, and left for you to edit, modify, or add routes & middleware as you please (the endpoints must remain in this file).  
+
+
+### On Collection Naming:  
+
+Collection names and resulting folder/file names will be **camel-cased** (`group-members` becomes `groupMembers`, etc).  
+
+
+1. If you plan on utilizing schemas, try to create <strong><em>plural collection names</em></strong>.  
+	1. **Ex:** `users` collection becomes `User` model (as well as file name).  
+2. If name plurality isn't recognized, the model/file will become collection name (capitalized) + `Model`.  
+	1. **Ex:** naming your collection `group` (singular), will result in the model and file name, `GroupModel` and `models/GroupModel.js`.   
+3. **Do not change the model OR file name** - the model/collection file names are used interchangeably to locate each other based on this plural/singular relationship.  
+
+> *You do not have to remember this* **IF** `initSchema` is set to `true`.
+
+If your validation model type is `'schema'` AND you do NOT have automated model generation, attempting to run any queries without a corresponding Schema Model will *result in an error*.  
+
+You will need to make sure the model file exists, and that your file/collection/model naming adheres to this convention.
+
+**Alternatively...**  
+
+You have the option to manually set and circumvent any existing schema model with a custom schema object, chained to your collection method with `setModel()`.  
+
+> See how to [Set A Custom Schema](#set-custom-schema-model)  
+
+
+###  A Few Words About Your New DB
+
+1. You don’t have to use http requests to manage your data if you don’t want to...or schemas.
+2. You can turn off route scaffolding by setting `initRoutes`/`routesAutoDelete` to `false` (but it isn't necessary).
+3. The `/collections` and `/models` directories must not be altered (leave the `/models` directory empty if you do not wish to use schemas, do not delete it).
+4. Editing or even pasting in file contents is a normal and necessary part of the workflow, but manually altering directory structures, such as adding, deleting, or renaming files, isn't recommended (although possible).
+5. If you wish to rename the `db.js` controller (the only one you may safely alter manually), make sure to also update the file name in the `routes` array in the db meta file.
+6. When in doubt, it takes about 15 seconds to delete the entire db folder and start over (which is a beautiful experience)  
+
+
+**[back to top](#readme)**  
+
+
+## Collections
+
+At the heart of the db is the collections data store (`/collections`).  
+
+It sits (suitably) between the remote access interface (`/api`), and the means to give some shape to your data that adheres to a set of stricter rules and defined relationships (`/models`), thereby making it a much more useful structure.  
+
+From a development-workflow standpoint, you will probably spend the least amount of time editing files directly in this folder.  
+
+- The collection meta file gives a good high level overview of the collection data, size, and settings. 
+- Check store files to ensure data is being added and updated correctly 
+	- You can add/edit data directly (mind the id field requirements).
+	- Beware of your storeMax limits - if the data you wish to add is close to or surpasses it, use collection methods/calls instead.
+
+
+### Custom Settings: 
+
+Collection settings will be based on your db settings in the db meta file, but you may customize the storeMax value, and validation model settings.  
+
+> See documentation for [Collection Settings Options](#collection-settings-options)
+
+
+### Customizing The Validation Model
+There are 2 types of validation models (and 2 types of id):
+
+**Default Validation:** 
+
+* `default ($incr)`: use number id validation only (default setting)
+
+```js
+const defaultSetting = {
+    storeMax: 131072,       // may override default db store max per collection here
+    model: {
+        type: 'default',
+        id: '$incr',
+        idCount: 0,         // the starting point for the id count (default = 0)
+        idMaxCount: 10000   // the max count per collection (default = 10000)
+    }
+}
+
+```
+
+* `default ($uid)`: use string id validation only 
+
+```js
+const defaultSetting2 = {
+    storeMax: 131072,
+    model: {
+        type: 'default',
+        id: '$uid',
+        uidLength: 11,      // default uidLength passed to uid generator
+        minLength: 6        // the min length
+    }
+}
+```
+
+**Schema Validation:** 
+
+* `schema ($incr)`: utilize schema models with an auto incrementing Number id:
+
+```js
+const modelSetting = {
+    storeMax: 131072,
+    model: {
+        type: 'schema',
+        id: '$incr',
+        idCount: 0,         
+        idMaxCount: 10000   
+    }
+}
+```
+
+* `schema ($uid)`: utilize schema models with an auto generated String uid:
+
+```js
+const modelSetting2 = {
+    storeMax: 131072,
+    model: {
+        type: 'schema',
+        id: '$uid',
+        uidLength: 11, 
+        minLength: 6     
+    }
+}
+```
+
+### Starter Collection Routes:
+
+Each new collection comes with the following basic routes:
+
+* **`GET /api/collection/_q/`:** ----- Run compound queries, comes with added `chainQuery()`, and `filterArray()` helper methods 
+* **`GET /api/collection/:id`:** ----- Get document by id
+* **`GET /api/collection`:** --------- Get all documents in collection
+* **`POST /api/collection`:** -------- Insert many documents into collection
+* **`PUT /api/collection`:** --------- Update collection documents
+* **`DELETE /api/collection/:id`:** -- Delete document by id
+
+These are just simple starter routes. You may add/remove/use/or improve them as you wish, it is your app, and your routes - do as you please (except changing the file name)
+
+> See the [collection.js Router Template](/lib/templates/col-router-template.js).  
+
+**[back to top](#readme)**
+
+
+## Schemas  
+
+The features were largely inspired by the popular [Mongoose ODM library](https://mongoosejs.com/), including the settings, the field types, and options. There are a few differences, however, and the features are limited to validating documents with no middleware, hooks, or functions - just simple validation rules and parameters.  
+
+If you choose to work with schema models, whether it's for more comprehensive validation, or to better organize your document data and relationships you will need to decide:
+
+1. If you wish your model files to be automatically scaffolded, set `initSchemas` to `true` in db settings (recommended).
+2. If you wish to have them automatically deleted when you drop a collection, set `modelsAutoDelete` to `true` in db settings.
+3. Using an incremented number or string uid
+
+Example:
+
+```js
+streamDB.createDb({
   initSchemas: true,
-  modelsAutoDelete: true
+  modelsAutoDelete: true,
+  defaultModel: {
+	type: ‘schema’,
+	id: ‘$incr’,	// or ‘$uid’
+	maxValue: 11
 })
 ```
 
-- Deleting models automatically requires `initSchemas` to be set to true. 
-- It is preferable you set both fields, as well as leave `initRoutes` default settings to true, because files and collections are searched interchangeably based on specific name conventions (i.e., plural 'users' collection becomes a singular 'User' model and vice versa). 
-- If you choose to manually setup the files you will have to follow that naming convention, as well as camel-casing collection directory and file names
+If you plan on using routes, It is preferable you also leave `initRoutes` default setting to `true`.
 
+### Generating Models
 
-**[back to top](#readme)**
+With the above db settings, creating a new collection (ex, ‘users’ ) will create the api/users.js route, the collections/users directory assets, and the models/User.js model. 
 
-
-## The Models Directory
-
-The 3rd step is declared when adding a collection, in the collection settings:
-
-```js
-const settings = {
-  model: {
-    type: 'schema',
-    id: '$incr',       // or $uid with uidLength, minLength
-    idCount: 0,          // default: 0
-    idMaxCount: 10000    // default: 10000
-  }
-}
-
-db.addCollection('users', settings)
-  .then(res => console.log(res))
-  .catch(e => console.log(e))
-```
-
-This will scaffold a User model under the models folder and the directory tree will now be:
+The directory tree will now look like this:  
 
 <pre>
 ─ streamDB
@@ -462,12 +687,9 @@ This will scaffold a User model under the models folder and the directory tree w
 </pre>
 
 
-**[back to top](#readme)**
+#### Starter Model Template
 
-
-## The Document Model
-
-Aside from the collection directory, files, and routers, executing the code above will generate a new file in the models directory: `testDB/models/User.js` and it will have the following starter template you may add to and edit:
+Continuing with the above example, the User model will have the following starter template you may add to and edit:  
 
 ```js
 // User Model
@@ -486,19 +708,16 @@ const User = new Schema({
 })
 
 module.exports = streamDb.model('User', User)
-```
-
-### Schema Settings
-The features were largely modeled after the Mongoose ORM library, including the settings, the field types, and options. There are a few differences, and the features are limited to validating documents with no middleware, hooks, or functions - just simple validation rules and parameters.
+```  
 
 - The id field isn't technically required, as it will be automatically generated and min/max rules will be based on the colMeta model settings.
-- When referencing id fields inside of `$ref` objects, use `Number` or `String` as the value instead of `$incr` or `$uid` types (use id Type only as the main document id)
-- In the settings argument: 
-  - you may set the model to `strict: true` if you wish no fields that are not set to be added when creating/updating documents
-  - leave either timestamp field to true to automatically generate/update them or set to false if you do not wish to add them
-  - you may remove the entire settings object if you do not wish to have those settings (equivalent to setting them all to false)
+- When referencing id fields inside of $ref objects, use Number or String as the value instead of $incr or $uid types (use id Type only as the main document id)
+- In document settings (2nd argument):
+	- you may set the model to strict: true if you wish no fields that are not set to be added when creating/updating documents.
+	- leave either timestamp field to true to automatically generate/update them or set to false if you do not wish to add them.
+	- you may remove the entire settings object if you do not wish to have those settings (equivalent to setting them all to false)
 
-## Schema Types 
+### Data Types
 
 Most types you are probably familiar with:
 
@@ -534,10 +753,7 @@ Or with the 'type' keyword inside an object with the rule parameters:
 }
 ```
 
-**[back to top](#readme)**
-
-
-## Schema Rules
+### Rules & Field Parameters
 
 Here the allowed keyword fields for each schema type:
 
@@ -556,7 +772,7 @@ Here the allowed keyword fields for each schema type:
 }
 ```
 
-### Field Parameters
+#### Field Parameters
 
 * **`default`:** set default value (accepts `null`, otherwise must match the field 'type')
 * **`required`:** set to true to require field
@@ -604,7 +820,8 @@ Schemas will validate up to one level nested objects:
 }
 ```
 
-### Embedded SchemaDocuments
+### Embedded Documents
+
 Schema documents can be imported and embedded into a schema:
   - The embedded document will be created and inserted in its own collection
   - The document data will be saved along with the embedded doc
@@ -625,6 +842,7 @@ const Detail = require('./Detail')  // import the model
 **NOTE:** 
 - Updating the child documents separately will not update the parent document data, you will need to run a separate call
 - Updating the child document data with a parent document update WILL also update all embedded documents
+
 
 ### Array Embeds
 Array embeds fall into the following options:
@@ -678,9 +896,17 @@ All settings are optional and have the following (default) values:
 * **`initSchemas (false)`:** set to true to automatically scaffold models for each collection
 * **`routesAutoDelete (true)`:** set to false if you do not wish to automatically delete api routes when you delete collection through the removeCollection() api
 * **`modelsAutoDelete (false)`:** set to true to automatically delete model files when you delete collection through the removeCollection() api
-* **`routesDir ('api')`:** name your base api router directory name /streamdb/api/ 
+* **`routesDir ('api')`:** name your base api router directory name `localhost:3000/api/collection` 
+* **`defaultModel`:** 
+	* **`type ('default')`:** 'default' means no validation, set to 'schema' if you wish to define schema models to validate your docs
+	* **`id ('$incr')`:** choose auto-increment number id type, or set to $uid to generate/validate id field as strings
+	* **`maxValue (10000)`:** set the max string length ($uid), or maximum count ($incr)  
 
-This is equivalent to:
+
+
+<details>
+  <summary>click here to see the <strong>code equivalent:</strong></summary>
+<br>
 
 ```js
 const streamDb = require('streamdb')
@@ -692,9 +918,16 @@ streamDb.createDb({
   initSchemas: false,
   routesAutoDelete: true, 
   modelsAutoDelete: false, 
-  routesDir: 'api' 
+  routesDir: 'api',
+  defaultModel: {
+  	type: 'default',
+	id: '$incr',
+	maxValue: 10000
+  }
 })
 ```
+</details>  
+
 
 Once you have created your db, the db routes are automatically created and you may [launch the server](#launching-db-server) and directly send post/delete requests to add/remove collections at `dbName/api/db`.
 
@@ -709,17 +942,49 @@ Returns:
 - Promise, deletes db directory & returns success/err msg
 
 
-### $ streamDb.model(modelName, schemaObj, colMeta)
+### $ streamDb.model('modelName', schemaObj, colMeta[optional])
 Generate a document model from existing model file or from a custom schema 
 
 Params:
 - `modelName` **{String}**: (required) name of model - should match the file path and schema object name
 - `schemaObj` **{Object}**: (required) the schema instance (new Schema({}) containing schema and settings objects
-- `colMeta` **{Object}**: (optional) the schema instance (new Schema({}) containing schema and settings objects
+- `colMeta` **{Object}**: (optional) the colMeta object - For test purposes only
 
 Returns: 
 - The model resource object
 
+
+## Launching DB Server
+
+### $ streamDb.server('dbName', 'routesDir', port, corsOptions)
+
+Launch your db server as a standalone by providing a port address or leave it empty if you wish to mount the routes on your express server. 
+
+Params:
+- `dbName` **{String}**: (required) db directory name
+- `routesDir` **{String}**: (required) directory name of your routes
+- `port` **{Number}**: (optional) port address to launch server and listen to
+- `corsOptions` **{Object}**: (optional) object containing custom options for the cors lib
+
+Returns: 
+- If port # is provided it returns the Express `server` instance and launches/listens to server at provided port
+- If port # is not provided it returns the `router` instance so you can mount it in your app (does not launch server)
+
+The default corsOptions are:
+
+```js
+const defaultOpts = {
+        origin: '*',
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        preflightContinue: false,
+        optionsSuccessStatus: 200
+      }
+```
+
+**NOTE:**  if you wish to pass your own custom options and not pass a port #, set port field to null : `('dbName', 'routesDir', null, corsOptions)`
+
+
+## Request Methods Helpers
 
 ### $ streamDb.chainQuery(colRef, query)
 
@@ -784,14 +1049,14 @@ A helper method to add a simple array filter to the query chain
  
 #### Filtering object arrays:  
 
- **`/api/colName/_q/?whereArray=articles,[title,=,"article title"]`**  
+ *`/api/colName/_q/?whereArray=articles,[title,=,"article title"]`*  
 
 Translates to api call:  
 `where('articles, (arr) => arr.filter(item => item.title == 'article title')`  
 
 #### Filtering values with `$item` keyword: 
 
-**`/api/colName/_q/?whereArray=privilages,[$item,=,admin]`**  
+*`/api/colName/_q/?whereArray=privilages,[$item,=,admin]`*  
 
 Translates to api call  
 `where('privilages, (arr) => arr.filter(item => item == 'admin')`  
@@ -808,37 +1073,6 @@ Returns:
 > **NOTE:** This method is deliberately separated, as you may construct your own array lookup methods. [See whereArrayParams](https://github.com/fabiantoth/streamdb/blob/ef21f2bfe016630ddb386289818856a30f164d7c/lib/api/chainQuery.js#L22)
 
 
-**[back to top](#readme)**
-
-
-## Launching DB Server
-
-### $ streamDb.server('dbName', 'routesDir', port, corsOptions)
-
-Launch your db server as a standalone by providing a port address or leave it empty if you wish to mount the routes on your express server. 
-
-Params:
-- `dbName` **{String}**: (required) db directory name
-- `routesDir` **{String}**: (required) directory name of your routes
-- `port` **{Number}**: (optional) port address to launch server and listen to
-- `corsOptions` **{Object}**: (optional) object containing custom options for the cors lib
-
-Returns: 
-- If port # is provided it returns the Express `server` instance and launches/listens to server at provided port
-- If port # is not provided it returns the `router` instance so you can mount it in your app (does not launch server)
-
-The default corsOptions are:
-
-```js
-const defaultOpts = {
-        origin: '*',
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-        preflightContinue: false,
-        optionsSuccessStatus: 200
-      }
-```
-
-**NOTE:**  if you wish to pass your own custom options and not pass a port #, set port field to null : `('dbName', 'routesDir', null, corsOptions)`
 
 ### Example of integrating into Express app:
 
@@ -915,69 +1149,6 @@ The settings are optional and have the following (default) values:
 * **`name`:**  (if 'schema') the model name (ie, 'User') autogenerated if initSchemas set to true
 * **`path`:** (if 'schema') the model location (ie, '/streamDB/models/User.js') autogenerated if initSchemas set to true
 
-### Validation Models
-There are 2 types of validation models (and 2 types of id):
-
-**Default Validation:** 
-
-* `default ($incr)`: use number id validation only (default setting)
-
-```js
-const defaultSetting = {
-    storeMax: 131072,       // may override default db store max per collection here
-    model: {
-        type: 'default',
-        id: '$incr',
-        idCount: 0,         // the starting point for the id count (default = 0)
-        idMaxCount: 10000   // the max count per collection (default = 10000)
-    }
-}
-
-```
-
-* `default ($uid)`: use string id validation only 
-
-```js
-const defaultSetting2 = {
-    storeMax: 131072,
-    model: {
-        type: 'default',
-        id: '$uid',
-        uidLength: 11,      // default uidLength passed to uid generator
-        minLength: 6        // the min length
-    }
-}
-```
-
-**Schema Validation:** 
-
-* `schema ($incr)`: utilize schema models with an auto incrementing Number id:
-
-```js
-const modelSetting = {
-    storeMax: 131072,
-    model: {
-        type: 'schema',
-        id: '$incr',
-        idCount: 0,         
-        idMaxCount: 10000   
-    }
-}
-```
-
-* `schema ($uid)`: utilize schema models with an auto generated String uid:
-
-```js
-const modelSetting2 = {
-    storeMax: 131072,
-    model: {
-        type: 'schema',
-        id: '$uid',
-        uidLength: 11, 
-        minLength: 6     
-    }
-}
-```
 
 ### $ db.dropCollection('name')
 
@@ -1006,12 +1177,12 @@ Returns:
 ## Set Custom Schema Model
 Use a custom schema model if you do not wish to setup model files or bypass existing model
 
-### $ db.collection('colName').setModel('modelName', model)
+### $ db.collection('colName').setModel('modelName', schemaObj)
 Chain `setModel()` to collection before chaining other methods (must be added every time you wish to use the schema)
 
 Params:
 - `modelName` **{String}**: (required) name of model, must be singular version of collection: `users` => `User`
-- `model` **{Object}**: (required) the model object containing the Schema instance
+- `schemaObj` **{Object}**: (required) the new Schema instance object
 
 Returns: 
 - Sets the validation model and returns the updated object with the collection reference
@@ -1026,7 +1197,7 @@ const DB = streamdb.DB
 const Schema = streamDb.Schema
 const db = new DB('streamDB')
 
-const User = new Schema({       // define your schema, settings
+const UserSchema = new Schema({       // define your schema, settings
     id: streamDb.Types.$incr,
     name: {
       type: String,
@@ -1048,21 +1219,20 @@ const User = new Schema({       // define your schema, settings
     }
 })
 
-const model = streamDb.model('User', User)  // get model
-
 const doc = {
   name: 'John Smith',
   age: 20
 }
 
 // this schema will now be used as the validation model for all your queries..
-let usersRef = db.collection('users').setModel('User', model)
+let usersRef = db.collection('users').setModel('User', UserSchema)
 
 usersRef.insertOne(doc)
-  .then()
-  .catch()
+  .then(res => console.log(res))
+  .catch(e = console.log(e))
 
 ```
+
 
 **[back to top](#readme)**
 
@@ -1367,8 +1537,9 @@ Returns:
 
 
 ## Stability Disclaimer
+- A [CHANGELOG](CHANGELOG.md) has been added as of v0.0.7 
 - Please don't use sensitive or valuable data (data you don't want to lose).
-- Keep in mind, early updates and changes will probably be breaking, experimental and may be temporary (a proper changelog most likely won't be maintained while this disclaimer is still up).
+- Keep in mind, early updates and changes will probably be breaking, experimental and may be temporary (although progress is being made slowly but surely).
 
 This project grew out of a less ambitious desire to just have a MUCH simpler way to support prototyping without being tied to an env or dealing with account limits...in short, this was not a planned library.  
 

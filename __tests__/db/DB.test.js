@@ -66,6 +66,27 @@ test('DB: (addCollection) Should return new collection meta file', async (done) 
     done()
 })
 
+test('DB: (addCollection) should override out of range min/max values when default model $incr to colSettings $uid', async (done) => {
+
+    const groupsColSettings = {
+        model: {
+            id: '$uid'
+        }
+    }
+
+    const expectedModel = {
+        type: 'default', 
+        id: '$uid', 
+        minLength: 6, 
+        uidLength: 11
+    }
+
+    const groupsMeta = await db.addCollection('groups', groupsColSettings)
+
+    expect(groupsMeta.model).toMatchObject(expectedModel)
+    done()
+})
+
 test('DB: (dropCollection) Should delete users collection and return success message', async (done) => {
     const deleted = await db.dropCollection('users')
 

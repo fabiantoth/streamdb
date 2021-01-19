@@ -114,8 +114,8 @@ test('Queries: throw error when where() arguments are incorrect data types', asy
 test('Queries: throw error when .and()/.or() methods are added before where()', async (done) => {
 
     setTimeout(async () => {
-        expect(() => db.collection('users').and(`access = member`).find()).toThrow(`[validationError]: and() methods cannot be used before opening where()`)
-        expect(() => db.collection('users').or(`access = member`).find()).toThrow(`[validationError]: or() methods cannot be used before opening where()`)
+        expect(() => db.collection('users').and(`access = member`).find()).toThrow(`[Validation Error]: and() methods cannot be used before opening where()`)
+        expect(() => db.collection('users').or(`access = member`).find()).toThrow(`[Validation Error]: or() methods cannot be used before opening where()`)
         done()
       }, 50)
 })

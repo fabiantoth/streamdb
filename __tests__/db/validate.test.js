@@ -1,6 +1,5 @@
 const validate = require('../../lib/db/validate')
 const streamDb = require('../../lib/index')
-const DB = streamDb.DB
 
 beforeAll(async (done) => {
     const existsMeta = await streamDb.createDb({ dbName: 'thisExists' })
@@ -16,6 +15,7 @@ const idTypeMatch = validate.idTypeMatch
 const checkUidRange = validate.checkUidRange
 const validateDirName = validate.validateDirName
 const dirAvailable = validate.dirAvailable
+const defaultModel = validate.defaultModel
 
 // uncovered from validate:
 // isObject, isArray, isString, isNumber, isBoolean, hasId, docSizeOk, validateStoresMax, idCountLimit
@@ -104,4 +104,47 @@ test('validate: (dirAvailable) Should throw error if dir name already exists', a
     } catch (e) {
         done()
     }
+})
+
+test('validate: (defaultModel) return valid defaultModel object', () => {
+    let default1 = { 
+        type: 'default', 
+        id: '$incr', 
+        maxValue: 10000
+    }
+
+    let defaultModel1 = { 
+        type: 'schema', 
+        id: '$incr', 
+        maxValue: 10000
+    }
+
+    let defaultModel2 = { 
+        type: 'schema', 
+        id: '$uid', 
+        maxValue: 24
+    }
+
+    let defaultModel3 = { 
+        type: 'default', 
+        id: '$uid', 
+        maxValue: 11
+    }
+   
+    let expectedDefault = defaultModel(undefined)
+    let expectedDefault1 = defaultModel({})
+    let model1 = defaultModel({ type: 'schema' })
+    let model2 = defaultModel({ type: 'schema', id: '$uid', maxValue: 24 })
+    let model3 = defaultModel({ id: '$uid' })
+
+    expect(expectedDefault).toMatchObject(default1)
+    expect(expectedDefault1).toMatchObject(default1)
+    expect(model1).toMatchObject(defaultModel1)
+    expect(model2).toMatchObject(defaultModel2)
+    expect(model3).toMatchObject(defaultModel3)
+
+    expect(() => defaultModel({ maxValue: -1 })).toThrow()
+    expect(() => defaultModel({ maxValue: 5 })).toThrow()
+    expect(() => defaultModel({ maxValue: '15' })).toThrow()
+    expect(() => defaultModel({ id: '$uid' , maxValue: 40})).toThrow()
 })
