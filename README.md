@@ -474,12 +474,15 @@ The db router comes with 2 simple routes:
 * **`POST /api/db/:name`:** ------- Create a new collection
 * **`DELETE /api/db/:name`:** ---- Drop/delete a collection 
 
-To add a new collection send a POST request with the name of the new collection in the param and a settings object in the request body (req.body).  
-To drop a collection send a DELETE request with the name of the collection in the param.  
+To add a new collection send a POST request with the name of the new collection in the `:name` param and a settings object (JSON body) in the `req.body` request.  
 
-> Check out the [Express routing documentation](https://expressjs.com/en/guide/routing.html) to learn more.  
+To drop a collection send a DELETE request with the name of the collection in the param.   
 
-These files are simple ON PURPOSE, built with the familiar Express framework, and left for you to edit, modify, or add routes & middleware as you please (the endpoints must remain in this file).  
+These files and routes are super simple, built with the familiar Express framework, left for you to edit, modify, or add routes & middleware as you please (they must all remain in this file).  
+
+If you are new to Express or need a refresher on routes:
+
+> Check out the [Express routing documentation](https://expressjs.com/en/guide/routing.html) to learn more. 
 
 
 ### On Collection Naming:  
