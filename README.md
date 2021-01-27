@@ -239,7 +239,7 @@ $ node server.js
 Your new backend is live with endpoints at: 
 - db: ``http://localhost:3000/api/db``
 - users collection: ``http://localhost:3000/api/users``
-- Accepts `Content-Type: application/json` requests
+- accepts `Content-Type: application/json` requests
 
 <details>
   <summary><strong>Details</strong></summary>
@@ -448,22 +448,18 @@ streamDb.createDb({
 .catch(e => console.log(e))
 ```  
 
-### defaultModel
+#### `defaultModel`
 
-Set a `defaultModel` in the db settings - every new collection will automatically start with the same validation model. This field corresponds to the `model` field in collection settings and will populate it in the collection meta.  
+Set a `defaultModel` in the db settings - every new collection will start with the same validation model.
 
-Any collection settings you set in the `model` field when adding a new collection will override the db defaults you have set if you wish to customize collection settings.  
+You may override and customize this per collection, in collection settings.  
 
-**NOTE:** the db `defaultModel` object is different than the collection `model` settings in that it only takes 3 fields, and has a new `maxValue`. The (min, max) values will be based on the defaults for each id type:  
+**NOTE:** the `maxValue` will correspond to the following *collection settings* based on id type:  
 
-- $incr - idCount(0)
-- $uid - minLength(6)
+- **`$incr`** - `idMaxCount` (default=10000)
+- **`$uid`** - `uidLength` (default=11)  
 
-If you do not specify a `maxValue`, then the default maximum values for each id type will be used:
-
-- $incr - idMaxCount(10000)
-- $uid - uidLength(11)  
-
+The default min values for each id type will be used.  
 
 > See the [API documentation for createDb(settings)](#-streamdbcreatedbsettings).  
 
@@ -510,7 +506,7 @@ You have the option to manually set and circumvent any existing schema model wit
 > See how to [Set A Custom Schema](#set-custom-schema-model)  
 
 
-###  A Few Words About Your New DB
+###  Summary
 
 1. You don’t have to use http requests to manage your data if you don’t want to...or schemas.
 2. You can turn off route scaffolding by setting `initRoutes`/`routesAutoDelete` to `false` (but it isn't necessary).
