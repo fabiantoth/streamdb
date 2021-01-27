@@ -96,3 +96,11 @@ test('Queue: Should delay by 1 second', (done) => {
         done()
     })
 })
+
+test('Queue: Should throw invalid millisec arg error', () => {
+    expect(() => new Queue(methods, '500')).toThrow(`[Type Error]: 2nd Millisecond argument must be a positive number. Recieved, ${typeof '500'}`)
+})
+
+test('Queue: Should throw invalid context arg error', () => {
+    expect(() => new Queue(undefined)).toThrow(`[Type Error]: Context argument must be an object. Received, ${typeof undefined}`)
+})
