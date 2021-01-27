@@ -42,7 +42,7 @@ beforeEach(async () => {
             resolve()
         }, 10)
     })
-  })
+})
 
 test('Collection: (insertOne) Should add one new document', async (done) => {
     const user = {
@@ -149,6 +149,53 @@ test('Collection: (getById) Should get document matching id 2', async (done) => 
             expect(res).toMatchObject(match)
             done()
         })
+})
+
+test('Collection: (getDocs) Should get 4 matching documents', async (done) => {
+    const docs = [1,3,5,6]
+    const match = [
+        {
+            id: 1,
+            firstname: 'Jerry',
+            lastname: 'Mouse',
+            email: 'jmouse@email.com'
+        },
+        {
+            id: 3,
+            firstname: 'Scooby',
+            lastname: 'Doo',
+            email: 'sdoo@email.com'
+        },
+        {
+            id: 5,
+            firstname: 'SpongeBob',
+            lastname: 'SquarePants',
+            email: 'sbsp@email.com'
+        },
+        {
+            id: 6,
+            firstname: 'Daffy',
+            lastname: 'Duck',
+            email: 'dduck@email.com',
+            tags: []
+        }
+    ]
+
+    db.collection('users').getDocs(docs)
+        .then(res => {
+            expect(res).toMatchObject(match)
+            done()
+        })
+})
+
+test('Collection: (getDocs) Should throw error if passed value is not an array', async (done) => {
+    expect(db.collection('users').getDocs()).rejects.toMatch(`[Type Error]: Value must be an array, received: ${typeof undefined}`)
+    done()
+})
+
+test('Collection: (getDocs) Should throw error if array is empty', async (done) => {
+    expect(db.collection('users').getDocs([])).rejects.toMatch(`[Type Error]: Array cannot be empty`)
+    done()
 })
 
 test('Collection: (updateOne) Should update one document with id 2', async (done) => {
