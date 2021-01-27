@@ -74,7 +74,7 @@ $ node setup.js
  
 
 <details>
-  <summary><strong>What you need to know</strong></summary>
+  <summary><strong>Details</strong></summary>
   
 <br>
   This will scaffold the following directory structure in your root directory:
@@ -120,7 +120,7 @@ $ node run.js
 
 
 <details>
-  <summary><strong>What you need to know</strong></summary>
+  <summary><strong>Details</strong></summary>
   
 <br>
   This will update the db directory as follows:
@@ -200,7 +200,7 @@ $ node run.js
 
 
 <details>
-  <summary><strong>What you need to know</strong></summary>
+  <summary><strong>Details</strong></summary>
   
 <br>
   If you examine the <code>users.0.json</code> and <code>users.meta.json</code> files located in the <code>/collections/users</code> directory, you will see the new data.
@@ -239,9 +239,10 @@ $ node server.js
 Your new backend is live with endpoints at: 
 - db: ``http://localhost:3000/api/db``
 - users collection: ``http://localhost:3000/api/users``
+- Accepts `Content-Type: application/json` requests
 
 <details>
-  <summary><strong>What you need to know</strong></summary>
+  <summary><strong>Details</strong></summary>
   
 <br>
 
