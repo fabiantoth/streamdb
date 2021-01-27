@@ -32,18 +32,24 @@ beforeAll(async (done) => {
         }
     }
 
-    setTimeout(() => {
-        db.addCollection('users', defaultSettings)
-            .then(res => {
-                colMeta = res
-                done()
-            })
-      }, 50)
+    db.addCollection('users', defaultSettings)
+        .then(res => {
+            colMeta = res
+            done()
+        })
 })
 
 afterAll(async (done) => {
     const deleted = await streamDb.deleteDb('defaultDB')
     done()
+})
+
+beforeEach(async () => {
+    await new Promise(async (resolve) => {
+        setTimeout(() => {
+            resolve()
+        }, 10)
+    })
 })
 
 test('default: (createOneDocument) Should return one new document', async (done) => {
@@ -53,19 +59,17 @@ test('default: (createOneDocument) Should return one new document', async (done)
         email: 'jmouse@email.com'
     }
 
-    setTimeout(() => {
-        createOneDocument(colMeta, user)
-            .then(res => {
-                expect.objectContaining({
-                    id: expect(res.id).toBe(1),
-                    firstname: expect(res.firstname).toBe('Jerry'),
-                    lastname: expect(res.lastname).toBe('Mouse'),
-                    email: expect(res.email).toBe('jmouse@email.com'),
-                })
-
-                done()
+    createOneDocument(colMeta, user)
+        .then(res => {
+            expect.objectContaining({
+                id: expect(res.id).toBe(1),
+                firstname: expect(res.firstname).toBe('Jerry'),
+                lastname: expect(res.lastname).toBe('Mouse'),
+                email: expect(res.email).toBe('jmouse@email.com'),
             })
-      }, 50)
+
+            done()
+        })
 })
 
 test('default: (createManyDocuments) Should add 3 new documents', async (done) => {
@@ -132,15 +136,9 @@ test('default: (createManyDocuments) Should add 3 new documents', async (done) =
         }
     ]
 
-    setTimeout(() => {
-        let res = createManyDocuments(colMeta, users)
-        expect(res).toMatchObject(expectedDocs)
-        done()
-            // .then(res => {
-            //     expect(res).toMatchObject(expectedDocs)
-            //     done()
-            // })
-      }, 50)
+    let res = createManyDocuments(colMeta, users)
+    expect(res).toMatchObject(expectedDocs)
+    done()
 })
 
 test('default: (updateDocument) Should return 1 updated document', async (done) => {
@@ -165,9 +163,7 @@ test('default: (updateDocument) Should return 1 updated document', async (done) 
         tags: [4,5,6]
     }
 
-    setTimeout(() => {
-        let res = updateDocument(user, update)
-        expect(res).toMatchObject(expected)
-        done()
-      }, 50)
+    let res = updateDocument(user, update)
+    expect(res).toMatchObject(expected)
+    done()
 })

@@ -41,6 +41,14 @@ afterAll(async (done) => {
     done()
 })
 
+beforeEach(async () => {
+    await new Promise(async (resolve) => {
+        setTimeout(() => {
+            resolve()
+        }, 10)
+    })
+})
+
 const User = new Schema({
     id: streamDb.Types.$incr,
     firstname: {
@@ -68,23 +76,21 @@ test('Collection-schema: (insertOne) Should add one new document', async (done) 
         email: 'jmouse@email.com'
     }
 
-    setTimeout(() => {
-        let usersRef = db.collection('users').setModel('User', User)
+    let usersRef = db.collection('users').setModel('User', User)
 
-        usersRef.insertOne(user)
-            .then(res => {
-                expect.objectContaining({
-                    id: expect(res.id).toBe(1),
-                    firstname: expect(res.firstname).toBe('Jerry'),
-                    lastname: expect(res.lastname).toBe('Mouse'),
-                    email: expect(res.email).toBe('jmouse@email.com'),
-                    created_at: expect.any(Date),
-                    updated_at: expect.any(Date)
-                })
-
-                done()
+    usersRef.insertOne(user)
+        .then(res => {
+            expect.objectContaining({
+                id: expect(res.id).toBe(1),
+                firstname: expect(res.firstname).toBe('Jerry'),
+                lastname: expect(res.lastname).toBe('Mouse'),
+                email: expect(res.email).toBe('jmouse@email.com'),
+                created_at: expect.any(Date),
+                updated_at: expect.any(Date)
             })
-      }, 50)
+
+            done()
+        })
 })
 
 test('Collection-schema: (insertMany) Should add 3 new documents', async (done) => {
@@ -117,22 +123,20 @@ test('Collection-schema: (insertMany) Should add 3 new documents', async (done) 
         }
     ]
 
-    setTimeout(() => {
-        let usersRef = db.collection('users').setModel('User', User)
+    let usersRef = db.collection('users').setModel('User', User)
 
-        usersRef.insertMany(users)
-            .then(res => {
-                expect(res).toEqual(expect.arrayContaining([expect.objectContaining({
-                    id: expect.any(Number),
-                    firstname: expect.any(String),
-                    lastname: expect.any(String),
-                    email: expect.any(String),
-                    created_at: expect.any(Date),
-                    updated_at: expect.any(Date)
-                })]))
-                done()
-            })
-      }, 50)
+    usersRef.insertMany(users)
+        .then(res => {
+            expect(res).toEqual(expect.arrayContaining([expect.objectContaining({
+                id: expect.any(Number),
+                firstname: expect.any(String),
+                lastname: expect.any(String),
+                email: expect.any(String),
+                created_at: expect.any(Date),
+                updated_at: expect.any(Date)
+            })]))
+            done()
+        })
 })
 
 test('Collection-schema: (updateOne) Should update one document with id 2', async (done) => {
@@ -141,22 +145,20 @@ test('Collection-schema: (updateOne) Should update one document with id 2', asyn
         email: 'b-bunny@email.com'
     }
 
-    setTimeout(() => {
-        let usersRef = db.collection('users').setModel('User', User)
+    let usersRef = db.collection('users').setModel('User', User)
 
-        usersRef.updateOne(update)
-            .then(res => {
-                expect.objectContaining({
-                    id: expect(res.id).toBe(2),
-                    firstname: expect(res.firstname).toBe('Bugs'),
-                    lastname: expect(res.lastname).toBe('Bunny'),
-                    email: expect(res.email).toBe('b-bunny@email.com'),
-                    created_at: expect.any(Date),
-                    updated_at: expect.any(Date)
-                })
-                done()
+    usersRef.updateOne(update)
+        .then(res => {
+            expect.objectContaining({
+                id: expect(res.id).toBe(2),
+                firstname: expect(res.firstname).toBe('Bugs'),
+                lastname: expect(res.lastname).toBe('Bunny'),
+                email: expect(res.email).toBe('b-bunny@email.com'),
+                created_at: expect.any(Date),
+                updated_at: expect.any(Date)
             })
-      }, 50)
+            done()
+        })
 })
 
 test('Collection-schema: (updateMany) Should update 2 documents', async (done) => {
@@ -171,31 +173,29 @@ test('Collection-schema: (updateMany) Should update 2 documents', async (done) =
         },
     ]
 
-    setTimeout(() => {
-        let usersRef = db.collection('users').setModel('User', User)
+    let usersRef = db.collection('users').setModel('User', User)
 
-        usersRef.updateMany(updates)
-            .then(res => {
-                expect(res.length).toBe(2)
+    usersRef.updateMany(updates)
+        .then(res => {
+            expect(res.length).toBe(2)
 
-                expect(res[0].id).toBe(3)
-                expect(res[0].firstname).toBe('Scooby')
-                expect(res[0].lastname).toBe('Doo')
-                expect(res[0].email).toBe('s-doo@email.com')
+            expect(res[0].id).toBe(3)
+            expect(res[0].firstname).toBe('Scooby')
+            expect(res[0].lastname).toBe('Doo')
+            expect(res[0].email).toBe('s-doo@email.com')
 
-                expect(res[1].id).toBe(4)
-                expect(res[1].firstname).toBe('Tom')
-                expect(res[1].lastname).toBe('Cat')
-                expect(res[1].email).toBe('t-cat@email.com')
+            expect(res[1].id).toBe(4)
+            expect(res[1].firstname).toBe('Tom')
+            expect(res[1].lastname).toBe('Cat')
+            expect(res[1].email).toBe('t-cat@email.com')
 
-                res.forEach(doc => {
-                    expect.objectContaining({
-                        created_at: expect.any(Date),
-                        updated_at: expect.any(Date)
-                    })
+            res.forEach(doc => {
+                expect.objectContaining({
+                    created_at: expect.any(Date),
+                    updated_at: expect.any(Date)
                 })
-                
-                done()
             })
-      }, 50)
+            
+            done()
+        })
 })

@@ -87,12 +87,10 @@ beforeAll(async (done) => {
     const resourcesDB = await streamDb.createDb(dbSettings)
     db = new DB('resourcesDB')
 
-    setTimeout(() => {
-        db.addCollection('users', colSettings)
-            .then(res => {
-                done()
-            })
-      }, 50)
+    db.addCollection('users', colSettings)
+        .then(res => {
+            done()
+        })
 })
 
 afterAll(async (done) => {
@@ -100,30 +98,33 @@ afterAll(async (done) => {
     done()
 })
 
+beforeEach(async () => {
+    await new Promise(async (resolve) => {
+        setTimeout(() => {
+            resolve()
+        }, 10)
+    })
+})
+
 test('getCollectionResources: Should insert 11 test records', async (done) => {
-    setTimeout(() => {
-        let usersRef = db.collection('users')
-        usersRef.insertMany(documents)
-            .then(data => {
-                expect(data.model.idCount).toBe(11)
-                done()
-            })
-      }, 50)
+    let usersRef = db.collection('users')
+    usersRef.insertMany(documents)
+        .then(data => {
+            expect(data.model.idCount).toBe(11)
+            done()
+        })
 })
 
 test('getCollectionResources: Should return array with collection resources', async (done) => {
-    setTimeout(async () => {
-        const resourceDb = new DB('resourcesDB')
-        let usersRef = resourceDb.collection('users')
-        let colPath = usersRef.colPath
+    const resourceDb = new DB('resourcesDB')
+    let usersRef = resourceDb.collection('users')
+    let colPath = usersRef.colPath
 
-        let resources = await getCollectionResources(colPath)
+    let resources = await getCollectionResources(colPath)
 
-        expect(resources.stores.length).toBe(11)
-        expect(resources.stores).toContain('resourcesDB/collections/users/users.10.json')
-        expect(resources.meta).toBe('resourcesDB/collections/users/users.meta.json')
+    expect(resources.stores.length).toBe(11)
+    expect(resources.stores).toContain('resourcesDB/collections/users/users.10.json')
+    expect(resources.meta).toBe('resourcesDB/collections/users/users.meta.json')
 
-        done()
-      }, 150)
-
+    done()
 })
