@@ -18,16 +18,9 @@
 - [Install](#install)
 - [2-Minute Quickstart](#2-minute-quickstart)
 - [Directories Overview](#directories-overview)
-- [DB Configuration](#db-configuration)
+- [DB Settings](#db-settings)
 - [Collections](#collections)
 - [Schemas](#schemas)
-  - [Generating Models](#generating-models)
-  - [Data Types](#data-types)
-  - [Rules & Field Parameters](#rules--field-parameters)
-  - [$ref Objects](#ref-objects)
-  - [Nested Objects](#nested-objects)
-  - [Embedded Documents](#embedded-documents)
-  - [Array Embeds](#array-embeds)
 - [API](#api)
   - [DB Methods](#db-methods)
     - [Launching Server](#launching-db-server)
@@ -36,18 +29,13 @@
   - [Set Custom Model](#set-custom-schema-model)
   - [Collection Methods](#collection-methods)
   - [Queries & Query Chains](#queries--query-chains)
-- <a target="_blank" href="CHANGELOG.md">CHANGELOG (new!)</a>
+- <a target="_blank" href="CHANGELOG.md">CHANGELOG</a>
+- [Tests](#tests)
+- [Stability Notice](#stability-notice) 
 
 
 
 ## Install:
-
-Basic requirements:
-  - Node (v12.7.0 or higher)
-  - NPM (v6.14.2 or higher)
-  - [Read this stability disclaimer](#stability-disclaimer)  
-  
-> Install with [npm](https://www.npmjs.com/)
 
 ```sh
 $ npm i streamdb
@@ -87,7 +75,7 @@ $ node setup.js
  
 
 <details>
-  <summary><strong>What you need to know</strong></summary>
+  <summary><strong>Details</strong></summary>
   
 <br>
   This will scaffold the following directory structure in your root directory:
@@ -133,7 +121,7 @@ $ node run.js
 
 
 <details>
-  <summary><strong>What you need to know</strong></summary>
+  <summary><strong>Details</strong></summary>
   
 <br>
   This will update the db directory as follows:
@@ -213,7 +201,7 @@ $ node run.js
 
 
 <details>
-  <summary><strong>What you need to know</strong></summary>
+  <summary><strong>Details</strong></summary>
   
 <br>
   If you examine the <code>users.0.json</code> and <code>users.meta.json</code> files located in the <code>/collections/users</code> directory, you will see the new data.
@@ -252,9 +240,10 @@ $ node server.js
 Your new backend is live with endpoints at: 
 - db: ``http://localhost:3000/api/db``
 - users collection: ``http://localhost:3000/api/users``
+- accepts `Content-Type: application/json` requests
 
 <details>
-  <summary><strong>What you need to know</strong></summary>
+  <summary><strong>Details</strong></summary>
   
 <br>
 
@@ -431,7 +420,7 @@ module.exports = streamDb.model('User', User)
 **[back to top](#readme)**
 
 
-## DB Configuration
+## DB Settings
 
 Setting up a new db requires you to run `createDb()` only once. You may use the default settings as shown in the Quickstart, or you can specify which parameters you wish to change.    
 
@@ -460,22 +449,18 @@ streamDb.createDb({
 .catch(e => console.log(e))
 ```  
 
-### defaultModel (*new*)
+#### `defaultModel`
 
-The newest feature as of `v0.0.7` is the ability to set a `defaultModel` in the db settings so that every new collection will automatically have the same configuration. This field corresponds to the `model` field in collection settings and will populate it in the collection meta.  
+Set a `defaultModel` in the db settings - every new collection will start with the same validation model.
 
-Any collection settings you set in the `model` field when adding a new collection will override the db defaults you have set if you wish to customize collection settings.  
+You may override and customize this per collection, in collection settings.  
 
-**NOTE:** the db `defaultModel` object is different than the collection `model` settings in that it only takes 3 fields, and has a new `maxValue`. The (min, max) values will be based on the defaults for each id type:  
+**NOTE:** the `maxValue` will correspond to the following *collection settings* based on id type:  
 
-- $incr - idCount(0)
-- $uid - minLength(6)
+- **`$incr`** - `idMaxCount` (default=10000)
+- **`$uid`** - `uidLength` (default=11)  
 
-If you do not specify a `maxValue`, then the default maximum values for each id type will be used:
-
-- $incr - idMaxCount(10000)
-- $uid - uidLength(11)  
-
+The default min values for each id type will be used.  
 
 > See the [API documentation for createDb(settings)](#-streamdbcreatedbsettings).  
 
@@ -490,12 +475,15 @@ The db router comes with 2 simple routes:
 * **`POST /api/db/:name`:** ------- Create a new collection
 * **`DELETE /api/db/:name`:** ---- Drop/delete a collection 
 
-To add a new collection send a POST request with the name of the new collection in the param and a settings object in the request body (req.body).  
-To drop a collection send a DELETE request with the name of the collection in the param.  
+To add a new collection send a POST request with the name of the new collection in the `:name` param and a settings object (JSON body) in the `req.body` request.  
 
-> Check out the [Express routing documentation](https://expressjs.com/en/guide/routing.html) to learn more.  
+To drop a collection send a DELETE request with the name of the collection in the param.   
 
-These files are simple ON PURPOSE, built with the familiar Express framework, and left for you to edit, modify, or add routes & middleware as you please (the endpoints must remain in this file).  
+These files and routes are super simple, built with the familiar Express framework, left for you to edit, modify, or add routes & middleware as you please (they must all remain in this file).  
+
+If you are new to Express or need a refresher on routes:
+
+> Check out the [Express routing documentation](https://expressjs.com/en/guide/routing.html) to learn more. 
 
 
 ### On Collection Naming:  
@@ -522,7 +510,7 @@ You have the option to manually set and circumvent any existing schema model wit
 > See how to [Set A Custom Schema](#set-custom-schema-model)  
 
 
-###  A Few Words About Your New DB
+###  Summary
 
 1. You don’t have to use http requests to manage your data if you don’t want to...or schemas.
 2. You can turn off route scaffolding by setting `initRoutes`/`routesAutoDelete` to `false` (but it isn't necessary).
@@ -1266,6 +1254,16 @@ Params:
 Returns: 
 - Promise. The document object
 
+### $ getDocs(\[ids\])
+
+Get many documents by id
+
+Params:
+- `ids` **{Array\<String\>|\<Number\>}**: (required) Array of ids
+
+Returns: 
+- Promise. The results array
+
 ### $ insertOne(doc)  
 
 Create/insert a new document into collection. If id field is provided, it will be validated against the collection settings and existing document ids.
@@ -1535,11 +1533,20 @@ Returns:
 **[back to top](#readme)**
 
 
+## Tests
 
-## Stability Disclaimer
-- A [CHANGELOG](CHANGELOG.md) has been added as of v0.0.7 
-- Please don't use sensitive or valuable data (data you don't want to lose).
-- Keep in mind, early updates and changes will probably be breaking, experimental and may be temporary (although progress is being made slowly but surely).
+Tests are implemented using the [Jest Framework](https://jestjs.io/), and located in the [\_\_tests\_\_](https://github.com/fabiantoth/streamdb/tree/main/__tests__) directory.  
+To run tests, install dev dependencies and run: 
+
+```sh
+$ npm test
+```
+
+
+## Stability Notice 
+
+- streamDB is mainly for prototyping, do not use in production, use sensitive, or data you don't want to lose. 
+- Early v0.x.x updates may be breaking, experimental, or temporary (keep track of updates, [CHANGELOG](https://github.com/fabiantoth/streamdb/blob/main/CHANGELOG.md)).
 
 This project grew out of a less ambitious desire to just have a MUCH simpler way to support prototyping without being tied to an env or dealing with account limits...in short, this was not a planned library.  
 

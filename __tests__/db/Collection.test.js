@@ -36,6 +36,14 @@ afterAll(async (done) => {
     done()
 })
 
+beforeEach(async () => {
+    await new Promise(async (resolve) => {
+        setTimeout(() => {
+            resolve()
+        }, 10)
+    })
+})
+
 test('Collection: (insertOne) Should add one new document', async (done) => {
     const user = {
         firstname: 'Jerry',
@@ -57,7 +65,7 @@ test('Collection: (insertOne) Should add one new document', async (done) => {
         })
 })
 
-test('Collection: (insertMany) Should add 3 new documents', async (done) => {
+test('Collection: (insertMany) Should add 5 new documents', async (done) => {
     const users = [
         {
             firstname: 'Bugs',
@@ -121,87 +129,123 @@ test('Collection: (insertMany) Should add 3 new documents', async (done) => {
         }
     ]
 
-    setTimeout(() => {
-        db.collection('users').insertMany(users)
-            .then(res => {
-                expect(res).toMatchObject(expectedDocs)
-                done()
-            })
-      }, 50)
+    db.collection('users').insertMany(users)
+        .then(res => {
+            expect(res).toMatchObject(expectedDocs)
+            done()
+        })
 })
 
 test('Collection: (getById) Should get document matching id 2', async (done) => {
-    setTimeout(() => {
-        const match = {
-            id: 2,
-            firstname: 'Bugs',
-            lastname: 'Bunny',
-            email: 'bbunny@email.com'
-        }
+    const match = {
+        id: 2,
+        firstname: 'Bugs',
+        lastname: 'Bunny',
+        email: 'bbunny@email.com'
+    }
 
-        db.collection('users').getById(2)
-            .then(res => {
-                expect(res).toMatchObject(match)
-                done()
-            })
-      }, 50)
+    db.collection('users').getById(2)
+        .then(res => {
+            expect(res).toMatchObject(match)
+            done()
+        })
+})
+
+test('Collection: (getDocs) Should get 4 matching documents', async (done) => {
+    const docs = [1,3,5,6]
+    const match = [
+        {
+            id: 1,
+            firstname: 'Jerry',
+            lastname: 'Mouse',
+            email: 'jmouse@email.com'
+        },
+        {
+            id: 3,
+            firstname: 'Scooby',
+            lastname: 'Doo',
+            email: 'sdoo@email.com'
+        },
+        {
+            id: 5,
+            firstname: 'SpongeBob',
+            lastname: 'SquarePants',
+            email: 'sbsp@email.com'
+        },
+        {
+            id: 6,
+            firstname: 'Daffy',
+            lastname: 'Duck',
+            email: 'dduck@email.com',
+            tags: []
+        }
+    ]
+
+    db.collection('users').getDocs(docs)
+        .then(res => {
+            expect(res).toMatchObject(match)
+            done()
+        })
+})
+
+test('Collection: (getDocs) Should throw error if passed value is not an array', async (done) => {
+    expect(db.collection('users').getDocs()).rejects.toMatch(`[Type Error]: Value must be an array, received: ${typeof undefined}`)
+    done()
+})
+
+test('Collection: (getDocs) Should throw error if array is empty', async (done) => {
+    expect(db.collection('users').getDocs([])).rejects.toMatch(`[Type Error]: Array cannot be empty`)
+    done()
 })
 
 test('Collection: (updateOne) Should update one document with id 2', async (done) => {
-    setTimeout(() => {
-        const update = {
-            id: 2,
-            email: 'b-bunny@email.com'
-        }
+    const update = {
+        id: 2,
+        email: 'b-bunny@email.com'
+    }
 
-        db.collection('users').updateOne(update)
-            .then(res => {
-                expect(res).toMatchObject(update)
-                done()
-            })
-      }, 50)
+    db.collection('users').updateOne(update)
+        .then(res => {
+            expect(res).toMatchObject(update)
+            done()
+        })
 })
 
 test('Collection: (deleteOne) Should delete document with id 2', async (done) => {
-    setTimeout(() => {
-        db.collection('users').deleteOne(2)
-            .then(res => {
-                expect(res).toBe(`Document with id "2" has been removed`)
-                done()
-            })
-      }, 50)
+    db.collection('users').deleteOne(2)
+        .then(res => {
+            expect(res).toBe(`Document with id "2" has been removed`)
+            done()
+        })
 })
 
 test('Collection: (updateMany) Should update 2 documents', async (done) => {
-    setTimeout(() => {
-        const updates = [
-            {
-                id: 3,
-                email: 's-doo@email.com'
-            },
-            {
-                id: 4,
-                email: 't-cat@email.com'
-            },
-        ]
+    const updates = [
+        {
+            id: 3,
+            email: 's-doo@email.com'
+        },
+        {
+            id: 4,
+            email: 't-cat@email.com'
+        }
+    ]
 
-        db.collection('users').updateMany(updates)
-            .then(res => {
-                expect(res).toMatchObject(updates)
-                done()
-            })
-      }, 50)
+    db.collection('users').updateMany(updates)
+        .then(res => {
+            expect(res).toMatchObject(updates)
+            done()
+        })
 })
 
 test('Collection: (deleteMany) Should delete 3 documents', async (done) => {
-    setTimeout(() => {
-        const docsToDelete = [1,3,4]
-        db.collection('users').deleteMany(docsToDelete)
-            .then(res => {
-                expect(res).toMatchObject(docsToDelete)
-                done()
-            })
-      }, 50)
+    const docsToDelete = [1,3,4]
+    
+    db.collection('users').deleteMany(docsToDelete)
+        .then(res => {
+            expect(res).toMatchObject(docsToDelete)
+            done()
+        })
 })
 
 test('Collection: (where) Should return 2 documents', async (done) => {
@@ -221,15 +265,13 @@ test('Collection: (where) Should return 2 documents', async (done) => {
         }
     ]
 
-    setTimeout(() => {
-        db.collection('users')
-            .where('id > 4')
-            .find()
-            .then(res => {
-                expect(res).toMatchObject(expectedDocs)
-                done()
-            })
-      }, 50)
+    db.collection('users')
+        .where('id > 4')
+        .find()
+        .then(res => {
+            expect(res).toMatchObject(expectedDocs)
+            done()
+        })
 })
 
 test('Collection: (where/and) Should return 1 match', async (done) => {
@@ -243,15 +285,13 @@ test('Collection: (where/and) Should return 1 match', async (done) => {
         }
     ]
 
-    setTimeout(() => {
-        db.collection('users')
-            .where('id > 4').and('lastname = Duck')
-            .find()
-            .then(res => {
-                expect(res).toMatchObject(expectedDocs)
-                done()
-            })
-      }, 50)
+    db.collection('users')
+        .where('id > 4').and('lastname = Duck')
+        .find()
+        .then(res => {
+            expect(res).toMatchObject(expectedDocs)
+            done()
+        })
 })
 
 test('Collection: (where/setProperty) Should return value of update', async (done) => {
@@ -263,15 +303,13 @@ test('Collection: (where/setProperty) Should return value of update', async (don
         tags: []
     }]
 
-    setTimeout(() => {
-        db.collection('users')
-            .where('id = 6')
-            .setProperty('email', 'daf-duck@email.com')
-            .then(res => {
-                expect(res).toMatchObject(update)
-                done()
-            })
-      }, 50)
+    db.collection('users')
+        .where('id = 6')
+        .setProperty('email', 'daf-duck@email.com')
+        .then(res => {
+            expect(res).toMatchObject(update)
+            done()
+        })
 })
 
 test('Collection: (where/deleteProperty) Should return success msg', async (done) => {
@@ -282,15 +320,13 @@ test('Collection: (where/deleteProperty) Should return success msg', async (done
         tags: []
     }]
 
-    setTimeout(() => {
-        db.collection('users')
-            .where('id = 6')
-            .deleteProperty('email')
-            .then(res => {
-                expect(res).toMatchObject(update)
-                done()
-            })
-      }, 50)
+    db.collection('users')
+        .where('id = 6')
+        .deleteProperty('email')
+        .then(res => {
+            expect(res).toMatchObject(update)
+            done()
+        })
 })
 
 test('Collection: (where/insertInto) Should success msg', async (done) => {
@@ -302,15 +338,13 @@ test('Collection: (where/insertInto) Should success msg', async (done) => {
         tags: ["string", 55, {testObj: "value1"} ]
     }]
 
-    setTimeout(() => {
-        db.collection('users')
-            .where('id = 6')
-            .insertInto('tags', tagValues)
-            .then(res => {
-                expect(res).toMatchObject(update)
-                done()
-            })
-      }, 50)
+    db.collection('users')
+        .where('id = 6')
+        .insertInto('tags', tagValues)
+        .then(res => {
+            expect(res).toMatchObject(update)
+            done()
+        })
 })
 
 test('Collection: (where/removeFrom) Should return success msg', async (done) => {
@@ -322,15 +356,13 @@ test('Collection: (where/removeFrom) Should return success msg', async (done) =>
         tags: ["string", 55, {testObj: "value1"}, 55 ]
     }]
 
-    setTimeout(() => {
-        db.collection('users')
-            .where('id = 6')
-            .insertInto('tags', tagValues)
-            .then(res => {
-                expect(res).toMatchObject(update)
-                done()
-            })
-      }, 50)
+    db.collection('users')
+        .where('id = 6')
+        .insertInto('tags', tagValues)
+        .then(res => {
+            expect(res).toMatchObject(update)
+            done()
+        })
 })
 
 test('Collection: (where/updateArray) Should return success msg', async (done) => {
@@ -350,15 +382,13 @@ test('Collection: (where/updateArray) Should return success msg', async (done) =
         tags: ["string", 55, { testObj: "updated value" }, 55 ]
     }]
 
-    setTimeout(() => {
-        db.collection('users')
-            .where('id = 6')
-            .updateArray('tags', updateFn)
-            .then(res => {
-                expect(res).toMatchObject(update)
-                done()
-            })
-      }, 50)
+    db.collection('users')
+        .where('id = 6')
+        .updateArray('tags', updateFn)
+        .then(res => {
+            expect(res).toMatchObject(update)
+            done()
+        })
 })
 
 test('Collection: (where/include) Should return matching obj', async (done) => {
@@ -367,16 +397,14 @@ test('Collection: (where/include) Should return matching obj', async (done) => {
         email: 'sbsp@email.com'
     }]
 
-    setTimeout(() => {
-        db.collection('users')
-            .where('id = 5')
-            .include(['firstname','email'])
-            .find()
-            .then(res => {
-                expect(res).toEqual(expectedResult)
-                done()
-            })
-      }, 50)
+    db.collection('users')
+        .where('id = 5')
+        .include(['firstname','email'])
+        .find()
+        .then(res => {
+            expect(res).toEqual(expectedResult)
+            done()
+        })
 })
 
 test('Collection: (where/exclude) Should return matching obj', async (done) => {
@@ -386,14 +414,12 @@ test('Collection: (where/exclude) Should return matching obj', async (done) => {
         lastname: 'SquarePants'
     }]
 
-    setTimeout(() => {
-        db.collection('users')
-            .where('id = 5')
-            .exclude(['email'])
-            .find()
-            .then(res => {
-                expect(res).toEqual(expectedResult)
-                done()
-            })
-      }, 50)
+    db.collection('users')
+        .where('id = 5')
+        .exclude(['email'])
+        .find()
+        .then(res => {
+            expect(res).toEqual(expectedResult)
+            done()
+        })
 })

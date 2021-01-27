@@ -55,20 +55,25 @@ beforeAll(async (done) => {
     const schemaMethods = await streamDb.createDb(dbSettings)
     db = new DB('schemaMethods')
 
-    setTimeout(() => {
-        db.addCollection('users', colSettings)
-            .then(res => {
-                colMeta = res
-                model = streamDb.model('User', User, res)
-                done()
-            })
-      }, 50)
-
+    db.addCollection('users', colSettings)
+        .then(res => {
+            colMeta = res
+            model = streamDb.model('User', User, res)
+            done()
+        })
 })
 
 afterAll(async (done) => {
     const deleted = await streamDb.deleteDb('schemaMethods')
     done()
+})
+
+beforeEach(async () => {
+    await new Promise(async (resolve) => {
+        setTimeout(() => {
+            resolve()
+        }, 10)
+    })
 })
 
 test('schema: (addOneDocument) Should return one new document', async (done) => {
@@ -78,21 +83,19 @@ test('schema: (addOneDocument) Should return one new document', async (done) => 
         email: 'jmouse@email.com'
     }
 
-    setTimeout(() => {
-        addOneDocument(user, model)
-            .then(res => {
-                expect.objectContaining({
-                    id: expect(res.id).toBe(1),
-                    firstname: expect(res.firstname).toBe('Jerry'),
-                    lastname: expect(res.lastname).toBe('Mouse'),
-                    email: expect(res.email).toBe('jmouse@email.com'),
-                    created_at: expect.any(Date),
-                    updated_at: expect.any(Date)
-                })
-
-                done()
+    addOneDocument(user, model)
+        .then(res => {
+            expect.objectContaining({
+                id: expect(res.id).toBe(1),
+                firstname: expect(res.firstname).toBe('Jerry'),
+                lastname: expect(res.lastname).toBe('Mouse'),
+                email: expect(res.email).toBe('jmouse@email.com'),
+                created_at: expect.any(Date),
+                updated_at: expect.any(Date)
             })
-      }, 50)
+
+            done()
+        })
 })
 
 test('schema: (addManyDocuments) Should add 3 new documents', async (done) => {
@@ -125,21 +128,19 @@ test('schema: (addManyDocuments) Should add 3 new documents', async (done) => {
         }
     ]
 
-    setTimeout(() => {
-        addManyDocuments(users, model)
-            .then(res => {
-                expect(res).toEqual(expect.arrayContaining([expect.objectContaining({
-                    id: expect.any(Number),
-                    firstname: expect.any(String),
-                    lastname: expect.any(String),
-                    email: expect.any(String),
-                    created_at: expect.any(Date),
-                    updated_at: expect.any(Date)
-                })]))
+    addManyDocuments(users, model)
+        .then(res => {
+            expect(res).toEqual(expect.arrayContaining([expect.objectContaining({
+                id: expect.any(Number),
+                firstname: expect.any(String),
+                lastname: expect.any(String),
+                email: expect.any(String),
+                created_at: expect.any(Date),
+                updated_at: expect.any(Date)
+            })]))
 
-                done()
-            })
-      }, 50)
+            done()
+        })
 })
 
 test('schema: (updateOneDocument) Should update one document with id 2', async (done) => {
@@ -148,19 +149,17 @@ test('schema: (updateOneDocument) Should update one document with id 2', async (
         email: 'b-bunny@email.com'
     }
 
-    setTimeout(() => {
-        updateOneDocument(update, model)
-            .then(res => {
-    
-                expect.objectContaining({
-                    id: expect(res.id).toBe(2),
-                    email: expect(res.email).toBe('b-bunny@email.com'),
-                    updated_at: expect.any(Date)
-                })
+    updateOneDocument(update, model)
+        .then(res => {
 
-                done()
+            expect.objectContaining({
+                id: expect(res.id).toBe(2),
+                email: expect(res.email).toBe('b-bunny@email.com'),
+                updated_at: expect.any(Date)
             })
-      }, 50)
+
+            done()
+        })
 })
 
 test('schema: (updateManyDocuments) Should update 2 documents', async (done) => {
@@ -175,24 +174,22 @@ test('schema: (updateManyDocuments) Should update 2 documents', async (done) => 
         },
     ]
 
-    setTimeout(() => {
-        updateManyDocuments(updates, model)
-            .then(res => {
-                expect(res.length).toBe(2)
+    updateManyDocuments(updates, model)
+        .then(res => {
+            expect(res.length).toBe(2)
 
-                expect(res[0].id).toBe(3)
-                expect(res[0].email).toBe('s-doo@email.com')
+            expect(res[0].id).toBe(3)
+            expect(res[0].email).toBe('s-doo@email.com')
 
-                expect(res[1].id).toBe(4)
-                expect(res[1].email).toBe('t-cat@email.com')
+            expect(res[1].id).toBe(4)
+            expect(res[1].email).toBe('t-cat@email.com')
 
-                res.forEach(doc => {
-                    expect.objectContaining({
-                        updated_at: expect.any(Date)
-                    })
+            res.forEach(doc => {
+                expect.objectContaining({
+                    updated_at: expect.any(Date)
                 })
-
-                done()
             })
-      }, 50)
+
+            done()
+        })
 })
