@@ -17,6 +17,15 @@ All notable changes to this project will be documented in this file.
 </details>
 <br>
 
+## Version 0.0.8  - (Jan. 27, 2021)
+
+- [Added] **[New Feature]:** **`getDocs([ids])`**: method to get many docs based on array of ids
+- [Added] **[New Feature]:** **`Queue Class`**: all collection method api calls now use a queue to debounce concurrent requests at 35ms
+- [Added] Tests for new method and class, small tests cleanup/refactor
+- [Fixed] Schema: Bug typo casting $ref objects in schemas
+- [Changed] README: added new API description, minor content edits 
+
+
 ## Version 0.0.7  - (Jan. 18, 2021)
 
 - [Added] **[New Feature]:** defaultValidation: can now set default validation model for all collections in db settings and edit in dbMeta
@@ -30,7 +39,7 @@ All notable changes to this project will be documented in this file.
 - [Added] **[New Feature]:** Enhanced **`filterArray()`** to filter items directly with new *`$item`* keyword
 - [Added] a bunch of use-case tests to query suite based on improved query functionality
 - [Fixed] http request queries `sort()`, `limit()`, `offset()` now fixed in *`chainQuery()`* helper
-- [Fixed] Refacor & bug fixes, parseInt in collection template
+- [Fixed] Refactor & bug fixes, parseInt in collection template
 - [Changed] Readme: Modified intro tutorials into Quickstart guide section
 
 
