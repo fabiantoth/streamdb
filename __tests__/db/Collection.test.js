@@ -57,7 +57,7 @@ test('Collection: (insertOne) Should add one new document', async (done) => {
         })
 })
 
-test('Collection: (insertMany) Should add 3 new documents', async (done) => {
+test('Collection: (insertMany) Should add 5 new documents', async (done) => {
     const users = [
         {
             firstname: 'Bugs',
@@ -127,39 +127,39 @@ test('Collection: (insertMany) Should add 3 new documents', async (done) => {
                 expect(res).toMatchObject(expectedDocs)
                 done()
             })
-      }, 50)
+      }, 0)
 })
 
 test('Collection: (getById) Should get document matching id 2', async (done) => {
-    setTimeout(() => {
-        const match = {
-            id: 2,
-            firstname: 'Bugs',
-            lastname: 'Bunny',
-            email: 'bbunny@email.com'
-        }
+    const match = {
+        id: 2,
+        firstname: 'Bugs',
+        lastname: 'Bunny',
+        email: 'bbunny@email.com'
+    }
 
+    setTimeout(() => {
         db.collection('users').getById(2)
             .then(res => {
                 expect(res).toMatchObject(match)
                 done()
             })
-      }, 50)
+      }, 10)
 })
 
 test('Collection: (updateOne) Should update one document with id 2', async (done) => {
-    setTimeout(() => {
-        const update = {
-            id: 2,
-            email: 'b-bunny@email.com'
-        }
+    const update = {
+        id: 2,
+        email: 'b-bunny@email.com'
+    }
 
+    setTimeout(() => {
         db.collection('users').updateOne(update)
             .then(res => {
                 expect(res).toMatchObject(update)
                 done()
             })
-      }, 50)
+      }, 10)
 })
 
 test('Collection: (deleteOne) Should delete document with id 2', async (done) => {
@@ -169,39 +169,40 @@ test('Collection: (deleteOne) Should delete document with id 2', async (done) =>
                 expect(res).toBe(`Document with id "2" has been removed`)
                 done()
             })
-      }, 50)
+      }, 10)
 })
 
 test('Collection: (updateMany) Should update 2 documents', async (done) => {
-    setTimeout(() => {
-        const updates = [
-            {
-                id: 3,
-                email: 's-doo@email.com'
-            },
-            {
-                id: 4,
-                email: 't-cat@email.com'
-            },
-        ]
+    const updates = [
+        {
+            id: 3,
+            email: 's-doo@email.com'
+        },
+        {
+            id: 4,
+            email: 't-cat@email.com'
+        },
+    ]
 
+    setTimeout(() => {
         db.collection('users').updateMany(updates)
             .then(res => {
                 expect(res).toMatchObject(updates)
                 done()
             })
-      }, 50)
+      }, 10)
 })
 
 test('Collection: (deleteMany) Should delete 3 documents', async (done) => {
+    const docsToDelete = [1,3,4]
+    
     setTimeout(() => {
-        const docsToDelete = [1,3,4]
         db.collection('users').deleteMany(docsToDelete)
             .then(res => {
                 expect(res).toMatchObject(docsToDelete)
                 done()
             })
-      }, 50)
+      }, 10)
 })
 
 test('Collection: (where) Should return 2 documents', async (done) => {
@@ -229,7 +230,7 @@ test('Collection: (where) Should return 2 documents', async (done) => {
                 expect(res).toMatchObject(expectedDocs)
                 done()
             })
-      }, 50)
+      }, 10)
 })
 
 test('Collection: (where/and) Should return 1 match', async (done) => {
@@ -251,7 +252,7 @@ test('Collection: (where/and) Should return 1 match', async (done) => {
                 expect(res).toMatchObject(expectedDocs)
                 done()
             })
-      }, 50)
+      }, 10)
 })
 
 test('Collection: (where/setProperty) Should return value of update', async (done) => {
@@ -271,7 +272,7 @@ test('Collection: (where/setProperty) Should return value of update', async (don
                 expect(res).toMatchObject(update)
                 done()
             })
-      }, 50)
+      }, 10)
 })
 
 test('Collection: (where/deleteProperty) Should return success msg', async (done) => {
@@ -290,7 +291,7 @@ test('Collection: (where/deleteProperty) Should return success msg', async (done
                 expect(res).toMatchObject(update)
                 done()
             })
-      }, 50)
+      }, 10)
 })
 
 test('Collection: (where/insertInto) Should success msg', async (done) => {
@@ -310,7 +311,7 @@ test('Collection: (where/insertInto) Should success msg', async (done) => {
                 expect(res).toMatchObject(update)
                 done()
             })
-      }, 50)
+      }, 10)
 })
 
 test('Collection: (where/removeFrom) Should return success msg', async (done) => {
@@ -330,7 +331,7 @@ test('Collection: (where/removeFrom) Should return success msg', async (done) =>
                 expect(res).toMatchObject(update)
                 done()
             })
-      }, 50)
+      }, 10)
 })
 
 test('Collection: (where/updateArray) Should return success msg', async (done) => {
@@ -358,7 +359,7 @@ test('Collection: (where/updateArray) Should return success msg', async (done) =
                 expect(res).toMatchObject(update)
                 done()
             })
-      }, 50)
+      }, 10)
 })
 
 test('Collection: (where/include) Should return matching obj', async (done) => {
@@ -376,7 +377,7 @@ test('Collection: (where/include) Should return matching obj', async (done) => {
                 expect(res).toEqual(expectedResult)
                 done()
             })
-      }, 50)
+      }, 10)
 })
 
 test('Collection: (where/exclude) Should return matching obj', async (done) => {
@@ -395,5 +396,5 @@ test('Collection: (where/exclude) Should return matching obj', async (done) => {
                 expect(res).toEqual(expectedResult)
                 done()
             })
-      }, 50)
+      }, 10)
 })
