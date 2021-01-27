@@ -18,7 +18,7 @@
 - [Install](#install)
 - [2-Minute Quickstart](#2-minute-quickstart)
 - [Directories Overview](#directories-overview)
-- [DB Configuration](#db-configuration)
+- [DB Settings](#db-settings)
 - [Collections](#collections)
 - [Schemas](#schemas)
 - [API](#api)
@@ -29,18 +29,12 @@
   - [Set Custom Model](#set-custom-schema-model)
   - [Collection Methods](#collection-methods)
   - [Queries & Query Chains](#queries--query-chains)
-- <a target="_blank" href="CHANGELOG.md">CHANGELOG (new!)</a>
+- <a target="_blank" href="CHANGELOG.md">CHANGELOG</a>
+- [Read this stability disclaimer](#stability-disclaimer) 
 
 
 
 ## Install:
-
-Basic requirements:
-  - Node (v12.7.0 or higher)
-  - NPM (v6.14.2 or higher)
-  - [Read this stability disclaimer](#stability-disclaimer)  
-  
-> Install with [npm](https://www.npmjs.com/)
 
 ```sh
 $ npm i streamdb
@@ -424,7 +418,7 @@ module.exports = streamDb.model('User', User)
 **[back to top](#readme)**
 
 
-## DB Configuration
+## DB Settings
 
 Setting up a new db requires you to run `createDb()` only once. You may use the default settings as shown in the Quickstart, or you can specify which parameters you wish to change.    
 
@@ -453,9 +447,9 @@ streamDb.createDb({
 .catch(e => console.log(e))
 ```  
 
-### defaultModel (*new*)
+### defaultModel
 
-The newest feature as of `v0.0.7` is the ability to set a `defaultModel` in the db settings so that every new collection will automatically have the same configuration. This field corresponds to the `model` field in collection settings and will populate it in the collection meta.  
+Set a `defaultModel` in the db settings - every new collection will automatically start with the same validation model. This field corresponds to the `model` field in collection settings and will populate it in the collection meta.  
 
 Any collection settings you set in the `model` field when adding a new collection will override the db defaults you have set if you wish to customize collection settings.  
 
