@@ -21,13 +21,6 @@
 - [DB Configuration](#db-configuration)
 - [Collections](#collections)
 - [Schemas](#schemas)
-  - [Generating Models](#generating-models)
-  - [Data Types](#data-types)
-  - [Rules & Field Parameters](#rules--field-parameters)
-  - [$ref Objects](#ref-objects)
-  - [Nested Objects](#nested-objects)
-  - [Embedded Documents](#embedded-documents)
-  - [Array Embeds](#array-embeds)
 - [API](#api)
   - [DB Methods](#db-methods)
     - [Launching Server](#launching-db-server)
@@ -1265,6 +1258,16 @@ Params:
 
 Returns: 
 - Promise. The document object
+
+### $ getDocs(\[ids\])
+
+Get many documents by id
+
+Params:
+- `ids` **{Array\<String\>|\<Number\>}**: (required) Array of ids
+
+Returns: 
+- Promise. The results array
 
 ### $ insertOne(doc)  
 
