@@ -30,7 +30,8 @@
   - [Collection Methods](#collection-methods)
   - [Queries & Query Chains](#queries--query-chains)
 - <a target="_blank" href="CHANGELOG.md">CHANGELOG</a>
-- [Read this stability disclaimer](#stability-disclaimer) 
+- [Tests](#tests)
+- [Stability Notice](#stability-notice) 
 
 
 
@@ -1532,11 +1533,20 @@ Returns:
 **[back to top](#readme)**
 
 
+## Tests
 
-## Stability Disclaimer
-- A [CHANGELOG](CHANGELOG.md) has been added as of v0.0.7 
-- Please don't use sensitive or valuable data (data you don't want to lose).
-- Keep in mind, early updates and changes will probably be breaking, experimental and may be temporary (although progress is being made slowly but surely).
+Tests are implemented using the [Jest Framework](https://jestjs.io/), and located in the [\_\_tests\_\_](https://github.com/fabiantoth/streamdb/tree/main/__tests__) directory.  
+To run tests, install dev dependencies and run: 
+
+```sh
+$ npm test
+```
+
+
+## Stability Notice 
+
+- streamDB is mainly for prototyping, do not use in production, use sensitive, or data you don't want to lose. 
+- Early v0.x.x updates may be breaking, experimental, or temporary (keep track of updates, [CHANGELOG](https://github.com/fabiantoth/streamdb/blob/main/CHANGELOG.md)).
 
 This project grew out of a less ambitious desire to just have a MUCH simpler way to support prototyping without being tied to an env or dealing with account limits...in short, this was not a planned library.  
 
