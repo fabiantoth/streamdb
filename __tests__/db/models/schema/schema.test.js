@@ -1,5 +1,4 @@
 const streamDb = require('../../../../lib/index')
-const DB = streamDb.DB
 const Schema = streamDb.Schema
 
 const addOneDocument = require('../../../../lib/db/models/schema/add-one-document')
@@ -27,33 +26,34 @@ const colSettings = {
     }
 }
 
-const User = new Schema({
-    id: streamDb.Types.$incr,
-    firstname: {
-        type: String,
-        required: true
-    },
-    lastname: {
-        type: String,
-        required: true
-    },
-    email: String
-}, 
-    {
-        strict: false,
-        timestamps: {
-            created_at: true,
-            updated_at: true
-        }
-})
-
 let db
 let colMeta
+let User
 let model 
 
 beforeAll(async (done) => {
     const schemaMethods = await streamDb.createDb(dbSettings)
-    db = new DB('schemaMethods')
+    db = new streamDb.DB('schemaMethods')
+
+    User = new Schema({
+        id: db.Types.$incr,
+        firstname: {
+            type: String,
+            required: true
+        },
+        lastname: {
+            type: String,
+            required: true
+        },
+        email: String
+    }, 
+        {
+            strict: false,
+            timestamps: {
+                created_at: true,
+                updated_at: true
+            }
+    })
 
     db.addCollection('users', colSettings)
         .then(res => {
