@@ -5,7 +5,7 @@ const dbSettings = {
     dbName: 'schema-class',
     initSchemas: true,
     modelsAutoDelete: true, 
-    model: {
+    defaultModel: {
         type: 'schema'
     } 
 }
@@ -165,4 +165,149 @@ test('Schema Class: should return a Schema object with schema and settings objec
           settings: { strict: false, timestamps: { created_at: true, updated_at: true } }
     })
 
+})
+
+test('Schema Class: (insertOne) Should add one new document with basic schema', async (done) => {
+    const DocModel = new Schema({
+        str: String,
+        num: Number,
+        arr: Array,
+        arr2: [],
+        bool: Boolean,
+        date: Date,
+        ref: {
+            collection: 'eagles',
+            $ref: Number
+        },
+        any: streamDb.Types.Any
+    }, 
+        {
+            strict: false,
+            timestamps: {
+                created_at: true,
+                updated_at: true
+            }
+    })
+
+    const doc = {
+        str: 'a string',
+        num: 100,
+        arr: [1, 2, 'three'],
+        arr2: [],
+        bool: true,
+        date: new Date(),
+        ref: {
+            collection: 'eagles',
+            $ref: 1
+        },
+        any: null
+    }
+
+    let usersRef = db.collection('cowboys').setModel('Cowboy', DocModel)
+
+    usersRef.insertOne(doc)
+        .then(res => {
+            expect.objectContaining({
+                id: expect(res.id).toBe(1),
+                str: expect(res.str).toBe('a string'),
+                num: expect(res.num).toBe(100),
+                arr: expect(res.arr).toMatchObject([1, 2, 'three']),
+                arr2: expect(res.arr2).toMatchObject([]),
+                bool: expect(res.bool).toBe(true),
+                date: expect.any(Date),
+                any: expect(res.any).toBe(null),
+                ref: expect(res.ref).toMatchObject({
+                    collection: 'eagles',
+                    $ref: 1
+                }),
+                created_at: expect.any(Date),
+                updated_at: expect.any(Date)
+            })
+
+            done()
+        })
+})
+
+test('Schema Class: (insertOne) Should add one new document with type definition schema', async (done) => {
+    const DocModel2 = new Schema({
+        str: {
+            type: String,
+            required: true,
+            minLength: 2,
+            maxLength: 10
+        },
+        num: {
+            type: Number,
+            required: true,
+            min: 0,
+            max: 100
+        },
+        arr: {
+            type: Array,
+            required: true,
+            minLength: 0,
+            maxLength: 20
+        },
+        bool: {
+            type: Boolean,
+            required: true,
+            default: false
+        },
+        date: {
+            type: Date,
+            required: true
+        },
+        ref: {
+            collection: 'cowboys',
+            $ref: Number
+        },
+        any: {
+            type: streamDb.Types.Any
+        }
+    }, 
+        {
+            strict: false,
+            timestamps: {
+                created_at: true,
+                updated_at: true
+            }
+    })
+
+    const doc = {
+        str: 'a string',
+        num: 100,
+        arr: [1, 2, 'three'],
+        arr2: [],
+        bool: true,
+        date: new Date(),
+        ref: {
+            collection: 'cowboys',
+            $ref: 1
+        },
+        any: null
+    }
+
+    let usersRef = db.collection('eagles').setModel('Eagle', DocModel2)
+
+    usersRef.insertOne(doc)
+        .then(res => {
+            expect.objectContaining({
+                id: expect(res.id).toBe(1),
+                str: expect(res.str).toBe('a string'),
+                num: expect(res.num).toBe(100),
+                arr: expect(res.arr).toMatchObject([1, 2, 'three']),
+                arr2: expect(res.arr2).toMatchObject([]),
+                bool: expect(res.bool).toBe(true),
+                date: expect.any(Date),
+                any: expect(res.any).toBe(null),
+                ref: expect(res.ref).toMatchObject({
+                    collection: 'cowboys',
+                    $ref: 1
+                }),
+                created_at: expect.any(Date),
+                updated_at: expect.any(Date)
+            })
+
+            done()
+        })
 })
