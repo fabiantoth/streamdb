@@ -106,8 +106,7 @@ Next, let's create our first collection. Create a separate file:
 ```js
 // run.js
 const streamDb = require('streamdb')
-const DB = streamDb.DB
-const db = new DB('streamDB')
+const db = new streamDb.DB('streamDB')
 
 db.addCollection('users')
   .then(res => console.log(res))
@@ -159,8 +158,7 @@ And finally, let's add some dummy data. Comment out the addCollection() code and
 ```js
 // run.js
 const streamDb = require('streamdb')
-const DB = streamDb.DB
-const db = new DB('streamDB')
+const db = new streamDb.DB('streamDB')
 
 // db.addCollection('users')
 //   .then(res => console.log(res))
@@ -299,9 +297,10 @@ The dbMeta is generated when you create the db, contains path information, colle
   "storesMax": 131072,                        // max store file size before split           [def=131072]
   "total": 0,                                 // total # of collections
   "routes": [                         
-    "db.js"                                 // all current routes (db route automatically created with db
+    "db.js"                                  // current routes (db route automatically created with db
   ],
-  "collections": [],                         // all current collections
+  "collections": [],                         // current collections
+  "models": [],				     // current models
   "defaultModel": {
          "type": "default",                  // 2 options: ['default', 'schema']          [def='default']
          "id": "$incr",                      // 2 options: ['$uid', '$incr']              [def='$incr']
@@ -491,17 +490,13 @@ If you are new to Express or need a refresher on routes:
 Collection names and resulting folder/file names will be **camel-cased** (`group-members` becomes `groupMembers`, etc).  
 
 
-1. If you plan on utilizing schemas, try to create <strong><em>plural collection names</em></strong>.  
-	1. **Ex:** `users` collection becomes `User` model (as well as file name).  
-2. If name plurality isn't recognized, the model/file will become collection name (capitalized) + `Model`.  
-	1. **Ex:** naming your collection `group` (singular), will result in the model and file name, `GroupModel` and `models/GroupModel.js`.   
-3. **Do not change the model OR file name** - the model/collection file names are used interchangeably to locate each other based on this plural/singular relationship.  
+If you plan on utilizing schemas, try to create <strong><em>plural collection names</em></strong>.  
+1. **Ex1:** `users` collection, becomes `User` model (as well as file name).  
+2. **Ex2:** `group` collection, becomes `Group` (singular) model.  
 
-> *You do not have to remember this* **IF** `initSchema` is set to `true`.
+> if  `initSchema` is set to `true` the model names will be created automatically.
 
 If your validation model type is `'schema'` AND you do NOT have automated model generation, attempting to run any queries without a corresponding Schema Model will *result in an error*.  
-
-You will need to make sure the model file exists, and that your file/collection/model naming adheres to this convention.
 
 **Alternatively...**  
 
@@ -589,7 +584,8 @@ const modelSetting = {
         type: 'schema',
         id: '$incr',
         idCount: 0,         
-        idMaxCount: 10000   
+        idMaxCount: 10000,   
+	name: 'modelName' (customize name)
     }
 }
 ```
@@ -603,7 +599,8 @@ const modelSetting2 = {
         type: 'schema',
         id: '$uid',
         uidLength: 11, 
-        minLength: 6     
+        minLength: 6,
+	name: 'modelName' (customize name)
     }
 }
 ```
@@ -747,7 +744,7 @@ Here the allowed keyword fields for each schema type:
 
 ```js
 {
-  strings:  ['type', 'default', 'required', 'validate', 'minLength', 'maxLength', 'enum', 'lowercase', 'capitalize'],
+  strings:  ['type', 'default', 'required', 'validate', 'minLength', 'maxLength', 'enum', 'lowercase', 'capitalize', 'trim'],
   numbers:  ['type', 'default', 'required', 'validate', 'min', 'max','enum'],
   booleans: ['type','required','default'],
   dates:    ['type','default','required','validate', 'startsAfter', 'startsBefore'],
@@ -769,6 +766,7 @@ Here the allowed keyword fields for each schema type:
 * **`validate`:** run a custom validate function: `validate: (v) => v.toUpperCase()`
 * **`enum`:** Array containing permitted String or Number values: `['some value', 4, 55]`
 * **`lowercase/capitalize`:** set to true/false to transform String types
+* **`trim`:** set to true/false to remove extra whitespaces before, after, and between characters
 * **`startsAfter/startsBefore`:** set Date() value floor/ceiling range on Date types
 * **`anyOf`:** for type Any, like enum, additionally can specify accept certain value/types: `[String, Number, 'some value', 55]`
 
@@ -1107,6 +1105,9 @@ The DB class constructor, must be instantiated with `new DB('dbName')`
 const streamDb = require('streamdb')
 const DB = streamDb.DB  
 const db = new DB('streamDB')  
+
+// or just
+// const db = new streamDb.DB('streamDB')
 ```
 
 
@@ -1135,7 +1136,6 @@ The settings are optional and have the following (default) values:
 * **`uidLength (11)`:** (if $uid) set id string length (max)
 * **`minLength (6)`:** (if $uid) set min length of characters
 * **`name`:**  (if 'schema') the model name (ie, 'User') autogenerated if initSchemas set to true
-* **`path`:** (if 'schema') the model location (ie, '/streamDB/models/User.js') autogenerated if initSchemas set to true
 
 
 ### $ db.dropCollection('name')
@@ -1181,9 +1181,8 @@ Returns:
 ```js
 // Using a custom schema model
 const streamDb = require('streamdb')
-const DB = streamdb.DB
 const Schema = streamDb.Schema
-const db = new DB('streamDB')
+const db = new streamdb.DB('streamDB')
 
 const UserSchema = new Schema({       // define your schema, settings
     id: streamDb.Types.$incr,
@@ -1229,8 +1228,7 @@ usersRef.insertOne(doc)
 ## Collection Methods:
 
 ```js
-const DB = streamDb.DB  
-const db = new DB('streamDB')   
+const db = new streamDb.DB('streamDB')   
 
 db.collection('name').method()
   .then(res => console.log(res))
