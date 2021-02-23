@@ -557,6 +557,8 @@ const defaultSetting = {
     }
 }
 
+db.addCollection('users', defaultSettings) // ...then().catch()
+
 ```
 
 * `default ($uid)`: use string id validation only 
@@ -571,6 +573,8 @@ const defaultSetting2 = {
         minLength: 6        // the min length
     }
 }
+
+db.addCollection('users', defaultSettings2)
 ```
 
 **Schema Validation:** 
@@ -585,9 +589,11 @@ const modelSetting = {
         id: '$incr',
         idCount: 0,         
         idMaxCount: 10000,   
-	name: 'modelName' (customize name)
+	name: 'UserModel' (customize name)
     }
 }
+
+db.addCollection('users', modelSetting)
 ```
 
 * `schema ($uid)`: utilize schema models with an auto generated String uid:
@@ -600,9 +606,11 @@ const modelSetting2 = {
         id: '$uid',
         uidLength: 11, 
         minLength: 6,
-	name: 'modelName' (customize name)
+	name: 'User' // (customize name)
     }
 }
+
+db.addCollection('users', modelSetting2)
 ```
 
 ### Starter Collection Routes:
