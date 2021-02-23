@@ -189,12 +189,12 @@ test('Collection: (getDocs) Should get 4 matching documents', async (done) => {
 })
 
 test('Collection: (getDocs) Should throw error if passed value is not an array', async (done) => {
-    expect(db.collection('users').getDocs()).rejects.toMatch(`[Type Error]: Value must be an array, received: ${typeof undefined}`)
+    expect(db.collection('users').getDocs()).rejects.toMatch(`Value must be an array, received: ${typeof undefined}`)
     done()
 })
 
 test('Collection: (getDocs) Should throw error if array is empty', async (done) => {
-    expect(db.collection('users').getDocs([])).rejects.toMatch(`[Type Error]: Array cannot be empty`)
+    expect(db.collection('users').getDocs([])).rejects.toMatch(`Array cannot be empty`)
     done()
 })
 

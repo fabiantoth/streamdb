@@ -112,14 +112,14 @@ beforeEach(async () => {
 })
 
 test('Queries: throw error when where() arguments are incorrect data types', async (done) => {
-    expect(() => db.collection('users').where(1).find()).toThrow(`[Type Error]: first where() argument must be a string, received: ${typeof 1}`)
-    expect(() => db.collection('users').where(`access = member`, `access = member`).find()).toThrow('[Type Error]: second where() argument must be a function')
+    expect(() => db.collection('users').where(1).find()).toThrow(`where() exp argument must be a string, received: ${typeof 1}`)
+    expect(() => db.collection('users').where(`access = member`, `access = member`).find()).toThrow('where() filterFn argument must be a function')
     done()
 })
 
 test('Queries: throw error when .and()/.or() methods are added before where()', async (done) => {
-    expect(() => db.collection('users').and(`access = member`).find()).toThrow(`[Validation Error]: and() methods cannot be used before opening where()`)
-    expect(() => db.collection('users').or(`access = member`).find()).toThrow(`[Validation Error]: or() methods cannot be used before opening where()`)
+    expect(() => db.collection('users').and(`access = member`).find()).toThrow(`and() methods cannot be used before opening where()`)
+    expect(() => db.collection('users').or(`access = member`).find()).toThrow(`or() methods cannot be used before opening where()`)
     done()
 })
 
