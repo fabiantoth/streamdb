@@ -26,7 +26,8 @@ const dbFullMeta = {
     storesMax: 10000,
     total: 0,
     routes: [ 'db.js' ],
-    collections: []
+    collections: [],
+    models: []
 }
 
 let date1 = new Date(2020, 11, 20)

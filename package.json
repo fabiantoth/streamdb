@@ -1,6 +1,6 @@
 {
   "name": "streamdb",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "A Node streams-based JSON document-model DB",
   "main": "lib/index.js",
   "scripts": {
@@ -14,6 +14,8 @@
     "db",
     "database",
     "streams",
+    "streamdb",
+    "stream-db",
     "json",
     "jsondb",
     "mockapi"
@@ -36,6 +38,7 @@
     "del": "6.0.0",
     "dot-prop": "6.0.1",
     "express": "4.17.1",
+    "filenamify": "^4.2.0",
     "globby": "11.0.1",
     "make-dir": "3.1.0",
     "pluralize": "8.0.0",

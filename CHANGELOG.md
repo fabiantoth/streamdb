@@ -17,6 +17,23 @@ All notable changes to this project will be documented in this file.
 </details>
 <br>
 
+## Version 0.0.9  - (Feb. 23, 2021)
+
+- [Added] **[New Feature]:** **Set Custom Model Name**: set custom model name in create collection settings, see <a href="README.md#customizing-the-validation-model">customizing model examples</a> (under Schema Validation)
+- [Added] [dependency]: **filenamify**
+- [Added] models array field to dbMeta
+- [Added] Starter tests for Schema, createCollection()
+- [Fixed] SchemaString: Bugs on string type param rules for capitalize, lowercase, min/max clashes, and trim now fixed
+- [Fixed] SchemaNumber: min/max clashes
+- [Fixed] SchemaArray: Bug on function reference
+- [Changed] Model naming: changed to camelCase capitalized defaults, see README documentation for Naming Convention
+ 
+### Release note:
+
+Going through more robust use-case testing, it became apparent a large portion of the schema & the code base needs to be refactored/rebuilt. This is already in progress but as a holdover, decided to release this update with at least some patch fixes.
+
+The next few releases will have significant changes to the overall quality & workflow of the library.
+
 ## Version 0.0.8  - (Jan. 27, 2021)
 
 - [Added] **[New Feature]:** **`getDocs([ids])`**: method to get many docs based on array of ids

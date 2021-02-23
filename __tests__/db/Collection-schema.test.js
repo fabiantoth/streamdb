@@ -93,7 +93,7 @@ test('Collection-schema: (insertOne) Should add one new document', async (done) 
         })
 })
 
-test('Collection-schema: (insertMany) Should add 3 new documents', async (done) => {
+test('Collection-schema: (insertMany) Should add 5 new documents', async (done) => {
     const users = [
         {
             firstname: 'Bugs',
