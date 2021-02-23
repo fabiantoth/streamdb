@@ -589,7 +589,7 @@ const modelSetting = {
         id: '$incr',
         idCount: 0,         
         idMaxCount: 10000,   
-	name: 'UserModel' (customize name)
+	name: 'UserModel' // (customize name)
     }
 }
 
