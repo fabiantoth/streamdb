@@ -4,7 +4,7 @@
   "description": "A Node streams-based JSON document-model DB",
   "main": "lib/index.js",
   "scripts": {
-    "test": "jest --runInBand"
+    "test": "jest --runInBand --watchAll"
   },
   "repository": {
     "type": "git",
