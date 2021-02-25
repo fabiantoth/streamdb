@@ -113,6 +113,39 @@ beforeEach(async () => {
     })
 })
 
+test('Schema: should return a Schema object instance typed fields and no rules', () => {
+    const stringsSchema = new Schema({
+        firstname: String,
+        lastname: String
+    }, {
+        strict: true,
+        timestamps: {
+            created_at: true,
+            updated_at: true
+        }
+    })
+
+    expect.objectContaining({
+        schema: expect(stringsSchema.schema).toMatchObject({ firstname: String, lastname: String }),
+        settings: expect(stringsSchema.settings).toMatchObject({ strict: true, timestamps: { created_at: true, updated_at: true } }),
+        instance: expect(stringsSchema.instance).toBe('schema'),
+        _TypedSchema: expect.objectContaining({
+            firstname: expect(stringsSchema._TypedSchema.firstname).toMatchObject({
+                params: String,
+                options: [],
+                field: 'firstname',
+                instance: 'string'
+              }),
+            lastname: expect(stringsSchema._TypedSchema.lastname).toMatchObject({
+                params: String,
+                options: [],
+                field: 'lastname',
+                instance: 'string'
+              })
+        })
+    })
+})
+
 test('Schema Class: should return a Schema object with schema and settings objects', () => {
     expect(typeof Cowboy).toBe('object')
 
@@ -310,4 +343,84 @@ test('Schema Class: (insertOne) Should add one new document with type definition
 
             done()
         })
+})
+
+test('Document: (insertOne) Should add one new document with a nested object', async (done) => {
+    let collection = await db.addCollection('users')
+
+    const UserSchema = new Schema({
+        name: String,
+        details: {
+            age: Number,
+            email: String
+        }
+    }, 
+        {
+            strict: true,
+            timestamps: {
+                created_at: true,
+                updated_at: true
+            }
+    })
+
+    const doc = {
+        name: 'John Smith',
+        details: {
+            age: 20,
+            email: 'jsmith@email.com'
+        }
+    }
+
+    let usersRef = db.collection('users').setModel('User', UserSchema, collection)
+
+    usersRef.insertOne(doc)
+        .then(res => {
+            expect.objectContaining({
+                id: expect(res.id).toBe(1),
+                name: expect(res.name).toBe('John Smith'),
+                details: expect(res.details).toMatchObject({
+                    age: 20,
+                    email: 'jsmith@email.com'
+                }),
+                created_at: expect.any(Date),
+                updated_at: expect.any(Date)
+            })
+
+            done()
+        })
+})
+
+//
+// ======= negative tests ========== //
+//
+test('Schema: #error #schema, #settings should throw error trying to assign schema or settings args to non objects', () => {
+    expect(() =>  new Schema('string'))
+        .toThrow(`Schema argument must be an object`)
+        
+    expect(() => new Schema({ name: String }, null))
+        .toThrow(`Settings argument must be an object`)
+})
+
+test('Schema: #error #schema should throw error if object is', () => {
+    expect(() =>  new Schema({}))
+        .toThrow(`Schema argument must contain at least one property declaration`)
+})
+
+test('Schema: #error #settings should throw error if settings object contains any fields other than "strict" or "timestamps"', () => {
+    expect(() =>  new Schema({ name: String }, { time: true }))
+        .toThrow(`Field "time" is not a valid settings option`)
+})
+
+test('Schema: #error #settings #timestamps should throw error if "timestamps" is not an object', () => {
+    expect(() =>  new Schema({ name: String }, { timestamps: null }))
+        .toThrow(`Timestamps settings must be an object`)
+})
+
+test('Schema: #error #settings should throw error if settings "strict", "created_at", and "updated_at" are non boolean values', () => {
+    expect(() =>  new Schema({ name: String }, { strict: 1 }))
+        .toThrow(`Schema strict value must be a boolean, received: number`)
+    expect(() =>  new Schema({ name: String }, { timestamps: { created_at: 'false' } }))
+        .toThrow(`created_at/updated_at can only be set to true or false`)
+    expect(() =>  new Schema({ name: String }, { timestamps: { updated_at: 0 } }))
+        .toThrow(`created_at/updated_at can only be set to true or false`)
 })
