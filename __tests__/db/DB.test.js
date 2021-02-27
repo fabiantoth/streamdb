@@ -38,31 +38,31 @@ test('DB: (addCollection) Should return new collection meta file', async (done) 
         }
     }
 
-    const expectedMeta = {
-        colName: 'users',
-        metaPath: './testUserDB/collections/users/users.meta.json',
-        colPath: './testUserDB/collections/users',
-        storeMax: 131072,
-        target: './testUserDB/collections/users/users.0.json',
-        store: [
-          {
-            '$id': 0,
-            size: 2,
-            path: './testUserDB/collections/users/users.0.json',
-            documents: []
-          }
-        ],
-        model: { 
+    const usersMeta = await db.addCollection('users', usersColSettings)
+
+    expect.objectContaining({
+        colName: expect(usersMeta.colName).toBe('users'),
+        metaPath: expect(usersMeta.metaPath).toBe('./testUserDB/collections/users/users.meta.json'),
+        colPath: expect(usersMeta.colPath).toBe('./testUserDB/collections/users'),
+        storeMax: expect(usersMeta.storeMax).toBe(131072),
+        target: expect(usersMeta.target).toBe('./testUserDB/collections/users/users.0.json'),
+        store: expect(usersMeta.store).toMatchObject([
+            {
+              '$id': 0,
+              size: 2,
+              path: './testUserDB/collections/users/users.0.json',
+              documents: []
+            }
+          ]),
+        model: expect(usersMeta.model).toMatchObject({ 
             type: 'default', 
             id: '$incr', 
             idCount: 0, 
             idMaxCount: 10000 
-        }
-    }
-
-    const usersMeta = await db.addCollection('users', usersColSettings)
-
-    expect(usersMeta).toMatchObject(expectedMeta)
+        }),
+        version: expect(usersMeta.version).toBe(1),
+        timestamp: expect.any(Date),
+    })
     done()
 })
 

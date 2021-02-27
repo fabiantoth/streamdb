@@ -355,14 +355,16 @@ The meta file contains path information, store size, number of stores, validatio
       "documents": []                                         // all ids in this store
     }
   ],
-  "model": {                                                // validation model
-    "type": "schema",                                         // (example of schema $incr model)
-    "id": "$incr",                                            // id type
-    "name": "User",                                           // model name
-    "path": "./streamDB/models/User.js"                       // model location
-    "idCount": 0,                                             // curr id count
-    "idMaxCount": 10000                                       // max id count for this collection
-  }
+  "model": {                                // validation model
+    "type": "schema",                         // (example of schema $incr model)
+    "id": "$incr",                            // id type
+    "name": "User",                           // model name
+    "path": "./streamDB/models/User.js"       // model location
+    "idCount": 0,                             // curr id count
+    "idMaxCount": 10000                       // max id count for this collection
+  },
+  "version": 1,                               // version # -> updates w/every change           
+  "timestamp": 1613412415291                  // last update ts in milliseconds
 }
 ```
 

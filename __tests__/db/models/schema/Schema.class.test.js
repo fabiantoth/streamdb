@@ -92,6 +92,30 @@ beforeAll(async (done) => {
     })
 
     let res1 = await db.addCollection('cowboys')
+    expect.objectContaining({
+        colName: expect(res1.colName).toBe('cowboys'),
+        metaPath: expect(res1.metaPath).toBe('./schema-class/collections/cowboys/cowboys.meta.json'),
+        colPath: expect(res1.colPath).toBe('./schema-class/collections/cowboys'),
+        storeMax: expect(res1.storeMax).toBe(131072),
+        target: expect(res1.target).toBe('./schema-class/collections/cowboys/cowboys.0.json'),
+        store: expect(res1.store).toMatchObject([
+            {
+              '$id': 0,
+              size: 2,
+              path: './schema-class/collections/cowboys/cowboys.0.json',
+              documents: []
+            }
+          ]),
+        model: expect(res1.model).toMatchObject({ 
+            type: 'schema', 
+            id: '$incr', 
+            idCount: 0, 
+            idMaxCount: 10000 
+        }),
+        version: expect(res1.version).toBe(1),
+        timestamp: expect.any(Date),
+    })
+
     CowboyModel = streamDb.model('Cowboy', Cowboy, res1)
 
     let res2 = await db.addCollection('eagles')

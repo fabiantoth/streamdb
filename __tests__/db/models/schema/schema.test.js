@@ -57,8 +57,33 @@ beforeAll(async (done) => {
 
     db.addCollection('users', colSettings)
         .then(res => {
+            expect.objectContaining({
+                colName: expect(res.colName).toBe('users'),
+                metaPath: expect(res.metaPath).toBe('./schemaMethods/collections/users/users.meta.json'),
+                colPath: expect(res.colPath).toBe('./schemaMethods/collections/users'),
+                storeMax: expect(res.storeMax).toBe(131072),
+                target: expect(res.target).toBe('./schemaMethods/collections/users/users.0.json'),
+                store: expect(res.store).toMatchObject([
+                    {
+                      '$id': 0,
+                      size: 2,
+                      path: './schemaMethods/collections/users/users.0.json',
+                      documents: []
+                    }
+                  ]),
+                model: expect(res.model).toMatchObject({ 
+                    type: 'schema', 
+                    id: '$incr', 
+                    idCount: 0, 
+                    idMaxCount: 10000 
+                }),
+                version: expect(res.version).toBe(1),
+                timestamp: expect.any(Date),
+            })
+
             colMeta = res
             model = streamDb.model('User', User, res)
+
             done()
         })
 })
@@ -98,7 +123,7 @@ test('schema: (addOneDocument) Should return one new document', async (done) => 
         })
 })
 
-test('schema: (addManyDocuments) Should add 3 new documents', async (done) => {
+test('schema: (addManyDocuments) Should add 5 new documents', async (done) => {
     const users = [
         {
             firstname: 'Bugs',
