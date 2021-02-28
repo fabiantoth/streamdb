@@ -79,7 +79,8 @@ test('Collection-schema: (insertOne) Should add one new document', async (done) 
     let usersRef = db.collection('users').setModel('User', User)
 
     usersRef.insertOne(user)
-        .then(res => {
+        .then(response => {
+            let res = response.data
             expect.objectContaining({
                 id: expect(res.id).toBe(1),
                 firstname: expect(res.firstname).toBe('Jerry'),
@@ -127,7 +128,7 @@ test('Collection-schema: (insertMany) Should add 5 new documents', async (done) 
 
     usersRef.insertMany(users)
         .then(res => {
-            expect(res).toEqual(expect.arrayContaining([expect.objectContaining({
+            expect(res.data).toEqual(expect.arrayContaining([expect.objectContaining({
                 id: expect.any(Number),
                 firstname: expect.any(String),
                 lastname: expect.any(String),
@@ -148,7 +149,8 @@ test('Collection-schema: (updateOne) Should update one document with id 2', asyn
     let usersRef = db.collection('users').setModel('User', User)
 
     usersRef.updateOne(update)
-        .then(res => {
+        .then(response => {
+            let res = response.data
             expect.objectContaining({
                 id: expect(res.id).toBe(2),
                 firstname: expect(res.firstname).toBe('Bugs'),
@@ -176,7 +178,8 @@ test('Collection-schema: (updateMany) Should update 2 documents', async (done) =
     let usersRef = db.collection('users').setModel('User', User)
 
     usersRef.updateMany(updates)
-        .then(res => {
+        .then(response => {
+            let res = response.data
             expect(res.length).toBe(2)
 
             expect(res[0].id).toBe(3)

@@ -78,7 +78,8 @@ test('SchemaRef: (insertOne) Should create 2 docs, populate parent $ref to subdo
 
     let usersRef = db.collection('users').setModel('User', User)
 
-    let result = await usersRef.insertOne(user)
+    let response = await usersRef.insertOne(user)
+    let result = response.data
 
     expect.objectContaining({
         id: expect(result.id).toBe(1),
@@ -87,7 +88,8 @@ test('SchemaRef: (insertOne) Should create 2 docs, populate parent $ref to subdo
         updated_at: expect.any(Date)
     })
 
-    let subResult = await db.collection('details').getById(1)
+    let response2 = await db.collection('details').getById(1)
+    let subResult = response2.data
 
     expect.objectContaining({
         id: expect(subResult.id).toBe(1),
@@ -109,7 +111,8 @@ test('SchemaRef: (updateOne) Should update ref object', async (done) => {
 
     let usersRef = db.collection('users').setModel('User', User)
 
-    let result = await usersRef.updateOne(update)
+    let response = await usersRef.updateOne(update)
+    let result = response.data
 
     expect.objectContaining({
         id: expect(result.id).toBe(1),
@@ -129,7 +132,8 @@ test('SchemaRef: (updateOne) Should set ref object field to null', async (done) 
 
     let usersRef = db.collection('users').setModel('User', User)
 
-    let result = await usersRef.updateOne(update)
+    let response = await usersRef.updateOne(update)
+    let result = response.data
 
     expect.objectContaining({
         id: expect(result.id).toBe(1),

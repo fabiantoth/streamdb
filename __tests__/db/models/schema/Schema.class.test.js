@@ -92,6 +92,7 @@ beforeAll(async (done) => {
     })
 
     let res1 = await db.addCollection('cowboys')
+
     expect.objectContaining({
         colName: expect(res1.colName).toBe('cowboys'),
         metaPath: expect(res1.metaPath).toBe('./schema-class/collections/cowboys/cowboys.meta.json'),
@@ -263,7 +264,9 @@ test('Schema Class: (insertOne) Should add one new document with basic schema', 
     let usersRef = db.collection('cowboys').setModel('Cowboy', DocModel)
 
     usersRef.insertOne(doc)
-        .then(res => {
+        .then(response => {
+            let res = response.data 
+
             expect.objectContaining({
                 id: expect(res.id).toBe(1),
                 str: expect(res.str).toBe('a string'),
@@ -347,7 +350,9 @@ test('Schema Class: (insertOne) Should add one new document with type definition
     let usersRef = db.collection('eagles').setModel('Eagle', DocModel2)
 
     usersRef.insertOne(doc)
-        .then(res => {
+        .then(response => {
+            let res = response.data 
+
             expect.objectContaining({
                 id: expect(res.id).toBe(1),
                 str: expect(res.str).toBe('a string'),
@@ -398,7 +403,9 @@ test('Document: (insertOne) Should add one new document with a nested object', a
     let usersRef = db.collection('users').setModel('User', UserSchema, collection)
 
     usersRef.insertOne(doc)
-        .then(res => {
+        .then(response => {
+            let res = response.data 
+
             expect.objectContaining({
                 id: expect(res.id).toBe(1),
                 name: expect(res.name).toBe('John Smith'),

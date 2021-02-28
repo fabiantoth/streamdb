@@ -59,7 +59,7 @@ test('Collection.insertOne(): Should add one new document', async (done) => {
     }
 
     let res = await db.collection('users').insertOne(user)
-    expect(res).toMatchObject(expectedDoc)
+    expect(res.data).toMatchObject(expectedDoc)
     done()
 })
 
@@ -136,7 +136,7 @@ test('Collection.insertMany(): Should add 5 new documents', async (done) => {
 
     db.collection('users').insertMany(users)
         .then(res => {
-            expect(res).toMatchObject(expectedDocs)
+            expect(res.data).toMatchObject(expectedDocs)
             done()
         })
 })
@@ -151,7 +151,7 @@ test('Collection.getById(): Should get document matching id 2', async (done) => 
 
     db.collection('users').getById(2)
         .then(res => {
-            expect(res).toMatchObject(match)
+            expect(res.data).toMatchObject(match)
             done()
         })
 })
@@ -188,7 +188,7 @@ test('Collection.getDocs(): Should get 4 matching documents', async (done) => {
 
     db.collection('users').getDocs(docs)
         .then(res => {
-            expect(res).toMatchObject(match)
+            expect(res.data).toMatchObject(match)
             done()
         })
 })
@@ -211,7 +211,7 @@ test('Collection.updateOne(): Should update one document with id 2', async (done
 
     db.collection('users').updateOne(update)
         .then(res => {
-            expect(res).toMatchObject(update)
+            expect(res.data).toMatchObject(update)
             done()
         })
 })
@@ -219,7 +219,9 @@ test('Collection.updateOne(): Should update one document with id 2', async (done
 test('Collection.deleteOne(): Should delete document with id 2', async (done) => {
     db.collection('users').deleteOne(2)
         .then(res => {
-            expect(res).toBe(`Document with id "2" has been removed`)
+            expect(res.success).toBe(true)
+            expect(res.message).toBe(`Document with id "2" has been removed`)
+            expect(res.data).toBe(2)
             done()
         })
 })
@@ -238,7 +240,7 @@ test('Collection.updateMany(): Should update 2 documents', async (done) => {
 
     db.collection('users').updateMany(updates)
         .then(res => {
-            expect(res).toMatchObject(updates)
+            expect(res.data).toMatchObject(updates)
             done()
         })
 })
@@ -248,7 +250,7 @@ test('Collection.deleteMany(): Should delete 3 documents', async (done) => {
     
     db.collection('users').deleteMany(docsToDelete)
         .then(res => {
-            expect(res).toMatchObject(docsToDelete)
+            expect(res.data).toMatchObject(docsToDelete)
             done()
         })
 })
@@ -274,7 +276,7 @@ test('Collection.where(): Should return 2 documents', async (done) => {
         .where('id > 4')
         .find()
         .then(res => {
-            expect(res).toMatchObject(expectedDocs)
+            expect(res.data).toMatchObject(expectedDocs)
             done()
         })
 })
@@ -294,7 +296,7 @@ test('Collection.where().and(): Should return 1 match', async (done) => {
         .where('id > 4').and('lastname = Duck')
         .find()
         .then(res => {
-            expect(res).toMatchObject(expectedDocs)
+            expect(res.data).toMatchObject(expectedDocs)
             done()
         })
 })
@@ -312,7 +314,7 @@ test('Collection.where().setProperty(): Should return value of update', async (d
         .where('id = 6')
         .setProperty('email', 'daf-duck@email.com')
         .then(res => {
-            expect(res).toMatchObject(update)
+            expect(res.data).toMatchObject(update)
             done()
         })
 })
@@ -329,7 +331,7 @@ test('Collection.where().deleteProperty(): Should return success msg', async (do
         .where('id = 6')
         .deleteProperty('email')
         .then(res => {
-            expect(res).toMatchObject(update)
+            expect(res.data).toMatchObject(update)
             done()
         })
 })
@@ -347,7 +349,7 @@ test('Collection.where().insertInto(): Should success msg', async (done) => {
         .where('id = 6')
         .insertInto('tags', tagValues)
         .then(res => {
-            expect(res).toMatchObject(update)
+            expect(res.data).toMatchObject(update)
             done()
         })
 })
@@ -365,7 +367,7 @@ test('Collection.where().removeFrom(): Should return success msg', async (done) 
         .where('id = 6')
         .insertInto('tags', tagValues)
         .then(res => {
-            expect(res).toMatchObject(update)
+            expect(res.data).toMatchObject(update)
             done()
         })
 })
@@ -391,7 +393,7 @@ test('Collection.where().updateArray(): Should return success msg', async (done)
         .where('id = 6')
         .updateArray('tags', updateFn)
         .then(res => {
-            expect(res).toMatchObject(update)
+            expect(res.data).toMatchObject(update)
             done()
         })
 })
@@ -407,7 +409,7 @@ test('Collection.where().include(): Should return matching obj', async (done) =>
         .include(['firstname','email'])
         .find()
         .then(res => {
-            expect(res).toEqual(expectedResult)
+            expect(res.data).toEqual(expectedResult)
             done()
         })
 })
@@ -424,7 +426,7 @@ test('Collection.where().exclude(): Should return matching obj', async (done) =>
         .exclude(['email'])
         .find()
         .then(res => {
-            expect(res).toEqual(expectedResult)
+            expect(res.data).toEqual(expectedResult)
             done()
         })
 })

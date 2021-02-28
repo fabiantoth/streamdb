@@ -109,8 +109,8 @@ beforeEach(async () => {
 test('getCollectionResources: Should insert 11 test records', async (done) => {
     let usersRef = db.collection('users')
     usersRef.insertMany(documents)
-        .then(data => {
-            expect(data.model.idCount).toBe(11)
+        .then(res => {
+            expect(res.data.model.idCount).toBe(11)
             done()
         })
 })
