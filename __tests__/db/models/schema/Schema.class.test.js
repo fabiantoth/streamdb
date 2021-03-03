@@ -25,8 +25,8 @@ beforeAll(async (done) => {
         uid: streamDb.Types.$uid,
         str: String,
         num: Number,
-        arr: Array,
-        arr2: [],
+        // arr: Array,
+        // arr2: [],
         bool: Boolean,
         date: Date,
         ref: {
@@ -58,12 +58,12 @@ beforeAll(async (done) => {
             min: 0,
             max: 100
         },
-        arr: {
-            type: Array,
-            required: true,
-            minLength: 0,
-            maxLength: 20
-        },
+        // arr: {
+        //     type: Array,
+        //     required: true,
+        //     minLength: 0,
+        //     maxLength: 20
+        // },
         bool: {
             type: Boolean,
             required: true,
@@ -81,7 +81,7 @@ beforeAll(async (done) => {
             type: streamDb.Types.Any
         },
         embedDoc: Cowboy,
-        arrEmbeddedDoc: [Cowboy]
+        // arrEmbeddedDoc: [Cowboy]
     }, 
         {
             strict: false,
@@ -186,8 +186,8 @@ test('Schema Class: should return a Schema object with schema and settings objec
         uid: expect(Object.prototype.toString.call(schema.uid)).toBe('[object Function]'),
         str: expect(evalType(schema.str, String)).toBe(true),
         num: expect(evalType(schema.num, Number)).toBe(true),
-        arr: expect(evalType(schema.arr, Array)).toBe(true),
-        arr2: expect(Array.isArray(schema.arr2)).toBe(true),
+        // arr: expect(evalType(schema.arr, Array)).toBe(true),
+        // arr2: expect(Array.isArray(schema.arr2)).toBe(true),
         bool: expect(evalType(schema.bool, Boolean)).toBe(true),
         date: expect(evalType(schema.date, Date)).toBe(true),
         ref: expect(schema.ref).toMatchObject({ collection: 'eagles', $ref: Number }),
@@ -207,18 +207,18 @@ test('Schema Class: should return a Schema object with schema and settings objec
               maxLength: 10
             },
             num: { type: Number, required: true, min: 0, max: 100 },
-            arr: {
-              type: Array,
-              required: true,
-              minLength: 0,
-              maxLength: 20
-            },
+            // arr: {
+            //   type: Array,
+            //   required: true,
+            //   minLength: 0,
+            //   maxLength: 20
+            // },
             bool: { type: Boolean, required: true, default: false },
             date: { type: Date, required: true },
             ref: { collection: 'cowboys', $ref: Number },
             any: { type: streamDb.Types.Any },
             embedDoc: { schema: Object, settings: Object },
-            arrEmbeddedDoc: [ Schema ]
+            // arrEmbeddedDoc: [ Schema ]
           },
           settings: { strict: false, timestamps: { created_at: true, updated_at: true } }
     })
@@ -229,8 +229,8 @@ test('Schema Class: (insertOne) Should add one new document with basic schema', 
     const DocModel = new Schema({
         str: String,
         num: Number,
-        arr: Array,
-        arr2: [],
+        // arr: Array,
+        // arr2: [],
         bool: Boolean,
         date: Date,
         ref: {
@@ -250,8 +250,8 @@ test('Schema Class: (insertOne) Should add one new document with basic schema', 
     const doc = {
         str: 'a string',
         num: 100,
-        arr: [1, 2, 'three'],
-        arr2: [],
+        // arr: [1, 2, 'three'],
+        // arr2: [],
         bool: true,
         date: new Date(),
         ref: {
@@ -271,8 +271,8 @@ test('Schema Class: (insertOne) Should add one new document with basic schema', 
                 id: expect(res.id).toBe(1),
                 str: expect(res.str).toBe('a string'),
                 num: expect(res.num).toBe(100),
-                arr: expect(res.arr).toMatchObject([1, 2, 'three']),
-                arr2: expect(res.arr2).toMatchObject([]),
+                // arr: expect(res.arr).toMatchObject([1, 2, 'three']),
+                // arr2: expect(res.arr2).toMatchObject([]),
                 bool: expect(res.bool).toBe(true),
                 date: expect.any(Date),
                 any: expect(res.any).toBe(null),
@@ -302,12 +302,12 @@ test('Schema Class: (insertOne) Should add one new document with type definition
             min: 0,
             max: 100
         },
-        arr: {
-            type: Array,
-            required: true,
-            minLength: 0,
-            maxLength: 20
-        },
+        // arr: {
+        //     type: Array,
+        //     required: true,
+        //     minLength: 0,
+        //     maxLength: 20
+        // },
         bool: {
             type: Boolean,
             required: true,
@@ -336,8 +336,8 @@ test('Schema Class: (insertOne) Should add one new document with type definition
     const doc = {
         str: 'a string',
         num: 100,
-        arr: [1, 2, 'three'],
-        arr2: [],
+        // arr: [1, 2, 'three'],
+        // arr2: [],
         bool: true,
         date: new Date(),
         ref: {
@@ -357,8 +357,8 @@ test('Schema Class: (insertOne) Should add one new document with type definition
                 id: expect(res.id).toBe(1),
                 str: expect(res.str).toBe('a string'),
                 num: expect(res.num).toBe(100),
-                arr: expect(res.arr).toMatchObject([1, 2, 'three']),
-                arr2: expect(res.arr2).toMatchObject([]),
+                // arr: expect(res.arr).toMatchObject([1, 2, 'three']),
+                // arr2: expect(res.arr2).toMatchObject([]),
                 bool: expect(res.bool).toBe(true),
                 date: expect.any(Date),
                 any: expect(res.any).toBe(null),
