@@ -432,7 +432,7 @@ test('Schema: #error #schema, #settings should throw error trying to assign sche
         .toThrow(`Settings argument must be an object`)
 })
 
-test('Schema: #error #schema should throw error if object is', () => {
+test('Schema: #error #schema should throw error if object is empty', () => {
     expect(() =>  new Schema({}))
         .toThrow(`Schema argument must contain at least one property declaration`)
 })
@@ -454,4 +454,13 @@ test('Schema: #error #settings should throw error if settings "strict", "created
         .toThrow(`created_at/updated_at can only be set to true or false`)
     expect(() =>  new Schema({ name: String }, { timestamps: { updated_at: 0 } }))
         .toThrow(`created_at/updated_at can only be set to true or false`)
+})
+
+test('Schema: #error #id should throw error if id field is declared and is not $incr or $uid', () => {
+    expect(() =>  new Schema({ id: String }))
+        .toThrow(`Document 'id' field must be $incr or $uid streamdb Type`)
+    expect(() =>  new Schema({ id: Number }, { strict: true }))
+        .toThrow(`Document 'id' field must be $incr or $uid streamdb Type`)
+    expect(() =>  new Schema({ id: { type: String } }))
+        .toThrow(`Document 'id' field must be $incr or $uid streamdb Type`)
 })
