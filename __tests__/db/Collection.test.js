@@ -193,16 +193,6 @@ test('Collection.getDocs(): Should get 4 matching documents', async (done) => {
         })
 })
 
-test('Collection.getDocs(): Should throw error if passed value is not an array', async (done) => {
-    expect(db.collection('users').getDocs()).rejects.toMatch(`Value must be an array, received: ${typeof undefined}`)
-    done()
-})
-
-test('Collection.getDocs(): Should throw error if array is empty', async (done) => {
-    expect(db.collection('users').getDocs([])).rejects.toMatch(`Array cannot be empty`)
-    done()
-})
-
 test('Collection.updateOne(): Should update one document with id 2', async (done) => {
     const update = {
         id: 2,
@@ -435,5 +425,85 @@ test('Collection: #version should be updated version number 12', async (done) =>
     let collection = db.collection('users')
     let colMeta = collection.colMeta
     expect(colMeta.version).toBe(12)
+    done()
+})
+
+
+//
+// ======= negative tests ========== //
+//
+test('Collection.getById(): #error should return reject error object when id does not exist', async (done) => {
+    expect.assertions(1)
+    await expect(db.collection('users').getById(2)).rejects.toEqual({
+        error: true,
+        message: `Document with id "2" does not exist`
+    })
+
+    done()
+})
+
+test('Collection.deleteOne(): #error should return reject error object when id does not exist', async (done) => {
+    expect.assertions(1)
+    await expect(db.collection('users').deleteOne(2)).rejects.toEqual({
+        error: true,
+        message: `Document with id "2" does not exist`
+    })
+
+    done()
+})
+
+test('Collection.deleteMany(): #error should return reject error object when id does not exist', async (done) => {
+    expect.assertions(1)
+    await expect(db.collection('users').deleteMany([2,3,4])).rejects.toEqual({
+        error: true,
+        message: `Document with id "2" does not exist`
+    })
+
+    done()
+})
+
+test('Collection.getDocs(): #error Should throw error if passed value is not an array', async (done) => {
+    expect(db.collection('users').getDocs()).rejects.toMatch(`Value must be an array, received: ${typeof undefined}`)
+    done()
+})
+
+test('Collection.getDocs(): #error Should throw error if array is empty', async (done) => {
+    expect(db.collection('users').getDocs([])).rejects.toMatch(`Array cannot be empty`)
+    done()
+})
+
+test('Collection.getDocs(): #error should return reject error object when id does not exist', async (done) => {
+    expect.assertions(1)
+    await expect(db.collection('users').getDocs([2,3,4])).rejects.toEqual({
+        error: true,
+        message: `Document with id "2" does not exist`
+    })
+
+    done()
+})
+
+test('Collection.updateOne(): #error should return reject error object when document id does not exist', async (done) => {
+    const update = { id: 1 }
+    expect.assertions(1)
+    await expect(db.collection('users').updateOne(update)).rejects.toEqual({
+        error: true,
+        message: `Document with id "1" does not exist`
+    })
+
+    done()
+})
+
+test('Collection.updateOne(): #error should return reject error object when document id does not exist', async (done) => {
+    const updates = [
+        { id: 1 },
+        { id: 2 },
+        { id: 3 }
+    ]
+    expect.assertions(1)
+    await expect(db.collection('users').updateMany(updates)).rejects.toEqual({
+        error: true,
+        message: `Document with id "1" does not exist`
+    })
+
     done()
 })
