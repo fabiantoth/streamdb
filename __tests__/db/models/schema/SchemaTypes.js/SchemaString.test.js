@@ -1,7 +1,7 @@
 const SchemaString = require('../../../../../lib/db/models/schema/SchemaTypes/SchemaString')
 
-const name = new SchemaString('name', String)
 test('SchemaString: #instance should return a new SchemaString instance with field "name"', () => {
+    const name = new SchemaString('name', String)
     expect.objectContaining({
         params: expect(name.params).toBe(String),
         options: expect(name.options).toMatchObject([]),
@@ -10,8 +10,8 @@ test('SchemaString: #instance should return a new SchemaString instance with fie
     })
 })
 
-const nameNull = new SchemaString(null, String)
 test('SchemaString: #instance #field #null should return a new SchemaString instance with field "null" value', () => {
+    const nameNull = new SchemaString(null, String)
     expect.objectContaining({
         params: expect(nameNull.params).toBe(String),
         options: expect(nameNull.options).toMatchObject([]),
@@ -20,8 +20,8 @@ test('SchemaString: #instance #field #null should return a new SchemaString inst
     })
 })
 
-const nameType = new SchemaString('name', { type: String })
 test('SchemaString: #instance #type #options should return a new SchemaString instance with full options and field "nameType"', () => {
+    const nameType = new SchemaString('name', { type: String })
     expect.objectContaining({
         params: expect(nameType.params).toMatchObject({ type: String }),
         options: expect(nameType.options).toMatchObject(['type','default','required','minLength','maxLength','enum','lowercase','capitalize', 'trim','validate']),
@@ -30,8 +30,8 @@ test('SchemaString: #instance #type #options should return a new SchemaString in
     })
 })
 
-const nameRequired = new SchemaString('nameRequired', { type: String, required: true })
 test('SchemaString: #instance #rules #required should return a new string instance with required rules', () => {
+    const nameRequired = new SchemaString('nameRequired', { type: String, required: true })
     expect.objectContaining({
         params: expect(nameRequired.params).toMatchObject({ type: String, required: true }),
         field: expect(nameRequired.field).toBe('nameRequired'),
@@ -39,8 +39,8 @@ test('SchemaString: #instance #rules #required should return a new string instan
     })
 })
 
-const nameMinLength = new SchemaString('nameMinLength', { type: String, minLength: 2 })
 test('SchemaString: #instance #rules #minLength should return a new string instance with minLength rules', () => {
+    const nameMinLength = new SchemaString('nameMinLength', { type: String, minLength: 2 })
     expect.objectContaining({
         params: expect(nameMinLength.params).toMatchObject({ type: String, minLength: 2 }),
         field: expect(nameMinLength.field).toBe('nameMinLength'),
@@ -48,8 +48,8 @@ test('SchemaString: #instance #rules #minLength should return a new string insta
     })
 })
 
-const nameMaxLength = new SchemaString('nameMaxLength', { type: String, maxLength: 20 })
 test('SchemaString: #instance #rules #maxLength should return a new string instance with maxLength rules', () => {
+    const nameMaxLength = new SchemaString('nameMaxLength', { type: String, maxLength: 20 })
     expect.objectContaining({
         params: expect(nameMaxLength.params).toMatchObject({ type: String, maxLength: 20 }),
         field: expect(nameMaxLength.field).toBe('nameMaxLength'),
@@ -57,8 +57,8 @@ test('SchemaString: #instance #rules #maxLength should return a new string insta
     })
 })
 
-const nameCapitalize = new SchemaString('nameCapitalize', { type: String, capitalize: true })
 test('SchemaString: #instance #rules #capitailze should return a new string instance with capitalize rules', () => {
+    const nameCapitalize = new SchemaString('nameCapitalize', { type: String, capitalize: true })
     expect.objectContaining({
         params: expect(nameCapitalize.params).toMatchObject({ type: String, capitalize: true}),
         field: expect(nameCapitalize.field).toBe('nameCapitalize'),
@@ -66,8 +66,8 @@ test('SchemaString: #instance #rules #capitailze should return a new string inst
     })
 })
 
-const nameDefault = new SchemaString('nameDefault', { type: String, default: 'hello' })
 test('SchemaString: #instance #rules #default should return a new string instance with default value set to "hello"', () => {
+    const nameDefault = new SchemaString('nameDefault', { type: String, default: 'hello' })
     expect.objectContaining({
         params: expect(nameDefault.params).toMatchObject({ type: String, default: 'hello' }),
         field: expect(nameDefault.field).toBe('nameDefault'),
@@ -75,8 +75,8 @@ test('SchemaString: #instance #rules #default should return a new string instanc
     })
 })
 
-const nameDefaultNull = new SchemaString('nameDefaultNull', { type: String, default: null })
 test('SchemaString: #instance #rules #default should return a new string instance with default value set to null', () => {
+    const nameDefaultNull = new SchemaString('nameDefaultNull', { type: String, default: null })
     expect.objectContaining({
         params: expect(nameDefaultNull.params).toMatchObject({ type: String, default: null }),
         field: expect(nameDefaultNull.field).toBe('nameDefaultNull'),
@@ -84,8 +84,8 @@ test('SchemaString: #instance #rules #default should return a new string instanc
     })
 })
 
-const nameEnum = new SchemaString('nameEnum', { type: String, enum: ['red', 'white', 'blue'] })
 test('SchemaString: #instance #rules #enum should return a new string instance with enum values', () => {
+    const nameEnum = new SchemaString('nameEnum', { type: String, enum: ['red', 'white', 'blue'] })
     expect.objectContaining({
         params: expect(nameEnum.params).toMatchObject({ type: String, enum: ['red', 'white', 'blue'] }),
         field: expect(nameEnum.field).toBe('nameEnum'),
@@ -93,12 +93,12 @@ test('SchemaString: #instance #rules #enum should return a new string instance w
     })
 })
 
-const nameParams2 = new SchemaString('nameParams2', {
-    type: String,
-    default: 'hello',
-    lowercase: true
-})
 test('SchemaString: #instance #rules [#default, #lowercase] should return a new string instance with lowercased default params', () => {
+    const nameParams2 = new SchemaString('nameParams2', {
+        type: String,
+        default: 'hello',
+        lowercase: true
+    })
     expect.objectContaining({
         params: expect(nameParams2.params).toMatchObject({ type: String, default: 'hello', lowercase: true}),
         options: expect(nameParams2.options).toMatchObject(['type','default','required','minLength','maxLength','enum','lowercase','capitalize', 'trim','validate']),
@@ -135,6 +135,7 @@ test('SchemaString.validate(): #null should return null value', () => {
     let result2 = nullValue2.validate(null)
     expect(result1).toBe(null)
     expect(result2).toBe(null)
+    expect(() => nullValue1.validate(1)).toThrow(`Expected type string, received: number`)
 })
 
 // 
@@ -144,6 +145,7 @@ test('SchemaString.validate(): #rules #default should return default value when 
     const defaultString = new SchemaString('defaultString', { type: String, default: 'hello' })
     let result = defaultString.validate(undefined)
     expect(result).toBe('hello')
+    expect(() => defaultString.validate(1)).toThrow(`Expected type string, received: number`)
 })
 
 test('SchemaString.validate(): #rules [#default, #required] should return default value even when required is false', () => {
