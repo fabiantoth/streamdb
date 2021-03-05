@@ -1,4 +1,5 @@
 const SchemaArray = require('../../../../../lib/db/models/schema/SchemaTypes/SchemaArray')
+const { $incr, $uid, Any } = require('../../../../../lib/db/types')
 
 test('SchemaArray: #instance should return a new SchemaArray instance with field "array"', () => {
     const array = new SchemaArray('array', Array)
@@ -102,6 +103,102 @@ test('SchemaArray: #instance #rules [#default, #minLength, #maxLength] should re
         rules: expect(array.rules).toMatchObject({ minLength: 2, maxLength: 3, default: [1,2,3] })
     })
 })
+
+
+// ==== setEmbedOptions() method use-cases ==== //
+
+/**
+ * NOTE: using 'type' kw declaration does not allow embeds
+ * 
+ * - empty - [[]], [Array]
+ * - Regular Embeds - [String,Number,Boolean,Date]
+ * - Object Embeds - [Any, SchemaObject, NestedObject, Model(Document), Array, SchemaRef($ref) ]
+ * - Array Embeds - [[ String, Number, Boolean, Date, Any ]]
+ */
+
+//
+// empty -> [[]], [Array]
+//
+test('SchemaArray: #embeds #empty #array return empty array embedded array type', () => {
+    const array1 = new SchemaArray('array', [[]])
+    const array2 = new SchemaArray('array', [Array])
+    
+    expect.objectContaining({
+        params: expect(array1.params).toMatchObject([[]]),
+        embeddedType: expect.objectContaining({
+            params: expect(array1.embeddedType.params).toMatchObject([])
+        })
+    })
+
+    expect.objectContaining({
+        params: expect(array2.params).toMatchObject([Array]),
+        embeddedType: expect.objectContaining({
+            params: expect(array2.embeddedType.params).toBe(Array)
+        })
+    })
+
+    // start with only direct embeds allowed
+    // this should throw an error
+
+    // const array3 = new SchemaArray('array', {
+    //     type: [[]]
+    // })
+    // const array4 = new SchemaArray('array', {
+    //     type: [Array]
+    // })
+
+    // expect.objectContaining({
+    //     params: expect(array3.params).toMatchObject({ type: [[]] }),
+    //     options: expect(array3.options).toMatchObject(['type','default','required','minLength','maxLength','validate']),
+    //     rules: expect(array3.rules).toMatchObject({})
+    // })
+
+    // expect.objectContaining({
+    //     params: expect(array4.params).toMatchObject({ type: [Array] }),
+    //     options: expect(array4.options).toMatchObject(['type','default','required','minLength','maxLength','validate']),
+    //     rules: expect(array4.rules).toMatchObject({})
+    // })
+})
+
+
+//
+// Regular Embeds -> 
+//
+
+test('SchemaArray: #embeds #SchemaTypes return SchemaType array embeds', () => {
+    const array = new SchemaArray('array', [String])
+    const array1 = new SchemaArray('array', [Number])
+    const array2 = new SchemaArray('array', [Date])
+
+    // const array3 = new SchemaArray('array', {
+    //     type: [String]
+    // })
+
+    // expect.objectContaining({
+    //     params: expect(array.params).toMatchObject([String]),
+    //     instance: expect(array.instance).toMatchObject('array'),
+    //     embeddedType: expect.objectContaining({
+    //         params: expect(array.embeddedType.params).toBe(String),
+    //         instance: expect(array.embeddedType.instance).toBe('string')
+    //     })
+    // })
+
+    // expect.objectContaining({
+    //     params: expect(array2.params).toMatchObject([Array]),
+    //     embeddedType: expect.objectContaining({
+    //         params: expect(array2.embeddedType.params).toBe(Array)
+    //     })
+    // })
+})
+
+//
+// Object Embeds -> 
+//
+
+//
+// Array Embeds -> 
+//
+
 
 
 // ==== validate() method use-cases ==== //
@@ -241,16 +338,121 @@ test('SchemaArray.validate(): #validate should run the allowedValues function ag
     const result1 = validateFunction.validate(arrInput1)
     const result2 = validateFunction.validate(arrInput2)
     const result3 = validateFunction.validate(arrInput3)
-    
+
     expect(result1).toMatchObject(arrInput1)
     expect(result2).toMatchObject(arrInput2)
     expect(result3).toMatchObject(['manager', 'user'])
 })
 
 
+// ==== validate().validateEmbedOptions() method use-cases ==== //
+
+/**
+ * - SchemaTypes [String,Number,Boolean,Date]
+ * - NestedObects [NestedObject]
+ * - Documents [DocumentModel]
+ * - $refs [SchemaRef]
+ * - Array Embeds [ [String,Number,Boolean,Date] ]
+ */
+
+//
+// ======= // SchemaTypes --> [String,Number,Boolean] ========== //
+//
+test('SchemaArray.validateEmbedOptions(): #validate #embeded #string should return value', () => {
+    const embed = new SchemaArray('embed', [String])
+
+    const result1 = embed.validate(['some string'])
+    const result2 = embed.validate(['some string', 'another string', 'str3'])
+
+    expect(result1).toMatchObject(['some string'])
+    expect(result2).toMatchObject(['some string', 'another string', 'str3'])
+    expect(() => embed.validate(['some string', null])).toThrow(`Expected type string, received: object`)
+    expect(() => embed.validate(['some string', undefined])).toThrow(`Expected type string, received: undefined`)
+    expect(() => embed.validate(['some string', 2])).toThrow(`Expected type string, received: number`)
+})
+
+test('SchemaArray.validateEmbedOptions(): #validate #embeded #number should return value', () => {
+    const embed = new SchemaArray('embed', [Number])
+
+    const result1 = embed.validate([1])
+    const result2 = embed.validate([1,2,3])
+
+    expect(result1).toMatchObject([1])
+    expect(result2).toMatchObject([1,2,3])
+    expect(() => embed.validate([1, null])).toThrow(`Expected type number, received: object`)
+    expect(() => embed.validate([1, 2 , undefined])).toThrow(`Expected type number, received: undefined`)
+    expect(() => embed.validate([1, 'some string', 2])).toThrow(`Expected type number, received: string`)
+})
+
+test('SchemaArray.validateEmbedOptions(): #validate #embeded #boolean should return value', () => {
+    const embed = new SchemaArray('embed', [Boolean])
+
+    const result1 = embed.validate([true])
+    const result2 = embed.validate([true, false, false])
+
+    expect(result1).toMatchObject([true])
+    expect(result2).toMatchObject([true,false, false])
+    expect(() => embed.validate([1])).toThrow(`Expected type boolean, received: number`)
+    expect(() => embed.validate([true, 0 , true])).toThrow(`Expected type boolean, received: number`)
+    expect(() => embed.validate([null])).toThrow(`Expected type boolean, received: object`)
+})
+
+test('SchemaArray.validateEmbedOptions(): #validate #embeded #date should return value', () => {
+    const date = new Date()
+    const date2 = new Date('2020-12-31T23:59:59.000Z')
+    const embed = new SchemaArray('embed', [Date])
+
+    const result1 = embed.validate(['2020-12-31T23:59:59.000Z'])
+    const result2 = embed.validate(['2020-12-31T23:59:59.000Z', date, date2])
+
+    expect(result1).toMatchObject([new Date('2020-12-31T23:59:59.000Z')])
+    expect(result2).toMatchObject([new Date('2020-12-31T23:59:59.000Z'), date, date2])
+    expect(() => embed.validate([1])).toThrow(`Expected type date or null, received: number`)
+    expect(() => embed.validate([date, 0, date2])).toThrow(`Expected type date or null, received: number`)
+    expect(() => embed.validate([null])).toThrow(`Expected type date, received: object`)
+    expect(() => embed.validate([undefined])).toThrow(`Expected type date, received: undefined`)
+})
+
+
 //
 // ======= negative tests ========== //
 //
+
+test(`SchemaArray: #error should throw error if global function is not Array`, () => {
+    expect(() => new SchemaArray('array', String))
+        .toThrow(`Invalid type for SchemaArray, expected Array global function`)
+    expect(() => new SchemaArray('array', null))
+        .toThrow(`Invalid type for SchemaArray, expected Array global function`)
+})
+
+test(`SchemaArray: #error #embeds should throw trying to embed non allowed values`, () => {
+    expect(() => new SchemaArray('array', [Any]))
+        .toThrow(`Embedding ${Any} is not allowed!`)
+    expect(() => new SchemaArray('array', [$incr]))
+        .toThrow(`Embedding ${$incr} is not allowed!`)
+    expect(() => new SchemaArray('array', [$uid]))
+        .toThrow(`Embedding ${$uid} is not allowed!`)
+    expect(() => new SchemaArray('array', [Object]))
+        .toThrow(`Embedding ${Object} is not allowed!`)
+    expect(() => new SchemaArray('array', [Function]))
+        .toThrow(`Embedding ${Function} is not allowed!`)
+})
+
+test(`SchemaArray: #error #type should throw error if global function is not Array`, () => {
+    expect(() => new SchemaArray('array', { type: String } ))
+        .toThrow(`Invalid type for SchemaArray, expected Array global function`)
+    expect(() => new SchemaArray('array', { type: null } ))
+        .toThrow(`Expected 'type' keyword declaration for SchemaArray`)
+})
+
+test(`SchemaArray: #error #typeEmbeds should throw trying to embed items inside 'type' keyword`, () => {
+    expect(() => new SchemaArray('array', { type: [[]] }))
+        .toThrow(`Cannot embed other types inside a 'type' keyword declaration`)
+    expect(() => new SchemaArray('array', { type: [Array] }))
+        .toThrow(`Cannot embed other types inside a 'type' keyword declaration`)
+    expect(() => new SchemaArray('array', { type: [null] }))
+        .toThrow(`Cannot embed other types inside a 'type' keyword declaration`)
+})
 
 test('SchemaArray: #error #default should throw if default type is not null or array', () => {
     expect(() => new SchemaArray('array', { 
