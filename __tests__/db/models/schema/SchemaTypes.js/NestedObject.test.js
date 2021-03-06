@@ -139,29 +139,29 @@ test('NestedObject: #instance #type #rules should return a new NestedObject inst
     })
 })
 
-test('NestedObject: #field #_TypedSchema should return a new nestedObject instance', () => {
-    const nestedObj = new NestedObject('nestedObj', { str: String, str2: { type: String, required: true, capitalize: true } })
+test('NestedObject: #instance #schema should convert a schema into a nested object', () => {
+    const schema = new Schema({ name: String, age: Number })
+    const nested = new NestedObject('nested', { schema: schema })
     expect.objectContaining({
-        field: expect(nestedObj.field).toBe('nestedObj'),
-        instance: expect(nestedObj.instance).toBe('nestedObject'),
-        _TypedSchema: expect(nestedObj._TypedSchema).toMatchObject({
-            str: {
-                params: String,
-                options: [],
-                field: 'str',
-                instance: 'string'
-            },
-            str2: {
-                params: {
-                    type: String,
-                    required: true,
-                    capitalize: true
-                },
-                options: ['type','default','required','minLength','maxLength','enum','lowercase','capitalize', 'trim', 'validate'],
-                field: 'str2',
-                instance: 'string',
-                rules: { required: true, capitalize: true }
-            }
+        field: expect(nested.field).toBe('nested'),
+        instance: expect(nested.instance).toBe('nestedObject'),
+        _TypedSchema: expect.objectContaining({
+            field: expect(nested._TypedSchema.schema.field).toBe('schema'),
+            instance: expect(nested._TypedSchema.schema.instance).toBe('nestedObject'),
+            _TypedSchema: expect.objectContaining({
+                name: expect(nested._TypedSchema.schema._TypedSchema.name).toMatchObject({
+                    field: 'name',
+                    instance: 'string',
+                    options: [],
+                    params: String
+                }),
+                age: expect(nested._TypedSchema.schema._TypedSchema.age).toMatchObject({
+                    field: 'age',
+                    instance: 'number',
+                    options: [],
+                    params: Number
+                })
+            })
         })
     })
 })
