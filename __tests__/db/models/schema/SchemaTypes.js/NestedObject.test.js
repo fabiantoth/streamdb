@@ -166,7 +166,22 @@ test('NestedObject: #instance #schema should convert a schema into a nested obje
     })
 })
 
+// ==== validate() method use-cases ==== //
+
+/**
+ * - SchemaTypes
+ * - NestedObects
+ * - Schema Objects
+ * - Documents [DocumentModel]
+ * - $refs [SchemaRef]
+ * - Array Embeds [ [String,Number,Boolean,Date] ]
+ */
+
+
+
+//
 // ======= negative tests ========== //
+//
 test('NestedObject: #field #error should throw a wrong parameter not an object type error', () => {
     expect(() => new NestedObject(null, {}))
         .toThrow(`field argument must be a string. Received: object`)
