@@ -159,13 +159,34 @@ test('Schema: #instance #arrayEmbed #SchemaType should return a schema object wi
 // ==== validate() method use-cases ==== //
 
 /**
+ * - strict
  * - SchemaTypes
  * - NestedObects
  * - Schema Objects
- * - Documents [DocumentModel]
+ * - Array/Nested Array Embeds
+ * - Documents + Embedded [Document]
  * - $refs [SchemaRef]
- * - Nested Array Embeds [ [String,Number,Boolean,Date] ]
+ * 
  */
+
+//
+// ======= // validate() strict settings --> null, undefined, SchemaTypes ========== //
+//
+test('Schema.validate(): #strict should return undefined ', () => {
+    const schema1 = new Schema({ name: String }, { strict: true })
+    const schema2 = new Schema({ name: { type: String } }, { strict: true })
+    const schema3 = new Schema({ detail: { name: String } }, { strict: true })
+    const schema4 = new Schema({ detail: { name: { type: String } } }, { strict: true })
+
+    const result1 = schema1.validate({ arr: [1] })
+    const result2 = schema2.validate({ arr: [1] })
+    const result3 = schema3.validate({ detail: { age: 18 } })
+    const result4 = schema4.validate({ detail: { age: 18 } })
+    expect(result1).toBe(undefined)
+    expect(result2).toBe(undefined)
+    expect(result3).toBe(undefined)
+    expect(result4).toBe(undefined)
+})
 
 //
 // ======= // validate() SchemaTypes --> null, undefined, SchemaTypes ========== //
@@ -262,33 +283,122 @@ test('Schema.validate(): #SchemaArray should validate array with rules', () => {
 // ======= // validate() Nested Objects --> ========== //
 //
 test('Schema.validate(): #NestedObject should validate nested object', () => {
-    const schema = new Schema({
+    const schema1 = new Schema({ detail: { name: String }})
+    const schema2 = new Schema({
         detail: {
-            name: String
+            name: {
+                type: String
+            }
         }
     })
 
-    const result1 = schema.validate({ arr: [1] })
+    const result1 = schema1.validate({ arr: [1] })
+    const result2 = schema2.validate({ arr: [1] })
+    const result3 = schema2.validate({ detail: { name: 'john' } })
+    const result4 = schema2.validate({ detail: { name: 'john' } })
+    expect(result1).toMatchObject({ arr: [1] })
+    expect(result2).toMatchObject({ arr: [1] })
+    expect(result3).toMatchObject({ detail: { name: 'john' } })
+    expect(result4).toMatchObject({ detail: { name: 'john' } })
 
     expect(() => schema1.validate()).toThrow(`Schema validate argument must be a valid object`)
+    expect(() => schema2.validate()).toThrow(`Schema validate argument must be a valid object`)
+    expect(() => schema1.validate({ detail: 'detail' })).toThrow(`Expected 'detail' to be an object, received: string`)
+    expect(() => schema2.validate({ detail: 'detail' })).toThrow(`Expected 'detail' to be an object, received: string`)
+    expect(() => schema1.validate({ detail: { name: 1 } })).toThrow(`Expected type string, received: number`)
+    expect(() => schema2.validate({ detail: { name: 1 } })).toThrow(`Expected type string, received: number`)
+})
+
+//
+// ======= // validate() nested Schema Objects ========== //
+//
+test('Schema.validate(): #Schema should validate nested schema object', () => {
+    const schema = new Schema({ name: String })
+    const schema1 = new Schema({
+        detail: schema
+    })
+
+    const result1 = schema1.validate({ detail: { name: 'john' } })
+    const result2 = schema1.validate({ arr: [1] })
+    const result3 = schema1.validate({ detail: { age: 18 } })
+    expect(result1).toMatchObject({ detail: { name: 'john' } })
+    expect(result2).toMatchObject({ arr: [1] })
+    expect(result3).toMatchObject({ detail: { age: 18 } })
+
+    expect(() => schema1.validate({ detail: 1 })).toThrow(`Expected 'detail' to be an object, received: number`)
+    expect(() => schema1.validate({ detail: { name: 1 } })).toThrow(`Expected type string, received: number`)
 })
 
 
 //
-// ======= // validate() Nested Array Embeds --> [ [String,Number,Boolean,Date] ] ========== //
+// ======= // validate() Array/Nested Array Embeds --> [String]/[[String]] ========== //
+//
+test('Schema.validate(): #SchemaArray #embeds #SchemaType should validate array with embedded types', () => {
+    const schema = new Schema({
+        strArr: [String]
+    })
+
+    const result1 = schema.validate({ strArr: ['bunch', 'of', 'strings'] })
+    const result2 = schema.validate({ strArr: [] })
+    expect(result1).toMatchObject({ strArr: ['bunch', 'of', 'strings'] })
+    expect(result2).toMatchObject({ strArr: [] })
+    
+    expect(() => schema.validate({ strArr: [1] })).toThrow(`Expected type string, received: number`)
+})
+
+test('Schema.validate(): #SchemaArray #embeds #NestedObjects should validate array with embedded objects', () => {
+    const schema = new Schema({
+        objArray: [{
+            name: { type: String, required: true },
+            age: Number
+        }]
+    })
+
+    const result1 = schema.validate({ objArray: [{ name: 'john', age: 18 }, { name: 'sally', age: 18 }] })
+    const result2 = schema.validate({ objArray: [] })
+    expect(result1).toMatchObject({ objArray: [{ name: 'john', age: 18 }, { name: 'sally', age: 18 }] })
+    expect(result2).toMatchObject({ objArray: [] })
+
+    expect(() => schema.validate({ objArray: [{ name: 1 }] })).toThrow(`Expected type string, received: number`)
+    expect(() => schema.validate({ objArray: [{ age: 18 }] })).toThrow(`'name' is required`)
+})
+
+test('Schema.validate(): #SchemaArray #embeds #Schema should validate array with embedded Schema', () => {
+    const UserSchema = new Schema({ name: String, age: Number })
+    const schema = new Schema({
+        objArray: [UserSchema]
+    })
+
+    const result1 = schema.validate({ objArray: [{ name: 'john', age: 18 }, { name: 'sally', age: 18 }] })
+    const result2 = schema.validate({ objArray: [] })
+    expect(result1).toMatchObject({ objArray: [{ name: 'john', age: 18 }, { name: 'sally', age: 18 }] })
+    expect(result2).toMatchObject({ objArray: [] })
+
+    expect(() => schema.validate({ objArray: [{ name: 1 }] })).toThrow(`Expected type string, received: number`)
+})
+
+test('Schema.validate(): #SchemaArray #embeds #Array[SchemaType] should validate array with array embedded types', () => {
+    const schema = new Schema({
+        arrEmbed: [[String]]
+    })
+
+    const result1 = schema.validate({ arrEmbed: [['val1', 'val2'], ['val3', 'val4']] })
+    const result2 = schema.validate({ arrEmbed: [] })
+    expect(result1).toMatchObject({ arrEmbed: [['val1', 'val2'], ['val3', 'val4']] })
+    expect(result2).toMatchObject({ arrEmbed: [] })
+
+    expect(() => schema.validate({ arrEmbed: [{ name: 1 }] })).toThrow(`Expected 'arrEmbed' to be an array, received: object`)
+})
+
+//
+// ======= // validate() Documents/Embedded Docs --> Document/[Document] ========== //
 //
 
-// test('Schema.validate(): #rules #SchemaArray should validate array with rules', () => {
-//     const schema = new Schema({
-//         strArr: [String]
-//     })
 
-//     const result1 = schema.validate({ arr: [1] })
+//
+// ======= // validate() $refs [SchemaRef] ========== //
+//
 
-//     expect(result1).toMatchObject({ arr: [1] })
-
-//     expect(() => schema.validate({ arr: [] })).toThrow(`'arr' array minLength is 1`)
-// })
 
 //
 // ======= negative tests ========== //
