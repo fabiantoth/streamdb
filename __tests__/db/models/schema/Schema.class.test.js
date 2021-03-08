@@ -341,52 +341,52 @@ test('Schema Class: (insertOne) Should add one new document with type definition
         })
 })
 
-test('Document: (insertOne) Should add one new document with a nested object', async (done) => {
-    let collection = await db.addCollection('users')
+// test('Document: (insertOne) Should add one new document with a nested object', async (done) => {
+//     let collection = await db.addCollection('users')
 
-    const UserSchema = new Schema({
-        name: String,
-        details: {
-            age: Number,
-            email: String
-        }
-    }, 
-        {
-            strict: true,
-            timestamps: {
-                created_at: true,
-                updated_at: true
-            }
-    })
+//     const UserSchema = new Schema({
+//         name: String,
+//         details: {
+//             age: Number,
+//             email: String
+//         }
+//     }, 
+//         {
+//             strict: true,
+//             timestamps: {
+//                 created_at: true,
+//                 updated_at: true
+//             }
+//     })
 
-    const doc = {
-        name: 'John Smith',
-        details: {
-            age: 20,
-            email: 'jsmith@email.com'
-        }
-    }
+//     const doc = {
+//         name: 'John Smith',
+//         details: {
+//             age: 20,
+//             email: 'jsmith@email.com'
+//         }
+//     }
 
-    let usersRef = db.collection('users').setModel('User', UserSchema, collection)
+//     let usersRef = db.collection('users').setModel('User', UserSchema, collection)
 
-    usersRef.insertOne(doc)
-        .then(response => {
-            let res = response.data 
+//     usersRef.insertOne(doc)
+//         .then(response => {
+//             let res = response.data 
 
-            expect.objectContaining({
-                id: expect(res.id).toBe(1),
-                name: expect(res.name).toBe('John Smith'),
-                details: expect(res.details).toMatchObject({
-                    age: 20,
-                    email: 'jsmith@email.com'
-                }),
-                created_at: expect.any(Date),
-                updated_at: expect.any(Date)
-            })
+//             expect.objectContaining({
+//                 id: expect(res.id).toBe(1),
+//                 name: expect(res.name).toBe('John Smith'),
+//                 details: expect(res.details).toMatchObject({
+//                     age: 20,
+//                     email: 'jsmith@email.com'
+//                 }),
+//                 created_at: expect.any(Date),
+//                 updated_at: expect.any(Date)
+//             })
 
-            done()
-        })
-})
+//             done()
+//         })
+// })
 
 //
 // ======= negative tests ========== //
