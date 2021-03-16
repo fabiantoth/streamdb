@@ -11,8 +11,80 @@ const dbSettings = {
 }
 
 let db
-let Cowboy
-let Eagle
+
+const CowboySchema = new Schema({
+    incr: streamDb.Types.$incr,
+    uid: streamDb.Types.$uid,
+    str: String,
+    num: Number,
+    arr: Array,
+    arr2: [],
+    bool: Boolean,
+    date: Date,
+    ref: {
+        collection: 'eagles',
+        model: 'Model',
+        $ref: Number
+    },
+    any: streamDb.Types.Any
+}, 
+    {
+        strict: false,
+        timestamps: {
+            created_at: true,
+            updated_at: true
+        }
+})
+
+const EagleSchema = new Schema({
+    incr: streamDb.Types.$incr,
+    uid: streamDb.Types.$uid,
+    str: {
+        type: String,
+        required: true,
+        minLength: 2,
+        maxLength: 10
+    },
+    num: {
+        type: Number,
+        required: true,
+        min: 0,
+        max: 100
+    },
+    arr: {
+        type: Array,
+        required: true,
+        minLength: 0,
+        maxLength: 20
+    },
+    bool: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    date: {
+        type: Date,
+        required: true
+    },
+    ref: {
+        collection: 'cowboys',
+        model: 'Model',
+        $ref: Number
+    },
+    any: {
+        type: streamDb.Types.Any
+    },
+    embedDoc: CowboySchema,
+    arrEmbeddedDoc: [CowboySchema]
+}, 
+    {
+        strict: false,
+        timestamps: {
+            created_at: true,
+            updated_at: true
+        }
+})
+
 let CowboyModel
 let EagleModel 
 
@@ -20,107 +92,12 @@ beforeAll(async (done) => {
     await streamDb.createDb(dbSettings)
     db = new streamDb.DB('schema-class')
 
-    Cowboy = new Schema({
-        incr: streamDb.Types.$incr,
-        uid: streamDb.Types.$uid,
-        str: String,
-        num: Number,
-        arr: Array,
-        arr2: [],
-        bool: Boolean,
-        date: Date,
-        ref: {
-            collection: 'eagles',
-            $ref: Number
-        },
-        any: streamDb.Types.Any
-    }, 
-        {
-            strict: false,
-            timestamps: {
-                created_at: true,
-                updated_at: true
-            }
-    })
-
-    Eagle = new Schema({
-        incr: streamDb.Types.$incr,
-        uid: streamDb.Types.$uid,
-        str: {
-            type: String,
-            required: true,
-            minLength: 2,
-            maxLength: 10
-        },
-        num: {
-            type: Number,
-            required: true,
-            min: 0,
-            max: 100
-        },
-        arr: {
-            type: Array,
-            required: true,
-            minLength: 0,
-            maxLength: 20
-        },
-        bool: {
-            type: Boolean,
-            required: true,
-            default: false
-        },
-        date: {
-            type: Date,
-            required: true
-        },
-        ref: {
-            collection: 'cowboys',
-            $ref: Number
-        },
-        any: {
-            type: streamDb.Types.Any
-        },
-        embedDoc: Cowboy,
-        arrEmbeddedDoc: [Cowboy]
-    }, 
-        {
-            strict: false,
-            timestamps: {
-                created_at: true,
-                updated_at: true
-            }
-    })
-
     let res1 = await db.addCollection('cowboys')
-
-    expect.objectContaining({
-        colName: expect(res1.colName).toBe('cowboys'),
-        metaPath: expect(res1.metaPath).toBe('./schema-class/collections/cowboys/cowboys.meta.json'),
-        colPath: expect(res1.colPath).toBe('./schema-class/collections/cowboys'),
-        storeMax: expect(res1.storeMax).toBe(131072),
-        target: expect(res1.target).toBe('./schema-class/collections/cowboys/cowboys.0.json'),
-        store: expect(res1.store).toMatchObject([
-            {
-              '$id': 0,
-              size: 2,
-              path: './schema-class/collections/cowboys/cowboys.0.json',
-              documents: []
-            }
-          ]),
-        model: expect(res1.model).toMatchObject({ 
-            type: 'schema', 
-            id: '$incr', 
-            idCount: 0, 
-            idMaxCount: 10000 
-        }),
-        version: expect(res1.version).toBe(1),
-        timestamp: expect.any(Date),
-    })
-
-    CowboyModel = streamDb.model('Cowboy', Cowboy, res1)
-
     let res2 = await db.addCollection('eagles')
-    EagleModel = streamDb.model('Eagle', Eagle, res2)
+    await db.addCollection('users')
+
+    CowboyModel = streamDb.model('Cowboy', CowboySchema, res1)
+    EagleModel = streamDb.model('Eagle', EagleSchema, res2)
 
     done()
 })
@@ -139,14 +116,14 @@ beforeEach(async () => {
 })
 
 test('Schema Class: should return a Schema object with schema and settings objects', () => {
-    expect(typeof Cowboy).toBe('object')
+    expect(typeof CowboySchema).toBe('object')
 
     const evalType = (val, type) => {
         return new val instanceof type
     }
 
-    const schema = Cowboy.schema
-    const settings = Cowboy.settings
+    const schema = CowboySchema.schema
+    const settings = CowboySchema.settings
 
     expect.objectContaining({
         incr: expect(Object.prototype.toString.call(schema.incr)).toBe('[object Function]'),
@@ -182,7 +159,7 @@ test('Schema Class: should return a Schema object with schema and settings objec
             },
             bool: { type: Boolean, required: true, default: false },
             date: { type: Date, required: true },
-            ref: { collection: 'cowboys', $ref: Number },
+            ref: { collection: 'cowboys', model: 'Cowboy', $ref: Number },
             any: { type: streamDb.Types.Any },
             embedDoc: { schema: Object, settings: Object },
             arrEmbeddedDoc: [ Schema ]
@@ -202,6 +179,7 @@ test('Schema Class: (insertOne) Should add one new document with basic schema', 
         date: Date,
         ref: {
             collection: 'eagles',
+            model: 'Eagle',
             $ref: Number
         },
         any: streamDb.Types.Any
@@ -221,10 +199,6 @@ test('Schema Class: (insertOne) Should add one new document with basic schema', 
         arr2: [],
         bool: true,
         date: new Date(),
-        ref: {
-            collection: 'eagles',
-            $ref: 1
-        },
         any: null
     }
 
@@ -243,10 +217,6 @@ test('Schema Class: (insertOne) Should add one new document with basic schema', 
                 bool: expect(res.bool).toBe(true),
                 date: expect.any(Date),
                 any: expect(res.any).toBe(null),
-                ref: expect(res.ref).toMatchObject({
-                    collection: 'eagles',
-                    $ref: 1
-                }),
                 created_at: expect.any(Date),
                 updated_at: expect.any(Date)
             })
@@ -286,6 +256,7 @@ test('Schema Class: (insertOne) Should add one new document with type definition
         },
         ref: {
             collection: 'cowboys',
+            model: 'Cowboy',
             $ref: Number
         },
         any: {
@@ -307,10 +278,6 @@ test('Schema Class: (insertOne) Should add one new document with type definition
         arr2: [],
         bool: true,
         date: new Date(),
-        ref: {
-            collection: 'cowboys',
-            $ref: 1
-        },
         any: null
     }
 
@@ -329,10 +296,6 @@ test('Schema Class: (insertOne) Should add one new document with type definition
                 bool: expect(res.bool).toBe(true),
                 date: expect.any(Date),
                 any: expect(res.any).toBe(null),
-                ref: expect(res.ref).toMatchObject({
-                    collection: 'cowboys',
-                    $ref: 1
-                }),
                 created_at: expect.any(Date),
                 updated_at: expect.any(Date)
             })
@@ -341,52 +304,54 @@ test('Schema Class: (insertOne) Should add one new document with type definition
         })
 })
 
-// test('Document: (insertOne) Should add one new document with a nested object', async (done) => {
-//     let collection = await db.addCollection('users')
+test('Document: (insertOne) Should add one new document with a nested object', async (done) => {
+    // let collection = await db.addCollection('users')
 
-//     const UserSchema = new Schema({
-//         name: String,
-//         details: {
-//             age: Number,
-//             email: String
-//         }
-//     }, 
-//         {
-//             strict: true,
-//             timestamps: {
-//                 created_at: true,
-//                 updated_at: true
-//             }
-//     })
+    const UserSchema = new Schema({
+        name: String,
+        details: {
+            age: Number,
+            email: String
+        }
+    }, 
+        {
+            strict: true,
+            timestamps: {
+                created_at: true,
+                updated_at: true
+            }
+    })
 
-//     const doc = {
-//         name: 'John Smith',
-//         details: {
-//             age: 20,
-//             email: 'jsmith@email.com'
-//         }
-//     }
+    const doc = {
+        name: 'John Smith',
+        details: {
+            age: 20,
+            email: 'jsmith@email.com'
+        }
+    }
 
-//     let usersRef = db.collection('users').setModel('User', UserSchema, collection)
+    let usersRef = db.collection('users').setModel('User', UserSchema)
 
-//     usersRef.insertOne(doc)
-//         .then(response => {
-//             let res = response.data 
+    usersRef.insertOne(doc)
+        .then(response => {
+            let res = response.data 
 
-//             expect.objectContaining({
-//                 id: expect(res.id).toBe(1),
-//                 name: expect(res.name).toBe('John Smith'),
-//                 details: expect(res.details).toMatchObject({
-//                     age: 20,
-//                     email: 'jsmith@email.com'
-//                 }),
-//                 created_at: expect.any(Date),
-//                 updated_at: expect.any(Date)
-//             })
+            expect.objectContaining({
+                id: expect(res.id).toBe(1),
+                name: expect(res.name).toBe('John Smith'),
+                details: expect(res.details).toMatchObject({
+                    age: 20,
+                    email: 'jsmith@email.com'
+                }),
+                created_at: expect.any(Date),
+                updated_at: expect.any(Date)
+            })
 
-//             done()
-//         })
-// })
+            done()
+        })
+    
+    done()
+})
 
 //
 // ======= negative tests ========== //

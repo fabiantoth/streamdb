@@ -60,7 +60,7 @@ test('DB: (addCollection) Should return new collection meta file', async (done) 
             idCount: 0, 
             idMaxCount: 10000 
         }),
-        version: expect(usersMeta.version).toBe(1),
+        version: expect(usersMeta.version).toBe(0),
         timestamp: expect.any(Date),
     })
     done()

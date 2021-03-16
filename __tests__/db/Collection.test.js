@@ -66,7 +66,7 @@ test('Collection.insertOne(): Should add one new document', async (done) => {
 test('Collection: #version should be updated version number 2', async (done) => {
     let collection = db.collection('users')
     let colMeta = collection.colMeta
-    expect(colMeta.version).toBe(2)
+    expect(colMeta.version).toBe(1)
     done()
 })
 
@@ -424,7 +424,7 @@ test('Collection.where().exclude(): Should return matching obj', async (done) =>
 test('Collection: #version should be updated version number 12', async (done) => {
     let collection = db.collection('users')
     let colMeta = collection.colMeta
-    expect(colMeta.version).toBe(12)
+    expect(colMeta.version).toBe(11)
     done()
 })
 
