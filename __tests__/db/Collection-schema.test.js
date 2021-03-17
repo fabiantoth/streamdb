@@ -45,7 +45,7 @@ beforeEach(async () => {
     await new Promise(async (resolve) => {
         setTimeout(() => {
             resolve()
-        }, 10)
+        }, 20)
     })
 })
 
@@ -151,6 +151,7 @@ test('Collection-schema: (updateOne) Should update one document with id 2', asyn
     usersRef.updateOne(update)
         .then(response => {
             let res = response.data
+            
             expect.objectContaining({
                 id: expect(res.id).toBe(2),
                 firstname: expect(res.firstname).toBe('Bugs'),
