@@ -156,8 +156,8 @@ test('Collection.getById(): Should get document matching id 2', async (done) => 
         })
 })
 
-test('Collection.getDocs(): Should get 4 matching documents', async (done) => {
-    const docs = [1,3,5,6]
+test('Collection.getDocs(): Should get 4 matching documents, filter out duplicate ids', async (done) => {
+    const docs = [1,3,3,5,6,5]
     const match = [
         {
             id: 1,
@@ -189,6 +189,14 @@ test('Collection.getDocs(): Should get 4 matching documents', async (done) => {
     db.collection('users').getDocs(docs)
         .then(res => {
             expect(res.data).toMatchObject(match)
+            done()
+        })
+})
+
+test('Collection.getDocs(): Should return empty array if no ids found', async (done) => {
+    db.collection('users').getDocs([10, 11, 12])
+        .then(res => {
+            expect(res.data).toMatchObject([])
             done()
         })
 })
@@ -235,12 +243,20 @@ test('Collection.updateMany(): Should update 2 documents', async (done) => {
         })
 })
 
-test('Collection.deleteMany(): Should delete 3 documents', async (done) => {
-    const docsToDelete = [1,3,4]
+test('Collection.deleteMany(): Should delete 3 documents and remove duplidate id', async (done) => {
+    const docsToDelete = [1,3,3,4]
     
     db.collection('users').deleteMany(docsToDelete)
         .then(res => {
-            expect(res.data).toMatchObject(docsToDelete)
+            expect(res.data).toMatchObject([1,3,4])
+            done()
+        })
+})
+
+test('Collection.deleteMany(): Should return an empty array when no ids found to delete', async (done) => {
+    db.collection('users').deleteMany([9,10,11,12])
+        .then(res => {
+            expect(res.data).toMatchObject([])
             done()
         })
 })
@@ -452,16 +468,6 @@ test('Collection.deleteOne(): #error should return reject error object when id d
     done()
 })
 
-test('Collection.deleteMany(): #error should return reject error object when id does not exist', async (done) => {
-    expect.assertions(1)
-    await expect(db.collection('users').deleteMany([2,3,4])).rejects.toEqual({
-        error: true,
-        message: `Document with id "2" does not exist`
-    })
-
-    done()
-})
-
 test('Collection.getDocs(): #error Should throw error if passed value is not an array', async (done) => {
     expect(db.collection('users').getDocs()).rejects.toMatch(`Value must be an array, received: ${typeof undefined}`)
     done()
@@ -469,16 +475,6 @@ test('Collection.getDocs(): #error Should throw error if passed value is not an 
 
 test('Collection.getDocs(): #error Should throw error if array is empty', async (done) => {
     expect(db.collection('users').getDocs([])).rejects.toMatch(`Array cannot be empty`)
-    done()
-})
-
-test('Collection.getDocs(): #error should return reject error object when id does not exist', async (done) => {
-    expect.assertions(1)
-    await expect(db.collection('users').getDocs([2,3,4])).rejects.toEqual({
-        error: true,
-        message: `Document with id "2" does not exist`
-    })
-
     done()
 })
 
