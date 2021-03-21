@@ -371,7 +371,34 @@ test('14 -> Collection.updateOne(): #update #embeddedDoc should update document 
     })
 })
 
-// test('15 -> Collection.updateOne(): #update #nestedObject #embeddedDoc should update embedded doc in nestedObject field', async (done) => {
+// test('15 -> Collection.updateOne(): #update #embeddedDoc for field that was not there, should do nothing', async (done) => {
+//     usersRef.updateOne({
+//         id: 2,
+//         group: {
+//             id: 2,
+//             title: 'Group 2'
+//         }
+//     })
+//     .then(response => {
+//         let res = response.data
+//         expect.objectContaining({
+//             id: expect(res.id).toBe(2),
+//             group: expect(res.group).toBe(undefined)
+//             // group: expect.objectContaining({
+//             //     id: expect(res.group.id).toBe(2),
+//             //     title: expect(res.group.title).toBe('Group 5'),
+//             //     owner: expect(res.group.owner).toEqual({
+//             //         collection: 'users',
+//             //         model: 'User',
+//             //         $ref: 3
+//             //     })
+//             // })
+//         })
+//         done()
+//     })
+// })
+
+// test('16 -> Collection.updateOne(): #update #nestedObject #embeddedDoc should update embedded doc in nestedObject field', async (done) => {
 //     usersRef.updateOne({
 //         id: 4,
 //         detail: {

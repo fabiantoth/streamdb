@@ -11,7 +11,7 @@ test('NestedObject: #instance should return a new NestedObject instance direct t
     }
     const nested = new NestedObject('nested', obj)
     expect.objectContaining({
-        field: expect(nested.field).toBe('nested'),
+        parentField: expect(nested.parentField).toBe('nested'),
         instance: expect(nested.instance).toBe('nestedObject'),
         _TypedSchema: expect(nested._TypedSchema).toMatchObject({
             str: {
@@ -78,7 +78,7 @@ test('NestedObject: #instance #type #rules should return a new NestedObject inst
     }
     const nested = new NestedObject('nested', obj)
     expect.objectContaining({
-        field: expect(nested.field).toBe('nested'),
+        parentField: expect(nested.parentField).toBe('nested'),
         instance: expect(nested.instance).toBe('nestedObject'),
         _TypedSchema: expect(nested._TypedSchema).toMatchObject({
             str: {
@@ -143,10 +143,10 @@ test('NestedObject: #instance #schema should convert a schema into a nested obje
     const schema = new Schema({ name: String, age: Number })
     const nested = new NestedObject('nested', { schema: schema })
     expect.objectContaining({
-        field: expect(nested.field).toBe('nested'),
+        parentField: expect(nested.parentField).toBe('nested'),
         instance: expect(nested.instance).toBe('nestedObject'),
         _TypedSchema: expect.objectContaining({
-            field: expect(nested._TypedSchema.schema.field).toBe('schema'),
+            parentField: expect(nested._TypedSchema.schema.parentField).toBe('schema'),
             instance: expect(nested._TypedSchema.schema.instance).toBe('nestedObject'),
             _TypedSchema: expect.objectContaining({
                 name: expect(nested._TypedSchema.schema._TypedSchema.name).toMatchObject({
