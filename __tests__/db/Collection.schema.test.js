@@ -371,6 +371,33 @@ test('14 -> Collection.updateOne(): #update #embeddedDoc should update document 
     })
 })
 
+test('15 -> Collection.updateOne(): #update #nestedObject #embeddedDoc should update nested object embedded doc field', async (done) => {
+    usersRef.updateOne({
+        id: 4,
+        detail: {
+            nestedGroup: {
+                id: 2,
+                title: 'Group-2'
+            }
+        }
+    })
+    .then(response => {
+        let res = response.data
+        expect.objectContaining({
+            id: expect(res.id).toBe(4),
+            detail: expect.objectContaining({
+                age: expect(res.detail.age).toBe(85),
+                nestedNumTag: expect(res.detail.nestedNumTag).toEqual([1,2,3]),
+                nestedGroup: expect.objectContaining({
+                    id: expect(res.detail.nestedGroup.id).toBe(2),
+                    title: expect(res.detail.nestedGroup.title).toBe('Group-2'),
+                })
+            })
+        })
+        done()
+    })
+})
+
 // test('15 -> Collection.updateOne(): #update #embeddedDoc for field that was not there, should do nothing', async (done) => {
 //     usersRef.updateOne({
 //         id: 2,
@@ -398,39 +425,12 @@ test('14 -> Collection.updateOne(): #update #embeddedDoc should update document 
 //     })
 // })
 
-// test('16 -> Collection.updateOne(): #update #nestedObject #embeddedDoc should update embedded doc in nestedObject field', async (done) => {
-//     usersRef.updateOne({
-//         id: 4,
-//         detail: {
-//             nestedGroup: {
-//                 id: 3,
-//                 title: 'Group-3'
-//             }
-//         }
-//     })
-//     .then(response => {
-//         let res = response.data
-//         expect.objectContaining({
-//             id: expect(res.id).toBe(4),
-//             detail: expect.objectContaining({
-//                 age: expect(res.detail.age).toBe(30),
-//                 nestedNumTag: expect(res.detail.nestedNumTag).toEqual([1]),
-//                 nestedGroup: expect.objectContaining({
-//                     id: expec(res.detail.nestedGroup.id).toBe(3),
-//                     title: expec(res.detail.nestedGroup.title).toBe('Group-3'),
-//                 })
-//             })
-//         })
-//         done()
-//     })
-// })
-
 
 //
 // ======= negative tests ========== //
 //
 
-test('Collection.updateOne(): #error #nestedField should throw error trying to assign empty object', () => {
+test('(-1) -> Collection.updateOne(): #error #nestedField should throw error trying to assign empty object', () => {
     expect.assertions(1)
     return usersRef.updateOne({  id: 4, detail: {} }).catch(e => expect(e).toEqual({
         "error": true,
@@ -438,7 +438,7 @@ test('Collection.updateOne(): #error #nestedField should throw error trying to a
     }))
 })
 
-test('Collection.updateOne(): #error #embeddedRef should throw error trying to assign $ref that does not exist', () => {
+test('(-2) -> Collection.updateOne(): #error #embeddedRef should throw error trying to assign $ref that does not exist', () => {
     expect.assertions(1)
     return usersRef.updateOne({
         id: 3,
@@ -454,7 +454,7 @@ test('Collection.updateOne(): #error #embeddedRef should throw error trying to a
     }))
 })
 
-test('Collection.updateOne(): #error #embeddedDoc should throw error if update obj for embedded document does not contain an id field', () => {
+test('(-3) -> Collection.updateOne(): #error #embeddedDoc should throw error if update obj for embedded document does not contain an id field', () => {
     expect.assertions(1)
     return usersRef.updateOne({
         id: 3,
