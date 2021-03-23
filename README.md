@@ -1173,18 +1173,10 @@ Returns:
 
 
 ## Set Custom Schema Model
-Use a custom schema model if you do not wish to setup model files or bypass existing model
+Use a custom schema model if you do not wish to setup model files or bypass existing model. 
 
-### $ db.collection('colName').setModel('modelName', schemaObj)
-Chain `setModel()` to collection before chaining other methods (must be added every time you wish to use the schema)
-
-Params:
-- `modelName` **{String}**: (required) name of model, must be singular version of collection: `users` => `User`
-- `schemaObj` **{Object}**: (required) the new Schema instance object
-
-Returns: 
-- Sets the validation model and returns the updated object with the collection reference
-
+### $ db.addSchema('name', schemaObj)
+First, create a new Schema instance you wish to use for validation and add it to the db instance:
 
 **Example**
 
@@ -1194,41 +1186,63 @@ const streamDb = require('streamdb')
 const Schema = streamDb.Schema
 const db = new streamdb.DB('streamDB')
 
-const UserSchema = new Schema({       // define your schema, settings
+// define your schema
+const UserSchema = new Schema({
     id: streamDb.Types.$incr,
-    name: {
-      type: String,
-      required: true,
-      minLength: 2,
-      capitalize: true
-    },
-    age: {
-      type: Number,
-      required: true,
-      min: 18
-    }
-}, 
-    {
-        strict: true,
-        timestamps: {
-            created_at: true,
-            updated_at: true
-    }
+    name: String,
+    age: Number
+},
+// may also include settings for strict/timestamps (optional)
+)
+
+// Add the schema to the db instance (see complete example below)
+db.addSchema('User', UserSchema)
+
+```
+
+Params:
+- `name` **{String}**: (required) name of schema model
+- `schemaObj` **{Object}**: (required) the new Schema instance object
+
+Returns: 
+- Adds the schema to the DB instance and returns the updated instance
+
+
+### $ db.collection('colName').useModel('name')
+Then, apply the schema to the collection you wish to use for validation:
+
+**Complete Example**
+
+```js
+// Using a custom schema model
+const streamDb = require('streamdb')
+const Schema = streamDb.Schema
+const db = new streamdb.DB('streamDB')
+
+// define your schema
+const UserSchema = new Schema({
+    id: streamDb.Types.$incr,
+    name: String,
+    age: Number
 })
 
-const doc = {
-  name: 'John Smith',
-  age: 20
-}
+// Add the schema to the db instance
+db.addSchema('User', UserSchema)
 
-// this schema will now be used as the validation model for all your queries..
-let usersRef = db.collection('users').setModel('User', UserSchema)
+// apply it to any collection you wish to use it to validae
+let usersRef = db.collection('users').useModel('User')
 
-usersRef.insertOne(doc)
+usersRef.insertOne({ name: 'John Smith', age: 20 })
   .then(res => console.log(res))
   .catch(e = console.log(e))
 
 ```
+
+Params:
+- `name` **{String}**: (required) name of the schema you specified above in `db.addSchema()`
+
+Returns: 
+- Sets the validation model and returns the updated object with the collection reference
 
 
 **[back to top](#readme)**
