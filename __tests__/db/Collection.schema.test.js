@@ -46,7 +46,8 @@ beforeAll(async (done) => {
     groupsRef = db.collection('groups').setModel('Group', Group)
     await groupsRef.insertOne({ title: 'Group 1' })
     
-    const GroupModel = streamDb.model('Group', Group, groupMeta)
+    // const GroupModel = streamDb.model('Group', Group, groupMeta)
+    const GroupModel = groupsRef.model
 
     const User = new Schema({
         id: streamDb.Types.$incr,
@@ -76,7 +77,6 @@ beforeAll(async (done) => {
             }
     })
     usersRef = db.collection('users').setModel('User', User)
-    
     
     done()
 })
