@@ -1178,6 +1178,14 @@ Use a custom schema model if you do not wish to setup model files or bypass exis
 ### $ db.addSchema('name', schemaObj)
 First, create a new Schema instance you wish to use for validation and add it to the db instance:
 
+Params:
+- `name` **{String}**: (required) name of schema model
+- `schemaObj` **{Object}**: (required) the new Schema instance object
+
+Returns: 
+- Adds the schema to the DB instance and returns the updated instance
+
+
 **Example**
 
 ```js
@@ -1200,16 +1208,16 @@ db.addSchema('User', UserSchema)
 
 ```
 
-Params:
-- `name` **{String}**: (required) name of schema model
-- `schemaObj` **{Object}**: (required) the new Schema instance object
-
-Returns: 
-- Adds the schema to the DB instance and returns the updated instance
-
 
 ### $ db.collection('colName').useModel('name')
 Then, apply the schema to the collection you wish to use for validation:
+
+Params:
+- `name` **{String}**: (required) name of the schema you specified above in `db.addSchema()`
+
+Returns: 
+- Sets the validation model and returns the updated object with the collection reference
+
 
 **Complete Example**
 
@@ -1226,23 +1234,17 @@ const UserSchema = new Schema({
     age: Number
 })
 
-// Add the schema to the db instance
+// add the schema to the db instance
 db.addSchema('User', UserSchema)
 
-// apply it to any collection you wish to use it to validae
-let usersRef = db.collection('users').useModel('User')
-
-usersRef.insertOne({ name: 'John Smith', age: 20 })
-  .then(res => console.log(res))
-  .catch(e = console.log(e))
+// use it in your collection requests
+db.collection('users')
+	.useModel('User')
+	.insertOne({ name: 'John Smith', age: 20 })
+	  .then(res => console.log(res))
+	  .catch(e = console.log(e))
 
 ```
-
-Params:
-- `name` **{String}**: (required) name of the schema you specified above in `db.addSchema()`
-
-Returns: 
-- Sets the validation model and returns the updated object with the collection reference
 
 
 **[back to top](#readme)**
