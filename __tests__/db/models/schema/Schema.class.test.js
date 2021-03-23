@@ -170,7 +170,7 @@ test('Schema Class: should return a Schema object with schema and settings objec
 })
 
 test('Schema Class: (insertOne) Should add one new document with basic schema', async (done) => {
-    const DocModel = new Schema({
+    const CowboySchema = new Schema({
         str: String,
         num: Number,
         arr: Array,
@@ -202,7 +202,8 @@ test('Schema Class: (insertOne) Should add one new document with basic schema', 
         any: null
     }
 
-    let usersRef = db.collection('cowboys').setModel('Cowboy', DocModel)
+    db.addSchema('Cowboy', CowboySchema)
+    let usersRef = db.collection('cowboys').useModel('Cowboy')
 
     usersRef.insertOne(doc)
         .then(response => {
@@ -226,7 +227,7 @@ test('Schema Class: (insertOne) Should add one new document with basic schema', 
 })
 
 test('Schema Class: (insertOne) Should add one new document with type definition schema', async (done) => {
-    const DocModel2 = new Schema({
+    const EagleSchema = new Schema({
         str: {
             type: String,
             required: true,
@@ -281,7 +282,8 @@ test('Schema Class: (insertOne) Should add one new document with type definition
         any: null
     }
 
-    let usersRef = db.collection('eagles').setModel('Eagle', DocModel2)
+    db.addSchema('Eagle', EagleSchema)
+    let usersRef = db.collection('eagles').useModel('Eagle')
 
     usersRef.insertOne(doc)
         .then(response => {
@@ -330,7 +332,8 @@ test('Document: (insertOne) Should add one new document with a nested object', a
         }
     }
 
-    let usersRef = db.collection('users').setModel('User', UserSchema)
+    db.addSchema('User', UserSchema)
+    let usersRef = db.collection('users').useModel('User')
 
     usersRef.insertOne(doc)
         .then(response => {

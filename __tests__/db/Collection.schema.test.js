@@ -43,7 +43,8 @@ beforeAll(async (done) => {
         }
     })
 
-    groupsRef = db.collection('groups').setModel('Group', Group)
+    db.addSchema('Group', Group)
+    groupsRef = db.collection('groups').useModel('Group')
     await groupsRef.insertOne({ title: 'Group 1' })
     
     // const GroupModel = streamDb.model('Group', Group, groupMeta)
@@ -76,7 +77,9 @@ beforeAll(async (done) => {
                 updated_at: true
             }
     })
-    usersRef = db.collection('users').setModel('User', User)
+
+    db.addSchema('User', User)
+    usersRef = db.collection('users').useModel('User')
     
     done()
 })
