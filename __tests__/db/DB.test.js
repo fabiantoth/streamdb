@@ -46,14 +46,14 @@ test('DB: (addCollection) Should return new collection meta file', async (done) 
         colPath: expect(usersMeta.colPath).toBe('./testUserDB/collections/users'),
         storeMax: expect(usersMeta.storeMax).toBe(131072),
         target: expect(usersMeta.target).toBe('./testUserDB/collections/users/users.0.json'),
-        store: expect(usersMeta.store).toMatchObject([
-            {
-              '$id': 0,
-              size: 2,
-              path: './testUserDB/collections/users/users.0.json',
-              documents: []
-            }
-          ]),
+        stores: expect(usersMeta.stores).toMatchObject({
+            '0': {
+                '$id': 0,
+                size: 2,
+                path: './testUserDB/collections/users/users.0.json',
+                documents: []
+              }
+        }),
         model: expect(usersMeta.model).toMatchObject({ 
             type: 'default', 
             id: '$incr', 
