@@ -4,10 +4,12 @@ const Schema = streamDb.Schema
 
 const addOneDocument = require('../../../../lib/db/models/schema/add-one-doc')
 const addManyDocuments = require('../../../../lib/db/models/schema/add-many-docs')
+const updateOneDocument = require('../../../../lib/db/models/schema/update-one-doc')
+
 // const addOneDocument = require('../../../../lib/db/models/schema/add-one-document')
 // const addManyDocuments = require('../../../../lib/db/models/schema/add-many-documents')
-const updateOneDocument = require('../../../../lib/db/models/schema/update-one-document')
-const updateManyDocuments = require('../../../../lib/db/models/schema/update-many-documents')
+// const updateOneDocument = require('../../../../lib/db/models/schema/update-one-document')
+// const updateManyDocuments = require('../../../../lib/db/models/schema/update-many-documents')
 
 const dbSettings = {
     dbName: 'schemaMethods',
@@ -110,7 +112,14 @@ test('schema: (addOneDocument) Should return one new document', () => {
         email: 'jmouse@email.com'
     }
 
-    let doc = addOneDocument(user, model)
+    let docModel = {
+        dbName: model.dbName,
+        colName: model.colName,
+        modelName: model.modelName,
+        schema: model.schema
+    }
+
+    let doc = addOneDocument(user, docModel)
 
     expect.objectContaining({
         id: expect(doc.id).toBe(1),
@@ -152,7 +161,14 @@ test('schema: (addManyDocuments) Should add 5 new documents', () => {
         }
     ]
 
-    let docs = addManyDocuments(users, model)
+    let docModel = {
+        dbName: model.dbName,
+        colName: model.colName,
+        modelName: model.modelName,
+        schema: model.schema
+    }
+
+    let docs = addManyDocuments(users, docModel)
     
     expect(docs).toEqual(expect.arrayContaining([expect.objectContaining({
         id: expect.any(Number),
