@@ -4,8 +4,8 @@ const Document = require('../../../../lib/db/models/schema/Document')
 
 const dbSettings = {
     dbName: 'schema-addmany',
-    initSchemas: true,
-    modelsAutoDelete: true, 
+    initSchemas: false,
+    modelsAutoDelete: false, 
     defaultModel: {
         type: 'schema',
         id: '$incr'
@@ -30,7 +30,9 @@ beforeAll(async (done) => {
         id: streamDb.Types.$incr,
         title: String
     })
-    GroupModel = streamDb.model('Group', GroupSchema, groupMeta)
+    // GroupModel = streamDb.model('Group', GroupSchema, groupMeta)
+    db.addSchema('Group', GroupSchema)
+    GroupModel = db.collection('groups').useModel('Group').model
     
     const UserSchema = new Schema({
         id: streamDb.Types.$incr,
@@ -65,7 +67,9 @@ beforeAll(async (done) => {
             $ref: Number
         }]
     })
-    UserModel = streamDb.model('User', UserSchema, userMeta)
+    // UserModel = streamDb.model('User', UserSchema, userMeta)
+    db.addSchema('User', UserSchema)
+    UserModel = db.collection('users').useModel('User').model
 
     done()
 })
