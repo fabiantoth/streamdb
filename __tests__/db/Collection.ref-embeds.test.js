@@ -36,6 +36,11 @@ beforeAll(async (done) => {
             model: 'Group',
             $ref: Number
         },
+        arrayGroupRefs: [{
+            collection: 'groups',
+            model: 'Group',
+            $ref: Number
+        }],
         nested: {
             nestedGroupRef: {
                 collection: 'groups',
@@ -64,7 +69,7 @@ afterAll(async (done) => {
     done()
 })
 
-test('1 -> Collection.insertOne(): #document #ref-embed add 1 document with a $ref embed', async (done) => {
+test('1 -> Collection.insertOne(): #document #embeddedRef add 1 document with a $ref embed', async (done) => {
     usersRef.insertOne({ 
         name: 'Jerry Mouse',
         groupRef: {
@@ -88,7 +93,7 @@ test('1 -> Collection.insertOne(): #document #ref-embed add 1 document with a $r
     })
 })
 
-test('2 -> Collection.insertOne(): #document #nestedObject #ref-embed add 1 document with a ref embed in nested object', async (done) => {
+test('2 -> Collection.insertOne(): #document #nestedObject #embeddedRef add 1 document with a ref embed in nested object', async (done) => {
     usersRef.insertOne({ 
         name: 'Tom Cat',
         nested: {
@@ -111,4 +116,96 @@ test('2 -> Collection.insertOne(): #document #nestedObject #ref-embed add 1 docu
         })
         done()
     })
+})
+
+test('3 -> Collection.insertOne(): #document #array #embeddedRef add 1 document with array embedded refs', async (done) => {
+    usersRef.insertOne({ 
+        name: 'Mighty Mouse',
+        arrayGroupRefs: [
+            { title: 'Group 3' },
+            { title: 'Group 4' }
+        ]
+     })
+    .then(response => {
+        let res = response.data 
+        expect.objectContaining({
+            id: expect(res.id).toBe(3),
+            arrayGroupRefs: expect(res.arrayGroupRefs).toEqual(expect.arrayContaining([expect.objectContaining({
+                collection: expect.any(String),
+                model: expect.any(String),
+                $ref: expect.any(Number)
+            })]))
+        })
+        done()
+    })
+})
+
+
+// insert many
+
+// update one
+
+// test('11 -> Collection.updateOne(): #embeddedRef #setNull should set $ref field to null', async (done) => {
+//     usersRef.updateOne({
+//         id: 3,
+//         groupRef: null
+//     })
+//     .then(response => {
+//         let res = response.data
+//         expect.objectContaining({
+//             id: expect(res.id).toBe(3),
+//             groupRef: expect(res.groupRef).toBe(null)
+//         })
+//         done()
+//     })
+// })
+
+// test('13 -> Collection.updateOne(): #update #embeddedRef should update $ref field to valid subDoc', async (done) => {
+//     usersRef.updateOne({
+//         id: 3,
+//         groupRef: {
+//             collection: 'groups',
+//             model: 'Group',
+//             $ref: 2
+//         }
+//     })
+//     .then(response => {
+//         let res = response.data
+//         expect.objectContaining({
+//             id: expect(res.id).toBe(3),
+//             groupRef: expect(res.groupRef).toEqual({
+//                 collection: 'groups',
+//                 model: 'Group',
+//                 $ref: 2
+//             })
+//         })
+//         done()
+//     })
+// })
+
+// update many
+
+// delete one
+
+// delete many
+
+
+//
+// ======= negative tests ========== //
+//
+
+test('(-1) -> Collection.updateOne(): #error #embeddedRef should throw error trying to assign $ref that does not exist', () => {
+    expect.assertions(1)
+    return usersRef.updateOne({
+        id: 2,
+        groupRef: {
+            collection: 'groups',
+            model: 'Group',
+            $ref: 6
+        }
+    })
+    .catch(e => expect(e).toEqual({
+        "error": true,
+        "message": "Document with id '6' does not exist in 'groups' collection"
+    }))
 })
