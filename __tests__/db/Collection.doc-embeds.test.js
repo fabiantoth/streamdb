@@ -199,51 +199,51 @@ test('4 -> Collection.updateOne(): #embeddedDoc #setNull should set document fie
     })
 })
 
-// test('5 -> Collection.updateOne(): #update #embeddedDoc should update document field to valid subDoc', async (done) => {
-//     usersRef.updateOne({
-//         id: 4,
-//         groupDoc: {
-//             id: 4,
-//             title: 'Group---4'
-//         }
-//     })
-//     .then(response => {
-//         let res = response.data
-//         expect.objectContaining({
-//             id: expect(res.id).toBe(4),
-//             groupDoc: expect.objectContaining({
-//                 id: expect(res.groupDoc.id).toBe(4),
-//                 title: expect(res.groupDoc.title).toBe('Group---4')
-//             })
-//         })
-//         done()
-//     })
-// })
+test('5 -> Collection.updateOne(): #update #embeddedDoc should update document field to valid subDoc', async (done) => {
+    usersRef.updateOne({
+        id: 4,
+        groupDoc: {
+            id: 4,
+            title: 'Group---4'
+        }
+    })
+    .then(response => {
+        let res = response.data
+        expect.objectContaining({
+            id: expect(res.id).toBe(4),
+            groupDoc: expect.objectContaining({
+                id: expect(res.groupDoc.id).toBe(4),
+                title: expect(res.groupDoc.title).toBe('Group---4')
+            })
+        })
+        done()
+    })
+})
 
-// test('6 -> Collection.updateOne(): #update #nestedObject #embeddedDoc should update nested object embedded doc field', async (done) => {
-//     usersRef.updateOne({
-//         id: 6,
-//         nested: {
-//             nestedGroupDoc: {
-//                 id: 6,
-//                 title: 'Group---6'
-//             }
-//         }
-//     })
-//     .then(response => {
-//         let res = response.data
-//         expect.objectContaining({
-//             id: expect(res.id).toBe(6),
-//             nested: expect.objectContaining({
-//                 nestedGroupDoc: expect.objectContaining({
-//                     id: expect(res.nested.nestedGroupDoc.id).toBe(6),
-//                     title: expect(res.nested.nestedGroupDoc.title).toBe('Group---6'),
-//                 })
-//             })
-//         })
-//         done()
-//     })
-// })
+test('6 -> Collection.updateOne(): #update #nestedObject #embeddedDoc should update nested object embedded doc field', async (done) => {
+    usersRef.updateOne({
+        id: 6,
+        nested: {
+            nestedGroupDoc: {
+                id: 6,
+                title: 'Group---6'
+            }
+        }
+    })
+    .then(response => {
+        let res = response.data
+        expect.objectContaining({
+            id: expect(res.id).toBe(6),
+            nested: expect.objectContaining({
+                nestedGroupDoc: expect.objectContaining({
+                    id: expect(res.nested.nestedGroupDoc.id).toBe(6),
+                    title: expect(res.nested.nestedGroupDoc.title).toBe('Group---6'),
+                })
+            })
+        })
+        done()
+    })
+})
 
 // update many
 

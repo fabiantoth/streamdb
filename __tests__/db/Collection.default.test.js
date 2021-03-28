@@ -238,7 +238,15 @@ test('Collection.updateMany(): Should update 2 documents', async (done) => {
 
     db.collection('users').updateMany(updates)
         .then(res => {
-            expect(res.data).toMatchObject(updates)
+            let response = res.data
+            expect.objectContaining({
+                id: expect(response[0].id).toBe(3),
+                email: expect(response[0].email).toBe('s-doo@email.com'),
+            })
+            expect.objectContaining({
+                id: expect(response[1].id).toBe(4),
+                email: expect(response[1].email).toBe('t-cat@email.com'),
+            })
             done()
         })
 })
