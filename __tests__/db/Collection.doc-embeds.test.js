@@ -34,10 +34,8 @@ beforeAll(async (done) => {
     const UserSchema = new Schema({
         name: String,
         groupDoc: GroupModel,
-        groupsArray: [GroupModel],
         nested: {
-            nestedGroupDoc: GroupModel,
-            // nestedGroupsArray: [GroupModel] // --> for now, disallow document array embeds in nestedObjects
+            nestedGroupDoc: GroupModel
         }
     })
     
@@ -63,12 +61,6 @@ afterAll(async (done) => {
 test('1 -> Collection.insertOne(): #document #embeddedDoc add 1 document with a document embed', async (done) => {
     usersRef.insertOne({ 
         name: 'Jerry Mouse',
-        // groupsArray: [
-        //     { title: 'Group 7' },
-        //     { title: 'Group 8' },
-        //     { title: 'Group 9' },
-        //     { title: 'Group 10' }
-        // ],
         groupDoc: {
             title: 'Group 1'
         }
@@ -182,8 +174,6 @@ test('3 -> Collection.insertMany(): #documents #embeddedDoc #nestedObject #embed
         })
 })
 
-// // update one
-
 test('4 -> Collection.updateOne(): #embeddedDoc #setNull should set document field to null', async (done) => {
     usersRef.updateOne({
         id: 3,
@@ -246,6 +236,31 @@ test('6 -> Collection.updateOne(): #update #nestedObject #embeddedDoc should upd
 })
 
 // update many
+// test('7 -> Collection.updateMany(): #updateMany #embeddedDoc should update parent and subdocuments', async (done) => {
+//     usersRef.updateOne({
+//         id: 6,
+//         nested: {
+//             nestedGroupDoc: {
+//                 id: 6,
+//                 title: 'Group---6'
+//             }
+//         }
+//     })
+//     .then(response => {
+//         let res = response.data
+//         expect.objectContaining({
+//             id: expect(res.id).toBe(6),
+//             nested: expect.objectContaining({
+//                 nestedGroupDoc: expect.objectContaining({
+//                     id: expect(res.nested.nestedGroupDoc.id).toBe(6),
+//                     title: expect(res.nested.nestedGroupDoc.title).toBe('Group---6'),
+//                 })
+//             })
+//         })
+//         done()
+//     })
+// })
+
 
 // delete one
 
