@@ -105,7 +105,7 @@ test('2 -> Collection.insertOne(): #document #nestedObject #embeddedDoc add 1 do
         })
 })
 
-test('3 -> Collection.insertMany(): #documents #embeddedDoc #nestedObject #embeddedDoc should add 4 new documents, 2 subdocs, 2 nested subdocs', async (done) => {
+test('3 -> Collection.insertMany(): #documents #nestedObject #embeddedDoc should add 4 new documents, 2 subdocs, 2 nested subdocs', async (done) => {
     const users = [
         {
             name: 'Bugs Bunny',
@@ -129,12 +129,6 @@ test('3 -> Collection.insertMany(): #documents #embeddedDoc #nestedObject #embed
         },
         {
             name: 'SpongeBob SquarePants',
-            // groupsArray: [
-            //     { title: 'Group 7' },
-            //     { title: 'Group 8' },
-            //     { title: 'Group 9' },
-            //     { title: 'Group 10' }
-            // ],
             nested: {
                 nestedGroupDoc: {
                     title: 'Group 6'
@@ -312,3 +306,5 @@ test('6 -> Collection.updateOne(): #update #nestedObject #embeddedDoc should upd
 //         "message": "Updating embedded documents requires id field for 'groupDoc'"
 //     }))
 // })
+
+// providing id fields in doc objects should throw error if doc already exists

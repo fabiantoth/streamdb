@@ -140,8 +140,93 @@ test('3 -> Collection.insertOne(): #document #array #embeddedRef add 1 document 
     })
 })
 
+test('4 -> Collection.insertMany(): #documents #embeddedRef should add 2 new documents, 2 subdocs', async (done) => {
+    const users = [
+        {
+            name: 'Bugs Bunny',
+            groupRef: {
+                title: 'Group 5'
+            }
+        },
+        {
+            name: 'Scooby Doo',
+            groupRef: {
+                title: 'Group 6'
+            }
+        }
+    ]
 
-// insert many
+    usersRef.insertMany(users)
+        .then(response => {
+            let res = response.data 
+            // regular ref embeds
+            expect.objectContaining({
+                id: expect(res[0].id).toBe(4),
+                groupRef: expect(res[0].groupRef).toMatchObject({
+                    collection: 'groups',
+                    model: 'Group',
+                    $ref: 5
+                })
+            })
+            expect.objectContaining({
+                id: expect(res[1].id).toBe(5),
+                groupRef: expect(res[1].groupRef).toMatchObject({
+                    collection: 'groups',
+                    model: 'Group',
+                    $ref: 6
+                })
+            })
+     
+            done()
+        })
+})
+
+test('5 -> Collection.insertMany(): #documents #nestedObject #embeddedRef should add 2 new documents, 2 subdocs', async (done) => {
+    const users = [
+        {
+            name: 'Tom Cat',
+            nested: {
+                nestedGroupRef: {
+                    title: 'Group 7'
+                }
+            }
+        },
+        {
+            name: 'SpongeBob SquarePants',
+            nested: {
+                nestedGroupRef: {
+                    title: 'Group 8'
+                }
+            }
+        }
+    ]
+
+    usersRef.insertMany(users)
+        .then(response => {
+            let res = response.data
+            // nested subdoc
+            expect.objectContaining({
+                id: expect(res[0].id).toBe(6),
+                nested: expect(res[0].nested.nestedGroupRef).toMatchObject({
+                    collection: 'groups',
+                    model: 'Group',
+                    $ref: 7
+                })
+            })
+            
+            expect.objectContaining({
+                id: expect(res[1].id).toBe(7),
+                nested: expect(res[1].nested.nestedGroupRef).toMatchObject({
+                    collection: 'groups',
+                    model: 'Group',
+                    $ref: 8
+                })
+            })
+
+            done()
+        })
+})
+
 
 // update one
 
@@ -201,11 +286,11 @@ test('(-1) -> Collection.updateOne(): #error #embeddedRef should throw error try
         groupRef: {
             collection: 'groups',
             model: 'Group',
-            $ref: 6
+            $ref: 10
         }
     })
     .catch(e => expect(e).toEqual({
         "error": true,
-        "message": "Document with id '6' does not exist in 'groups' collection"
+        "message": "Document with id '10' does not exist in 'groups' collection"
     }))
 })
