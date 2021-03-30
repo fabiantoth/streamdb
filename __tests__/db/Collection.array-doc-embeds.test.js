@@ -107,3 +107,109 @@ test('2 -> Collection.insertOne(): #document #nestedObject #array #embeddedDoc a
         done()
     })
 })
+
+test('3 -> Collection.insertMany(): #manyDocuments #array #embeddedDoc add 2 parent documents with array of document embeds', async (done) => {
+    const docs = [
+        { 
+            name: 'Donald Duck',
+            groupsArray: [
+                { title: 'Group 5' },
+                { title: 'Group 6' }
+            ]
+        },
+        { 
+            name: 'Daffy Duck',
+            groupsArray: [
+                { title: 'Group 7' },
+                { title: 'Group 8' }
+            ]
+        },
+    ]
+    usersRef.insertMany(docs)
+    .then(response => {
+        let res = response.data 
+        expect.objectContaining({
+            id: expect(res[0].id).toBe(3),
+            name: expect(res[0].name).toBe('Donald Duck'),
+            groupsArray: expect(res[0].groupsArray).toEqual(expect.arrayContaining([
+                { id: 5, title: 'Group 5'},
+                { id: 6, title: 'Group 6'}
+            ]))
+        })
+
+        expect.objectContaining({
+            id: expect(res[1].id).toBe(4),
+            name: expect(res[1].name).toBe('Daffy Duck'),
+            groupsArray: expect(res[1].groupsArray).toEqual(expect.arrayContaining([
+                { id: 7, title: 'Group 7'},
+                { id: 8, title: 'Group 8'}
+            ]))
+        })
+        
+        done()
+    })
+})
+
+test('4 -> Collection.insertMany(): #manyDocuments #nestedObject #array #embeddedDoc add 2 parent documents with nestedObject array of document embeds', async (done) => {
+    const docs = [
+        { 
+            name: 'Bugs Bunny',
+            nested: {
+                nestedGroupsArray: [
+                    { title: 'Group 9' },
+                    { title: 'Group 10' }
+                ]
+            }
+        },
+        { 
+            name: 'Scooby Doo',
+            nested: {
+                nestedGroupsArray: [
+                    { title: 'Group 11' },
+                    { title: 'Group 12' }
+                ]
+            }
+        },
+    ]
+    usersRef.insertMany(docs)
+    .then(response => {
+        let res = response.data 
+        expect.objectContaining({
+            id: expect(res[0].id).toBe(5),
+            name: expect(res[0].name).toBe('Bugs Bunny'),
+            nested: expect.objectContaining({
+                nestedGroupsArray: expect(res[0].nested.nestedGroupsArray).toEqual(expect.arrayContaining([
+                    { id: 9, title: 'Group 9'},
+                    { id: 10, title: 'Group 10'}
+                ]))
+            })
+        })
+        
+        expect.objectContaining({
+            id: expect(res[1].id).toBe(6),
+            name: expect(res[1].name).toBe('Scooby Doo'),
+            nested: expect.objectContaining({
+                nestedGroupsArray: expect(res[1].nested.nestedGroupsArray).toEqual(expect.arrayContaining([
+                    { id: 11, title: 'Group 11'},
+                    { id: 12, title: 'Group 12'}
+                ]))
+            })
+        })
+        
+        done()
+    })
+})
+
+
+// updateOne
+
+// updateMany
+
+// set/insert, remove/delete
+
+
+//
+// ======= negative tests ========== //
+//
+
+// providing id fields in doc objects should throw error if doc already exists
