@@ -177,6 +177,7 @@ test('4 -> Collection.updateOne(): #embeddedDoc #setNull should set document fie
         let res = response.data 
         expect.objectContaining({
             id: expect(res.id).toBe(3),
+            name: expect(res.name).toBe('Bugs Bunny'),
             groupDoc: expect(res.groupDoc).toBe(null)
         })
         done()
@@ -197,6 +198,7 @@ test('5 -> Collection.updateOne(): #update #embeddedDoc should update document f
             id: expect(res.id).toBe(4),
             groupDoc: expect.objectContaining({
                 id: expect(res.groupDoc.id).toBe(4),
+                name: expect(res.name).toBe('Scooby Doo'),
                 title: expect(res.groupDoc.title).toBe('Group---4')
             })
         })
@@ -218,6 +220,7 @@ test('6 -> Collection.updateOne(): #update #nestedObject #embeddedDoc should upd
         let res = response.data
         expect.objectContaining({
             id: expect(res.id).toBe(6),
+            name: expect(res.name).toBe('SpongeBob SquarePants'),
             nested: expect.objectContaining({
                 nestedGroupDoc: expect.objectContaining({
                     id: expect(res.nested.nestedGroupDoc.id).toBe(6),
