@@ -51,14 +51,21 @@ test('3 -> SchemaRef.validate(): #rules should return null/undefined values', ()
 //
 // Number/String
 //
-test('4 -> SchemaRef.validate(): #rules should return values', () => {
+test('4 -> SchemaRef.validate(): #rules should return values with model field optional', () => {
     const refObj = new SchemaRef('refObj', { collection: 'col', model: 'Col', $ref: String })
     const refObj2 = new SchemaRef('refObj', { collection: 'col', model: 'Col', $ref: Number })
+    const refObj3 = new SchemaRef('refObj', { collection: 'col', $ref: String })
+    const refObj4 = new SchemaRef('refObj', { collection: 'col', $ref: Number })
+
     const result = refObj.validate({ collection: 'col', model: 'Col', $ref: 'strref' })
     const result2 = refObj2.validate({ collection: 'col', model: 'Col', $ref: 1 })
+    const result3 = refObj3.validate({ collection: 'col', $ref: 'strref' })
+    const result4 = refObj4.validate({ collection: 'col', $ref: 1 })
     
     expect(result).toMatchObject({ collection: 'col', model: 'Col', $ref: 'strref' })
     expect(result2).toMatchObject({ collection: 'col', model: 'Col', $ref: 1 })
+    expect(result3).toMatchObject({ collection: 'col', $ref: 'strref' })
+    expect(result4).toMatchObject({ collection: 'col', $ref: 1 })
 })
 
 
@@ -77,7 +84,7 @@ test('(-2) -> SchemaRef: #error #reftype should throw an error if missing collec
 
 test('(-3) -> SchemaRef: #error #reftype should throw an error if missing $ref field', () => {
     expect(() => new SchemaRef('SchemaRef', { type: SchemaRef, model: 'Collection', collection: 'collection' }))
-        .toThrow(`Missing "$ref" field for $ref type`)
+        .toThrow(`The $ref field is required for $ref objects`)
 })
 
 test('(-4) -> SchemaRef: #error #reftype should throw an error if contains non $ref object fields', () => {
