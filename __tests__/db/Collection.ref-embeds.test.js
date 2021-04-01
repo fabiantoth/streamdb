@@ -13,6 +13,7 @@ const dbSettings = {
 
 let db
 let usersRef
+let groupsRef
 
 beforeAll(async (done) => {
     await streamDb.createDb(dbSettings)
@@ -23,11 +24,21 @@ beforeAll(async (done) => {
 
     
     const GroupSchema = new Schema({
-        title: String
+        title: String,
+        owner: {
+            collection: 'users',
+            $ref: Number
+        },
+        nested: {
+            nestedOwner: {
+                collection: 'users',
+                $ref: Number
+            }
+        }
     })
     
     db.addSchema('Group', GroupSchema)
-    db.collection('groups').useModel('Group')
+    groupsRef= db.collection('groups').useModel('Group')
     
     const UserSchema = new Schema({
         name: String,
@@ -140,7 +151,7 @@ test('3 -> Collection.insertOne(): #document #array #embeddedRef add 1 document 
     })
 })
 
-test('4 -> Collection.insertMany(): #documents #embeddedRef should add 2 new documents, 2 subdocs', async (done) => {
+test('5 -> Collection.insertMany(): #documents #embeddedRef should add 2 new documents, 2 subdocs', async (done) => {
     const users = [
         {
             name: 'Bugs Bunny',
@@ -181,7 +192,7 @@ test('4 -> Collection.insertMany(): #documents #embeddedRef should add 2 new doc
         })
 })
 
-test('5 -> Collection.insertMany(): #documents #nestedObject #embeddedRef should add 2 new documents, 2 subdocs', async (done) => {
+test('6 -> Collection.insertMany(): #documents #nestedObject #embeddedRef should add 2 new documents, 2 subdocs', async (done) => {
     const users = [
         {
             name: 'Tom Cat',
@@ -225,6 +236,57 @@ test('5 -> Collection.insertMany(): #documents #nestedObject #embeddedRef should
 
             done()
         })
+})
+
+test('7 -> Collection.insertOne(): #subdocument #parentRef should add subdocument and insert parent owner reference', async (done) => {
+    let insertRes = await usersRef.insertOne({ 
+        name: 'Power Ranger',
+        groupRef: {
+            title: 'Group 9'
+        }
+     })
+    
+    let groupRes = await groupsRef.getById(9)
+    let res = groupRes.data
+
+    expect.objectContaining({
+        id: expect(res.id).toBe(9),
+        title: expect(res.title).toBe('Group 9'),
+        owner: expect(res.owner).toMatchObject({
+            collection: 'users',
+            $ref: 8
+        })
+    })
+
+    done()
+})
+
+test('8 -> Collection.insertOne(): #subdocument #nestedObject #parentRef should add subdocument and insert parent owner reference in nested object', async (done) => {
+    let insertRes = await usersRef.insertOne({ 
+        name: 'Red Power Ranger',
+        groupRef: {
+            title: 'Group 10',
+            nested: {
+                title: 'Group 10'
+            }
+        }
+     })
+    
+    let groupRes = await groupsRef.getById(10)
+    let res = groupRes.data
+
+    expect.objectContaining({
+        id: expect(res.id).toBe(10),
+        title: expect(res.title).toBe('Group 10'),
+        nested: expect(res.nested.nestedOwner).toMatchObject({
+            collection: 'users',
+            $ref: 9
+        }),
+        created_at: expect.any(Date),
+        updated_at: expect.any(Date)
+    })
+
+    done()
 })
 
 
@@ -286,11 +348,11 @@ test('(-1) -> Collection.updateOne(): #error #embeddedRef should throw error try
         groupRef: {
             collection: 'groups',
             model: 'Group',
-            $ref: 10
+            $ref: 20
         }
     })
     .catch(e => expect(e).toEqual({
         "error": true,
-        "message": "Document with id '10' does not exist in 'groups' collection"
+        "message": "Document with id '20' does not exist in 'groups' collection"
     }))
 })
