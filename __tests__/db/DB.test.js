@@ -1,5 +1,6 @@
 const streamDb = require('../../lib/index')
 const DB = streamDb.DB
+const Schema = streamDb.Schema
 
 const dbSettings = {
     dbName: 'testUserDB',
@@ -26,7 +27,7 @@ afterAll(async (done) => {
 
 
 
-test('DB: (addCollection) Should return new collection meta file', async (done) => {
+test('1 -> db.addCollection(): Should return new collection meta file', async (done) => {
 
     const usersColSettings = {
         storeMax: 131072,
@@ -66,7 +67,7 @@ test('DB: (addCollection) Should return new collection meta file', async (done) 
     done()
 })
 
-test('DB: (addCollection) should override out of range min/max values when default model $incr to colSettings $uid', async (done) => {
+test('2 -> db.addCollection(): should override out of range min/max values when default model $incr to colSettings $uid', async (done) => {
 
     const groupsColSettings = {
         model: {
@@ -87,9 +88,37 @@ test('DB: (addCollection) should override out of range min/max values when defau
     done()
 })
 
-test('DB: (dropCollection) Should delete users collection and return success message', async (done) => {
+test('3 -> db.addSchema(): Should add a new schema to db schemas', async (done) => {
+    const DetailSchema = new Schema({
+        age: Number,
+        email: String
+    })
+
+    const updatedDb = db.addSchema('Detail', DetailSchema)
+
+    expect(Object.keys(updatedDb.schemas).length).toBe(1)
+    done()
+})
+
+test('4 -> db.dropCollection(): Should delete users collection and return success message', async (done) => {
     const deleted = await db.dropCollection('users')
 
     expect(deleted).toBe('Collection "users" has been deleted')
+    done()
+})
+
+
+//
+// ======= negative tests ========== //
+//
+
+test('(-1) -> db.addSchema(): #error Should throw error trying to add model name that already exists', async (done) => {
+    const DetailSchema = new Schema({
+        age: Number,
+        email: String
+    })
+
+    expect(() => db.addSchema('Detail', DetailSchema))
+        .toThrow(`Model 'Detail' already exists`)
     done()
 })

@@ -3,8 +3,8 @@ const Schema = streamDb.Schema
 
 const dbSettings = {
     dbName: 'schema-class',
-    initSchemas: true,
-    modelsAutoDelete: true, 
+    initSchemas: false,
+    modelsAutoDelete: false, 
     defaultModel: {
         type: 'schema'
     } 
