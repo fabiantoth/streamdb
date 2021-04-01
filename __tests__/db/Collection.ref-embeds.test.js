@@ -238,7 +238,7 @@ test('6 -> Collection.insertMany(): #documents #nestedObject #embeddedRef should
         })
 })
 
-test('7 -> Collection.insertOne(): #subdocument #parentRef should add subdocument and insert parent owner reference', async (done) => {
+test('7 -> Collection.insertOne(): #subdocument #parentRef should add subdocument and insert parent owner reference on top level only', async (done) => {
     let insertRes = await usersRef.insertOne({ 
         name: 'Power Ranger',
         groupRef: {
@@ -255,7 +255,8 @@ test('7 -> Collection.insertOne(): #subdocument #parentRef should add subdocumen
         owner: expect(res.owner).toMatchObject({
             collection: 'users',
             $ref: 8
-        })
+        }),
+        nested: expect(res.nested).toBe(undefined)
     })
 
     done()
