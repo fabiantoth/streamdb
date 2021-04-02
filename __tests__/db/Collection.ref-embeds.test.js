@@ -290,6 +290,51 @@ test('8 -> Collection.insertOne(): #subdocument #nestedObject #parentRef should 
     done()
 })
 
+test('9 -> Collection.insertMany(): #subdocuments #parentRef should match parent owner references for nested and top level', async (done) => {
+    let insertRes = await usersRef.insertMany([
+        { 
+            name: 'White Power Ranger',
+            groupRef: {
+                title: 'Group 11'
+            }
+        },
+        { 
+            name: 'Green Power Ranger',
+            groupRef: {
+                title: 'Group 12',
+                nested: {
+                    title: 'Group 12'
+                }
+            }
+        }
+    ])
+
+    let groupRes = await groupsRef.getDocs([11,12])
+    let res = groupRes.data
+
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(11),
+        owner: expect(res[0].owner).toMatchObject({
+            collection: 'users',
+            $ref: 10
+        }),
+        nested: expect(res[0].nested).toBe(undefined)
+    })
+    expect.objectContaining({
+        id: expect(res[1].id).toBe(12),
+        owner: expect(res[1].owner).toMatchObject({
+            collection: 'users',
+            $ref: 10
+        }),
+        nested: expect(res[1].nested.nestedOwner).toMatchObject({
+            collection: 'users',
+            $ref: 10
+        }),
+    })
+
+    done()
+})
+
 
 // update one
 
