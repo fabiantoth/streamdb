@@ -136,10 +136,7 @@ test('3 -> Collection.insertOne(): #document #array #embeddedRef add 1 document 
         let res = response.data 
         expect.objectContaining({
             id: expect(res.id).toBe(3),
-            arrayGroupRefs: expect(res.arrayGroupRefs).toEqual(expect.arrayContaining([expect.objectContaining({
-                collection: expect.any(String),
-                $ref: expect.any(Number)
-            })]))
+            arrayGroupRefs: expect(res.arrayGroupRefs).toEqual(expect.arrayContaining([3,4]))
         })
         done()
     })

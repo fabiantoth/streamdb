@@ -28,6 +28,12 @@ beforeAll(async (done) => {
         owner: {
             collection: 'users',
             $ref: Number
+        },
+        nested: {
+            nestedOwner: {
+                collection: 'users',
+                $ref: Number
+            }
         }
     })
     
@@ -82,18 +88,7 @@ test('1 -> Collection.insertOne(): #document #array #embeddedRef add 1 parent do
         expect.objectContaining({
             id: expect(res.id).toBe(1),
             name: expect(res.name).toBe('Jerry Mouse'),
-            groupsRefArray: expect(res.groupsRefArray).toEqual(expect.arrayContaining([
-                {
-                    collection: 'groups',
-                    model: 'Group',
-                    $ref: 1
-                },
-                {
-                    collection: 'groups',
-                    model: 'Group',
-                    $ref: 2
-                }
-            ])),
+            groupsRefArray: expect(res.groupsRefArray).toEqual(expect.arrayContaining([1,2])),
             created_at: expect.any(Date),
             updated_at: expect.any(Date)
         })
@@ -117,18 +112,7 @@ test('2 -> Collection.insertOne(): #document #nestedObject #array #embeddedRef a
             id: expect(res.id).toBe(2),
             name: expect(res.name).toBe('Mighty Mouse'),
             nested: expect.objectContaining({
-                nestedGroupsRefArray: expect(res.nested.nestedGroupsRefArray).toEqual(expect.arrayContaining([
-                    {
-                        collection: 'groups',
-                        model: 'Group',
-                        $ref: 3
-                    },
-                    {
-                        collection: 'groups',
-                        model: 'Group',
-                        $ref: 4
-                    }
-                ]))
+                nestedGroupsRefArray: expect(res.nested.nestedGroupsRefArray).toEqual(expect.arrayContaining([3,4]))
             })
         })
         done()
@@ -150,7 +134,7 @@ test('3 -> Collection.insertMany(): #documents #array #embeddedDoc add 2 parent 
                 { title: 'Group 7' },
                 { title: 'Group 8' }
             ]
-        },
+        }
     ]
     usersRef.insertMany(docs)
     .then(response => {
@@ -158,35 +142,13 @@ test('3 -> Collection.insertMany(): #documents #array #embeddedDoc add 2 parent 
         expect.objectContaining({
             id: expect(res[0].id).toBe(3),
             name: expect(res[0].name).toBe('Donald Duck'),
-            groupsRefArray: expect(res[0].groupsRefArray).toEqual(expect.arrayContaining([
-                {
-                    collection: 'groups',
-                    model: 'Group',
-                    $ref: 5
-                },
-                {
-                    collection: 'groups',
-                    model: 'Group',
-                    $ref: 6
-                }
-            ]))
+            groupsRefArray: expect(res[0].groupsRefArray).toEqual(expect.arrayContaining([5,6]))
         })
 
         expect.objectContaining({
             id: expect(res[1].id).toBe(4),
             name: expect(res[1].name).toBe('Daffy Duck'),
-            groupsRefArray: expect(res[1].groupsRefArray).toEqual(expect.arrayContaining([
-                {
-                    collection: 'groups',
-                    model: 'Group',
-                    $ref: 7
-                },
-                {
-                    collection: 'groups',
-                    model: 'Group',
-                    $ref: 8
-                }
-            ]))
+            groupsRefArray: expect(res[1].groupsRefArray).toEqual(expect.arrayContaining([7,8]))
         })
         
         done()
@@ -221,18 +183,7 @@ test('4 -> Collection.insertMany(): #documents #nestedObject #array #embeddedRef
             id: expect(res[0].id).toBe(5),
             name: expect(res[0].name).toBe('Bugs Bunny'),
             nested: expect.objectContaining({
-                nestedGroupsRefArray: expect(res[0].nested.nestedGroupsRefArray).toEqual(expect.arrayContaining([
-                    {
-                        collection: 'groups',
-                        model: 'Group',
-                        $ref: 9
-                    },
-                    {
-                        collection: 'groups',
-                        model: 'Group',
-                        $ref: 10
-                    }
-                ]))
+                nestedGroupsRefArray: expect(res[0].nested.nestedGroupsRefArray).toEqual(expect.arrayContaining([9,10]))
             })
         })
         
@@ -240,21 +191,83 @@ test('4 -> Collection.insertMany(): #documents #nestedObject #array #embeddedRef
             id: expect(res[1].id).toBe(6),
             name: expect(res[1].name).toBe('Scooby Doo'),
             nested: expect.objectContaining({
-                nestedGroupsRefArray: expect(res[1].nested.nestedGroupsRefArray).toEqual(expect.arrayContaining([
-                    {
-                        collection: 'groups',
-                        model: 'Group',
-                        $ref: 11
-                    },
-                    {
-                        collection: 'groups',
-                        model: 'Group',
-                        $ref: 12
-                    }
-                ]))
+                nestedGroupsRefArray: expect(res[1].nested.nestedGroupsRefArray).toEqual(expect.arrayContaining([11,12]))
             })
         })
         
         done()
     })
+})
+
+test('5 -> Collection.insertOne(): #document #nestedObject #array #embeddedRef #parentInfo add 1 parent document with parent info injected into subDoc to level & nested field', async (done) => {
+    let usersRes = await usersRef.insertOne({ 
+        name: 'Mighty Mouse',
+        groupsRefArray: [
+            { title: 'Group 13' },
+            { title: 'Group 14', nested: { level: 14 } }
+        ]
+    })
+
+    let groupRes = await groupsRef.getById([14])
+    let res = groupRes.data
+
+    expect.objectContaining({
+        id: expect(res.id).toBe(14),
+        owner: expect(res.owner).toMatchObject({
+            collection: 'users',
+            $ref: 7
+        }),
+        nested: expect(res.nested.nestedOwner).toMatchObject({
+            collection: 'users',
+            $ref: 7
+        }),
+    })
+
+    done()
+})
+
+test('6 -> Collection.insertMany(): #documents #nestedObject #array #embeddedRef #parentInfo add 2 parent document with parent info injected into subDocs to level & nested field', async (done) => {
+    const docs = [
+        { 
+            name: 'Donald Duck',
+            groupsRefArray: [
+                { title: 'Group 15' },
+                { title: 'Group 16', nested: { level: 16 } }
+            ]
+        },
+        { 
+            name: 'Daffy Duck',
+            groupsRefArray: [
+                { title: 'Group 17' },
+                { title: 'Group 18', nested: { level: 18 } }
+            ]
+        }
+    ]
+    let usersRes = await usersRef.insertMany(docs)
+
+    let groupRes = await groupsRef.getDocs([15,18])
+    let res = groupRes.data
+
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(15),
+        owner: expect(res[0].owner).toMatchObject({
+            collection: 'users',
+            $ref: 8
+        }),
+        nested: expect(res[0].nested).toBe(undefined)
+    })
+
+    expect.objectContaining({
+        id: expect(res[1].id).toBe(18),
+        owner: expect(res[1].owner).toMatchObject({
+            collection: 'users',
+            $ref: 9
+        }),
+        nested: expect(res[1].nested.nestedOwner).toMatchObject({
+            collection: 'users',
+            $ref: 9
+        }),
+    })
+
+    done()
 })
