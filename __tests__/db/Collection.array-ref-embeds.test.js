@@ -213,14 +213,8 @@ test('5 -> Collection.insertOne(): #document #nestedObject #array #embeddedRef #
 
     expect.objectContaining({
         id: expect(res.id).toBe(14),
-        owner: expect(res.owner).toMatchObject({
-            collection: 'users',
-            $ref: 7
-        }),
-        nested: expect(res.nested.nestedOwner).toMatchObject({
-            collection: 'users',
-            $ref: 7
-        }),
+        owner: expect(res.owner).toBe(7),
+        nested: expect(res.nested.nestedOwner).toBe(7),
     })
 
     done()
@@ -250,23 +244,14 @@ test('6 -> Collection.insertMany(): #documents #nestedObject #array #embeddedRef
 
     expect.objectContaining({
         id: expect(res[0].id).toBe(15),
-        owner: expect(res[0].owner).toMatchObject({
-            collection: 'users',
-            $ref: 8
-        }),
+        owner: expect(res[0].owner).toBe(8),
         nested: expect(res[0].nested).toBe(undefined)
     })
 
     expect.objectContaining({
         id: expect(res[1].id).toBe(18),
-        owner: expect(res[1].owner).toMatchObject({
-            collection: 'users',
-            $ref: 9
-        }),
-        nested: expect(res[1].nested.nestedOwner).toMatchObject({
-            collection: 'users',
-            $ref: 9
-        }),
+        owner: expect(res[1].owner).toBe(9),
+        nested: expect(res[1].nested.nestedOwner).toBe(9),
     })
 
     done()

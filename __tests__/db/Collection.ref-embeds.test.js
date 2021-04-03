@@ -89,10 +89,7 @@ test('1 -> Collection.insertOne(): #document #embeddedRef add 1 document with a 
         expect.objectContaining({
             id: expect(res.id).toBe(1),
             name: expect(res.name).toBe('Jerry Mouse'),
-            groupRef: expect(res.groupRef).toMatchObject({
-                collection: 'groups',
-                $ref: 1
-            }),
+            groupRef: expect(res.groupRef).toBe(1),
             created_at: expect.any(Date),
             updated_at: expect.any(Date)
         })
@@ -113,10 +110,7 @@ test('2 -> Collection.insertOne(): #document #nestedObject #embeddedRef add 1 do
         let res = response.data 
         expect.objectContaining({
             id: expect(res.id).toBe(2),
-            nested: expect(res.nested.nestedGroupRef).toMatchObject({
-                collection: 'groups',
-                $ref: 2
-            }),
+            nested: expect(res.nested.nestedGroupRef).toBe(2),
             created_at: expect.any(Date),
             updated_at: expect.any(Date)
         })
@@ -164,17 +158,11 @@ test('5 -> Collection.insertMany(): #documents #embeddedRef should add 2 new doc
             // regular ref embeds
             expect.objectContaining({
                 id: expect(res[0].id).toBe(4),
-                groupRef: expect(res[0].groupRef).toMatchObject({
-                    collection: 'groups',
-                    $ref: 5
-                })
+                groupRef: expect(res[0].groupRef).toBe(5)
             })
             expect.objectContaining({
                 id: expect(res[1].id).toBe(5),
-                groupRef: expect(res[1].groupRef).toMatchObject({
-                    collection: 'groups',
-                    $ref: 6
-                })
+                groupRef: expect(res[1].groupRef).toBe(6)
             })
      
             done()
@@ -207,18 +195,12 @@ test('6 -> Collection.insertMany(): #documents #nestedObject #embeddedRef should
             // nested subdoc
             expect.objectContaining({
                 id: expect(res[0].id).toBe(6),
-                nested: expect(res[0].nested.nestedGroupRef).toMatchObject({
-                    collection: 'groups',
-                    $ref: 7
-                })
+                nested: expect(res[0].nested.nestedGroupRef).toBe(7)
             })
             
             expect.objectContaining({
                 id: expect(res[1].id).toBe(7),
-                nested: expect(res[1].nested.nestedGroupRef).toMatchObject({
-                    collection: 'groups',
-                    $ref: 8
-                })
+                nested: expect(res[1].nested.nestedGroupRef).toBe(8)
             })
 
             done()
@@ -239,10 +221,7 @@ test('7 -> Collection.insertOne(): #subdocument #parentRef should add subdocumen
     expect.objectContaining({
         id: expect(res.id).toBe(9),
         title: expect(res.title).toBe('Group 9'),
-        owner: expect(res.owner).toMatchObject({
-            collection: 'users',
-            $ref: 8
-        }),
+        owner: expect(res.owner).toBe(8),
         nested: expect(res.nested).toBe(undefined)
     })
 
@@ -266,10 +245,7 @@ test('8 -> Collection.insertOne(): #subdocument #nestedObject #parentRef should 
     expect.objectContaining({
         id: expect(res.id).toBe(10),
         title: expect(res.title).toBe('Group 10'),
-        nested: expect(res.nested.nestedOwner).toMatchObject({
-            collection: 'users',
-            $ref: 9
-        }),
+        nested: expect(res.nested.nestedOwner).toBe(9),
         created_at: expect.any(Date),
         updated_at: expect.any(Date)
     })
@@ -301,22 +277,13 @@ test('9 -> Collection.insertMany(): #subdocuments #parentRef should match parent
 
     expect.objectContaining({
         id: expect(res[0].id).toBe(11),
-        owner: expect(res[0].owner).toMatchObject({
-            collection: 'users',
-            $ref: 10
-        }),
+        owner: expect(res[0].owner).toBe(10),
         nested: expect(res[0].nested).toBe(undefined)
     })
     expect.objectContaining({
         id: expect(res[1].id).toBe(12),
-        owner: expect(res[1].owner).toMatchObject({
-            collection: 'users',
-            $ref: 10
-        }),
-        nested: expect(res[1].nested.nestedOwner).toMatchObject({
-            collection: 'users',
-            $ref: 10
-        }),
+        owner: expect(res[1].owner).toBe(10),
+        nested: expect(res[1].nested.nestedOwner).toBe(10)
     })
 
     done()
