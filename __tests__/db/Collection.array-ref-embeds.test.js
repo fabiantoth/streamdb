@@ -24,12 +24,15 @@ beforeAll(async (done) => {
 
     
     const GroupSchema = new Schema({
-        title: String
+        title: String,
+        owner: {
+            collection: 'users',
+            $ref: Number
+        }
     })
     
     db.addSchema('Group', GroupSchema)
     groupsRef = db.collection('groups').useModel('Group')
-    // const GroupModel = groupsRef.model
     
     const UserSchema = new Schema({
         name: String,

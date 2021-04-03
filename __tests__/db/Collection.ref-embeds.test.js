@@ -44,18 +44,15 @@ beforeAll(async (done) => {
         name: String,
         groupRef: {
             collection: 'groups',
-            model: 'Group',
             $ref: Number
         },
         arrayGroupRefs: [{
             collection: 'groups',
-            model: 'Group',
             $ref: Number
         }],
         nested: {
             nestedGroupRef: {
                 collection: 'groups',
-                model: 'Group',
                 $ref: Number
             }
         }
@@ -94,7 +91,6 @@ test('1 -> Collection.insertOne(): #document #embeddedRef add 1 document with a 
             name: expect(res.name).toBe('Jerry Mouse'),
             groupRef: expect(res.groupRef).toMatchObject({
                 collection: 'groups',
-                model: 'Group',
                 $ref: 1
             }),
             created_at: expect.any(Date),
@@ -119,7 +115,6 @@ test('2 -> Collection.insertOne(): #document #nestedObject #embeddedRef add 1 do
             id: expect(res.id).toBe(2),
             nested: expect(res.nested.nestedGroupRef).toMatchObject({
                 collection: 'groups',
-                model: 'Group',
                 $ref: 2
             }),
             created_at: expect.any(Date),
@@ -143,7 +138,6 @@ test('3 -> Collection.insertOne(): #document #array #embeddedRef add 1 document 
             id: expect(res.id).toBe(3),
             arrayGroupRefs: expect(res.arrayGroupRefs).toEqual(expect.arrayContaining([expect.objectContaining({
                 collection: expect.any(String),
-                model: expect.any(String),
                 $ref: expect.any(Number)
             })]))
         })
@@ -175,7 +169,6 @@ test('5 -> Collection.insertMany(): #documents #embeddedRef should add 2 new doc
                 id: expect(res[0].id).toBe(4),
                 groupRef: expect(res[0].groupRef).toMatchObject({
                     collection: 'groups',
-                    model: 'Group',
                     $ref: 5
                 })
             })
@@ -183,7 +176,6 @@ test('5 -> Collection.insertMany(): #documents #embeddedRef should add 2 new doc
                 id: expect(res[1].id).toBe(5),
                 groupRef: expect(res[1].groupRef).toMatchObject({
                     collection: 'groups',
-                    model: 'Group',
                     $ref: 6
                 })
             })
@@ -220,7 +212,6 @@ test('6 -> Collection.insertMany(): #documents #nestedObject #embeddedRef should
                 id: expect(res[0].id).toBe(6),
                 nested: expect(res[0].nested.nestedGroupRef).toMatchObject({
                     collection: 'groups',
-                    model: 'Group',
                     $ref: 7
                 })
             })
@@ -229,7 +220,6 @@ test('6 -> Collection.insertMany(): #documents #nestedObject #embeddedRef should
                 id: expect(res[1].id).toBe(7),
                 nested: expect(res[1].nested.nestedGroupRef).toMatchObject({
                     collection: 'groups',
-                    model: 'Group',
                     $ref: 8
                 })
             })
@@ -393,7 +383,6 @@ test('(-1) -> Collection.updateOne(): #error #embeddedRef should throw error try
         id: 2,
         groupRef: {
             collection: 'groups',
-            model: 'Group',
             $ref: 20
         }
     })

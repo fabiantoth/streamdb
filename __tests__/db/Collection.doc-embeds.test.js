@@ -311,3 +311,35 @@ test('6 -> Collection.updateOne(): #update #nestedObject #embeddedDoc should upd
 // })
 
 // providing id fields in doc objects should throw error if doc already exists
+
+test('(-1) -> Collection.insertOne(): #error #embeddedDoc should throw error trying to add doc with id field that already exists', () => {
+    expect.assertions(1)
+    return usersRef.insertOne({ 
+        name: 'Jerry Mouse',
+        groupDoc: {
+            id: 1,
+            title: 'Group 1'
+        }
+     })
+    .catch(e => expect(e).toEqual({
+        "error": true,
+        "message": "Document with id \"1\" already exists in collection 'groups'"
+    }))
+})
+
+test('(-2) -> Collection.insertOne(): #error #nestedObject #embeddedDoc should throw error trying to add doc with id field that already exists', () => {
+    expect.assertions(1)
+    return usersRef.insertOne({ 
+        name: 'Jerry Mouse',
+        nested: {
+            nestedGroupDoc: {
+                id: 1,
+                title: 'Group 1'
+            }
+        }
+     })
+    .catch(e => expect(e).toEqual({
+        "error": true,
+        "message": "Document with id \"1\" already exists in collection 'groups'"
+    }))
+})
