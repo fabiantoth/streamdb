@@ -200,8 +200,70 @@ test('4 -> Collection.insertMany(): #manyDocuments #nestedObject #array #embedde
     })
 })
 
+test('5 -> Collection.updateOne(): #update #array #embeddedDoc #setNull set array field to empty', async (done) => {
+    usersRef.updateOne({
+        id: 1,
+        name: 'Jerry-Mouse',
+        groupsArray: null
+    })
+    .then(response => {
+        let res = response.data
+        expect.objectContaining({
+            id: expect(res.id).toBe(1),
+            name: expect(res.name).toBe('Jerry-Mouse'),
+            groupsArray: expect(res.groupsArray).toEqual([])
+        })
+        done()
+    })
+})
 
-// updateOne
+test('6 -> Collection.updateOne(): #update #nestedObject #array #embeddedDoc #setEmpty set array field to empty', async (done) => {
+    usersRef.updateOne({
+        id: 2,
+        name: 'Mighty-Mouse',
+        nested: {
+            nestedGroupsArray: []
+        }
+    })
+    .then(response => {
+        let res = response.data
+        expect.objectContaining({
+            id: expect(res.id).toBe(2),
+            name: expect(res.name).toBe('Mighty-Mouse'),
+            nested: expect.objectContaining({
+                nestedGroupsArray: expect(res.nested.nestedGroupsArray).toEqual([])
+            })
+        })
+        done()
+    })
+})
+
+test('7 -> Collection.updateOne(): #update #array #embeddedDoc #nestedObject #array #embeddedDoc trying to update array should ignore any other values', async (done) => {
+    usersRef.updateOne({
+        id: 3,
+        name: 'Donald-Duck',
+        groupsArray: [1,2,3,4,5],
+        nested: {
+            nestedGroupsArray: [
+                { title: 'Group 11' },
+                { title: 'Group 12' }
+            ]
+        }
+    })
+    .then(response => {
+        let res = response.data
+        expect.objectContaining({
+            id: expect(res.id).toBe(3),
+            name: expect(res.name).toBe('Donald-Duck'),
+            groupsArray: expect(res.groupsArray.length).toBe(2),
+            nested: expect.objectContaining({
+                nestedGroupsArray: expect(res.nested.nestedGroupsArray).toBe(undefined)
+            })
+        })
+        done()
+    })
+})
+
 
 // updateMany
 

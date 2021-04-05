@@ -44,13 +44,11 @@ beforeAll(async (done) => {
         name: String,
         groupsRefArray: [{
             collection: 'groups',
-            model: 'Group',
             $ref: Number
         }],
         nested: {
             nestedGroupsRefArray: [{
                 collection: 'groups',
-                model: 'Group',
                 $ref: Number
             }]
         }
@@ -255,4 +253,68 @@ test('6 -> Collection.insertMany(): #documents #nestedObject #array #embeddedRef
     })
 
     done()
+})
+
+test('7 -> Collection.updateOne(): #update #array #ref #setNull set array field to empty', async (done) => {
+    usersRef.updateOne({
+        id: 1,
+        name: 'Jerry-Mouse',
+        groupsRefArray: null
+    })
+    .then(response => {
+        let res = response.data
+        expect.objectContaining({
+            id: expect(res.id).toBe(1),
+            name: expect(res.name).toBe('Jerry-Mouse'),
+            groupsRefArray: expect(res.groupsRefArray).toEqual([])
+        })
+        done()
+    })
+})
+
+test('8 -> Collection.updateOne(): #update #nestedObject #array #ref #setEmpty set array field to empty', async (done) => {
+    usersRef.updateOne({
+        id: 2,
+        name: 'Mighty-Mouse',
+        nested: {
+            nestedGroupsRefArray: []
+        }
+    })
+    .then(response => {
+        let res = response.data
+        expect.objectContaining({
+            id: expect(res.id).toBe(2),
+            name: expect(res.name).toBe('Mighty-Mouse'),
+            nested: expect.objectContaining({
+                nestedGroupsRefArray: expect(res.nested.nestedGroupsRefArray).toEqual([])
+            })
+        })
+        done()
+    })
+})
+
+test('9 -> Collection.updateOne(): #update #nestedObject #array #ref #nestedObject #array #ref trying to update array should ignore any other values', async (done) => {
+    usersRef.updateOne({
+        id: 3,
+        name: 'Donald-Duck',
+        groupsRefArray: [1,2,3,4,5],
+        nested: {
+            nestedGroupsRefArray: [
+                { title: 'Group 11' },
+                { title: 'Group 12' }
+            ]
+        }
+    })
+    .then(response => {
+        let res = response.data
+        expect.objectContaining({
+            id: expect(res.id).toBe(3),
+            name: expect(res.name).toBe('Donald-Duck'),
+            groupsRefArray: expect(res.groupsRefArray.length).toBe(2),
+            nested: expect.objectContaining({
+                nestedGroupsRefArray: expect(res.nested.nestedGroupsRefArray).toBe(undefined)
+            })
+        })
+        done()
+    })
 })
