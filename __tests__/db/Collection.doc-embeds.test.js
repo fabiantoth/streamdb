@@ -232,7 +232,6 @@ test('6 -> Collection.updateOne(): #update #nestedObject #embeddedDoc should upd
     })
 })
 
-// update many
 // test('7 -> Collection.updateMany(): #updateMany #embeddedDoc should update parent and subdocuments', async (done) => {
 //     usersRef.updateOne({
 //         id: 6,

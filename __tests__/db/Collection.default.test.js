@@ -445,7 +445,7 @@ test('Collection.where().exclude(): Should return matching obj', async (done) =>
         })
 })
 
-test('Collection: #version should be updated version number 12', async (done) => {
+test('Collection: #version should be updated version number 11', async (done) => {
     let collection = db.collection('users')
     let colMeta = collection.colMeta
     expect(colMeta.version).toBe(11)

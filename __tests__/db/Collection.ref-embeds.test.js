@@ -289,48 +289,68 @@ test('9 -> Collection.insertMany(): #subdocuments #parentRef should match parent
     done()
 })
 
+test('10 -> Collection.updateOne(): #embeddedRef #setNull should set $ref field to null', async (done) => {
+    usersRef.updateOne({
+        id: 3,
+        groupRef: null
+    })
+    .then(response => {
+        let res = response.data
+        expect.objectContaining({
+            id: expect(res.id).toBe(3),
+            groupRef: expect(res.groupRef).toBe(null)
+        })
+        done()
+    })
+})
 
-// update one
+test('11 -> Collection.updateOne(): #update #embeddedRef should update $ref field to valid subDoc', async (done) => {
+    usersRef.updateOne({
+        id: 3,
+        groupRef: 2
+    })
+    .then(response => {
+        let res = response.data
+        expect.objectContaining({
+            id: expect(res.id).toBe(3),
+            groupRef: expect(res.groupRef).toBe(2)
+        })
+        done()
+    })
+})
 
-// test('11 -> Collection.updateOne(): #embeddedRef #setNull should set $ref field to null', async (done) => {
-//     usersRef.updateOne({
-//         id: 3,
-//         groupRef: null
-//     })
-//     .then(response => {
-//         let res = response.data
-//         expect.objectContaining({
-//             id: expect(res.id).toBe(3),
-//             groupRef: expect(res.groupRef).toBe(null)
-//         })
-//         done()
-//     })
-// })
-
-// test('13 -> Collection.updateOne(): #update #embeddedRef should update $ref field to valid subDoc', async (done) => {
-//     usersRef.updateOne({
-//         id: 3,
-//         groupRef: {
-//             collection: 'groups',
-//             model: 'Group',
-//             $ref: 2
-//         }
-//     })
-//     .then(response => {
-//         let res = response.data
-//         expect.objectContaining({
-//             id: expect(res.id).toBe(3),
-//             groupRef: expect(res.groupRef).toEqual({
-//                 collection: 'groups',
-//                 model: 'Group',
-//                 $ref: 2
-//             })
-//         })
-//         done()
-//     })
-// })
-
-// update many
+test('12 -> Collection.updateMany(): #updateMany #embeddedRef should update $ref field to valid subDocs', async (done) => {
+    usersRef.updateMany([
+        {
+            id: 4,
+            groupRef: 2
+        },
+        {
+            id: 5,
+            groupRef: 2
+        },
+        {
+            id: 6,
+            groupRef: 2
+        },
+    ])
+    .then(response => {
+        let res = response.data
+        expect.objectContaining({
+            id: expect(res[0].id).toBe(4),
+            groupRef: expect(res[0].groupRef).toBe(2)
+        })
+        expect.objectContaining({
+            id: expect(res[1].id).toBe(5),
+            groupRef: expect(res[1].groupRef).toBe(2)
+        })
+        expect.objectContaining({
+            id: expect(res[2].id).toBe(6),
+            groupRef: expect(res[2].groupRef).toBe(2)
+        })
+        done()
+    })
+})
 
 // delete one
 
@@ -344,11 +364,8 @@ test('9 -> Collection.insertMany(): #subdocuments #parentRef should match parent
 test('(-1) -> Collection.updateOne(): #error #embeddedRef should throw error trying to assign $ref that does not exist', () => {
     expect.assertions(1)
     return usersRef.updateOne({
-        id: 2,
-        groupRef: {
-            collection: 'groups',
-            $ref: 20
-        }
+        id: 3,
+        groupRef: 20
     })
     .catch(e => expect(e).toEqual({
         "error": true,
