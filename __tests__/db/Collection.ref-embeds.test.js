@@ -77,7 +77,7 @@ afterAll(async (done) => {
     done()
 })
 
-test('1 -> Collection.insertOne(): #document #embeddedRef add 1 document with a $ref embed', async (done) => {
+test('1 -> Collection.insertOne(): #ref add 1 document with a $ref embed', async (done) => {
     usersRef.insertOne({ 
         name: 'Jerry Mouse',
         groupRef: {
@@ -97,7 +97,26 @@ test('1 -> Collection.insertOne(): #document #embeddedRef add 1 document with a 
     })
 })
 
-test('2 -> Collection.insertOne(): #document #nestedObject #embeddedRef add 1 document with a ref embed in nested object', async (done) => {
+test('2 -> Collection.insertOne(): #ref #nestedObject #ref add 1 document with an existing refs in top and nested levels', async (done) => {
+    usersRef.insertOne({ 
+        name: 'Micky Mouse',
+        groupRef: 1,
+        nested: {
+            nestedGroupRef: 1
+        }
+     })
+    .then(response => {
+        let res = response.data 
+        expect.objectContaining({
+            id: expect(res.id).toBe(2),
+            groupRef: expect(res.groupRef).toBe(1),
+            nested: expect(res.nested.nestedGroupRef).toBe(1),
+        })
+        done()
+    })
+})
+
+test('3 -> Collection.insertOne(): #ref #nestedObject #ref add 1 document with a ref embed in nested object', async (done) => {
     usersRef.insertOne({ 
         name: 'Tom Cat',
         nested: {
@@ -109,7 +128,7 @@ test('2 -> Collection.insertOne(): #document #nestedObject #embeddedRef add 1 do
     .then(response => {
         let res = response.data 
         expect.objectContaining({
-            id: expect(res.id).toBe(2),
+            id: expect(res.id).toBe(3),
             nested: expect(res.nested.nestedGroupRef).toBe(2),
             created_at: expect.any(Date),
             updated_at: expect.any(Date)
@@ -118,7 +137,7 @@ test('2 -> Collection.insertOne(): #document #nestedObject #embeddedRef add 1 do
     })
 })
 
-test('3 -> Collection.insertOne(): #document #array #embeddedRef add 1 document with array embedded refs', async (done) => {
+test('4 -> Collection.insertOne(): #ref #array #ref add 1 document with array embedded refs', async (done) => {
     usersRef.insertOne({ 
         name: 'Mighty Mouse',
         arrayGroupRefs: [
@@ -129,14 +148,14 @@ test('3 -> Collection.insertOne(): #document #array #embeddedRef add 1 document 
     .then(response => {
         let res = response.data 
         expect.objectContaining({
-            id: expect(res.id).toBe(3),
+            id: expect(res.id).toBe(4),
             arrayGroupRefs: expect(res.arrayGroupRefs).toEqual(expect.arrayContaining([3,4]))
         })
         done()
     })
 })
 
-test('5 -> Collection.insertMany(): #documents #embeddedRef should add 2 new documents, 2 subdocs', async (done) => {
+test('5 -> Collection.insertMany(): #ref #embeddedRef should add 2 new documents, 2 subdocs', async (done) => {
     const users = [
         {
             name: 'Bugs Bunny',
@@ -157,11 +176,11 @@ test('5 -> Collection.insertMany(): #documents #embeddedRef should add 2 new doc
             let res = response.data 
             // regular ref embeds
             expect.objectContaining({
-                id: expect(res[0].id).toBe(4),
+                id: expect(res[0].id).toBe(5),
                 groupRef: expect(res[0].groupRef).toBe(5)
             })
             expect.objectContaining({
-                id: expect(res[1].id).toBe(5),
+                id: expect(res[1].id).toBe(6),
                 groupRef: expect(res[1].groupRef).toBe(6)
             })
      
@@ -169,7 +188,7 @@ test('5 -> Collection.insertMany(): #documents #embeddedRef should add 2 new doc
         })
 })
 
-test('6 -> Collection.insertMany(): #documents #nestedObject #embeddedRef should add 2 new documents, 2 subdocs', async (done) => {
+test('6 -> Collection.insertMany(): #ref #nestedObject #ref should add 2 new documents with an existing refs in top and nested levels', async (done) => {
     const users = [
         {
             name: 'Tom Cat',
@@ -194,12 +213,12 @@ test('6 -> Collection.insertMany(): #documents #nestedObject #embeddedRef should
             let res = response.data
             // nested subdoc
             expect.objectContaining({
-                id: expect(res[0].id).toBe(6),
+                id: expect(res[0].id).toBe(7),
                 nested: expect(res[0].nested.nestedGroupRef).toBe(7)
             })
             
             expect.objectContaining({
-                id: expect(res[1].id).toBe(7),
+                id: expect(res[1].id).toBe(8),
                 nested: expect(res[1].nested.nestedGroupRef).toBe(8)
             })
 
@@ -207,7 +226,44 @@ test('6 -> Collection.insertMany(): #documents #nestedObject #embeddedRef should
         })
 })
 
-test('7 -> Collection.insertOne(): #subdocument #parentRef should add subdocument and insert parent owner reference on top level only', async (done) => {
+test('7 -> Collection.insertMany(): #ref #nestedObject #ref should add 2 new documents, 2 subdocs', async (done) => {
+    const users = [
+        {
+            name: 'TC',
+            groupRef: 7,
+            nested: {
+                nestedGroupRef: 7
+            }
+        },
+        {
+            name: 'SS',
+            groupRef: 8,
+            nested: {
+                nestedGroupRef: 8
+            }
+        }
+    ]
+
+    usersRef.insertMany(users)
+        .then(response => {
+            let res = response.data
+            expect.objectContaining({
+                id: expect(res[0].id).toBe(9),
+                groupRef: expect(res[0].groupRef).toBe(7),
+                nested: expect(res[0].nested.nestedGroupRef).toBe(7)
+            })
+            
+            expect.objectContaining({
+                id: expect(res[1].id).toBe(10),
+                groupRef: expect(res[1].groupRef).toBe(8),
+                nested: expect(res[1].nested.nestedGroupRef).toBe(8)
+            })
+
+            done()
+        })
+})
+
+test('8 -> Collection.insertOne(): #subdocument #parentRef should add subdocument and insert parent owner reference on top level only', async (done) => {
     let insertRes = await usersRef.insertOne({ 
         name: 'Power Ranger',
         groupRef: {
@@ -221,14 +277,14 @@ test('7 -> Collection.insertOne(): #subdocument #parentRef should add subdocumen
     expect.objectContaining({
         id: expect(res.id).toBe(9),
         title: expect(res.title).toBe('Group 9'),
-        owner: expect(res.owner).toBe(8),
+        owner: expect(res.owner).toBe(11),
         nested: expect(res.nested).toBe(undefined)
     })
 
     done()
 })
 
-test('8 -> Collection.insertOne(): #subdocument #nestedObject #parentRef should add subdocument and insert parent owner reference in nested object', async (done) => {
+test('9 -> Collection.insertOne(): #subdocument #nestedObject #parentRef should add subdocument and insert parent owner reference in nested object', async (done) => {
     let insertRes = await usersRef.insertOne({ 
         name: 'Red Power Ranger',
         groupRef: {
@@ -245,7 +301,7 @@ test('8 -> Collection.insertOne(): #subdocument #nestedObject #parentRef should 
     expect.objectContaining({
         id: expect(res.id).toBe(10),
         title: expect(res.title).toBe('Group 10'),
-        nested: expect(res.nested.nestedOwner).toBe(9),
+        nested: expect(res.nested.nestedOwner).toBe(12),
         created_at: expect.any(Date),
         updated_at: expect.any(Date)
     })
@@ -253,7 +309,7 @@ test('8 -> Collection.insertOne(): #subdocument #nestedObject #parentRef should 
     done()
 })
 
-test('9 -> Collection.insertMany(): #subdocuments #parentRef should match parent owner references for nested and top level', async (done) => {
+test('10 -> Collection.insertMany(): #subdocuments #parentRef should match parent owner references for nested and top level', async (done) => {
     let insertRes = await usersRef.insertMany([
         { 
             name: 'White Power Ranger',
@@ -277,19 +333,19 @@ test('9 -> Collection.insertMany(): #subdocuments #parentRef should match parent
 
     expect.objectContaining({
         id: expect(res[0].id).toBe(11),
-        owner: expect(res[0].owner).toBe(10),
+        owner: expect(res[0].owner).toBe(13),
         nested: expect(res[0].nested).toBe(undefined)
     })
     expect.objectContaining({
         id: expect(res[1].id).toBe(12),
-        owner: expect(res[1].owner).toBe(10),
-        nested: expect(res[1].nested.nestedOwner).toBe(10)
+        owner: expect(res[1].owner).toBe(13),
+        nested: expect(res[1].nested.nestedOwner).toBe(13)
     })
 
     done()
 })
 
-test('10 -> Collection.updateOne(): #embeddedRef #setNull should set $ref field to null', async (done) => {
+test('11 -> Collection.updateOne(): #ref #setNull should set $ref field to null', async (done) => {
     usersRef.updateOne({
         id: 3,
         groupRef: null
@@ -304,7 +360,7 @@ test('10 -> Collection.updateOne(): #embeddedRef #setNull should set $ref field 
     })
 })
 
-test('11 -> Collection.updateOne(): #update #embeddedRef should update $ref field to valid subDoc', async (done) => {
+test('12 -> Collection.updateOne(): #update #ref should update $ref field to valid subDoc', async (done) => {
     usersRef.updateOne({
         id: 3,
         groupRef: 2
@@ -319,7 +375,7 @@ test('11 -> Collection.updateOne(): #update #embeddedRef should update $ref fiel
     })
 })
 
-test('12 -> Collection.updateMany(): #updateMany #embeddedRef should update $ref field to valid subDocs', async (done) => {
+test('13 -> Collection.updateMany(): #updateMany #ref should update $ref field to valid subDocs', async (done) => {
     usersRef.updateMany([
         {
             id: 4,
@@ -361,7 +417,7 @@ test('12 -> Collection.updateMany(): #updateMany #embeddedRef should update $ref
 // ======= negative tests ========== //
 //
 
-test('(-1) -> Collection.updateOne(): #error #embeddedRef should throw error trying to assign $ref that does not exist', () => {
+test('(-1) -> Collection.updateOne(): #error #ref should throw error trying to assign $ref that does not exist', () => {
     expect.assertions(1)
     return usersRef.updateOne({
         id: 3,
