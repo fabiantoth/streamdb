@@ -338,8 +338,8 @@ test('10 -> Collection.insertMany(): #subdocuments #parentRef should match paren
     })
     expect.objectContaining({
         id: expect(res[1].id).toBe(12),
-        owner: expect(res[1].owner).toBe(13),
-        nested: expect(res[1].nested.nestedOwner).toBe(13)
+        owner: expect(res[1].owner).toBe(14),
+        nested: expect(res[1].nested.nestedOwner).toBe(14)
     })
 
     done()
