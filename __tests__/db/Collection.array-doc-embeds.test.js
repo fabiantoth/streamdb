@@ -59,27 +59,36 @@ afterAll(async (done) => {
 })
 
 test('1 -> Collection.insertOne(): #document #array #embeddedDoc add 1 parent document with array of document embeds', async (done) => {
-    usersRef.insertOne({ 
+    let userRes = await usersRef.insertOne({ 
         name: 'Jerry Mouse',
         groupsArray: [
             { title: 'Group 1' },
             { title: 'Group 2' }
         ]
      })
-    .then(response => {
-        let res = response.data 
-        expect.objectContaining({
-            id: expect(res.id).toBe(1),
-            name: expect(res.name).toBe('Jerry Mouse'),
-            groupsArray: expect(res.groupsArray).toEqual(expect.arrayContaining([
-                { id: 1, title: 'Group 1'},
-                { id: 2, title: 'Group 2'}
-            ])),
-            created_at: expect.any(Date),
-            updated_at: expect.any(Date)
-        })
-        done()
+
+    let res = userRes.data 
+    expect.objectContaining({
+        id: expect(res.id).toBe(1),
+        name: expect(res.name).toBe('Jerry Mouse'),
+        groupsArray: expect(res.groupsArray).toEqual(expect.arrayContaining([
+            { id: 1, title: 'Group 1'},
+            { id: 2, title: 'Group 2'}
+        ])),
+        created_at: expect.any(Date),
+        updated_at: expect.any(Date)
     })
+
+    let groupRes = await groupsRef.getDocs([1,2])
+    let gres = groupRes.data
+    
+    expect(gres).toEqual(expect.arrayContaining([
+        { id: 1, title: 'Group 1'},
+        { id: 2, title: 'Group 2'}
+    ]))
+
+    done()
+    
 })
 
 test('2 -> Collection.insertOne(): #document #nestedObject #array #embeddedDoc add 1 parent document with nestedObject array of document embeds', async (done) => {
@@ -263,6 +272,12 @@ test('7 -> Collection.updateOne(): #update #array #embeddedDoc #nestedObject #ar
         done()
     })
 })
+
+// test('get -> ', async (done) => {
+//     let groupRes = await groupsRef.get()
+//     console.log(groupRes.data)
+//     done()
+// })
 
 
 // updateMany
