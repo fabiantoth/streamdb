@@ -311,9 +311,7 @@ test('9 -> Collection.updateOne(): #update #nestedObject #array #ref #nestedObje
             id: expect(res.id).toBe(3),
             name: expect(res.name).toBe('Donald-Duck'),
             groupsRefArray: expect(res.groupsRefArray.length).toBe(2),
-            nested: expect.objectContaining({
-                nestedGroupsRefArray: expect(res.nested.nestedGroupsRefArray).toBe(undefined)
-            })
+            nested: expect(res.nested).toBe(undefined)
         })
         done()
     })

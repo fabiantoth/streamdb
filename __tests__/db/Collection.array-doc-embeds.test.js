@@ -134,29 +134,27 @@ test('3 -> Collection.insertMany(): #manyDocuments #array #embeddedDoc add 2 par
             ]
         },
     ]
-    usersRef.insertMany(docs)
-    .then(response => {
-        let res = response.data 
-        expect.objectContaining({
-            id: expect(res[0].id).toBe(3),
-            name: expect(res[0].name).toBe('Donald Duck'),
-            groupsArray: expect(res[0].groupsArray).toEqual(expect.arrayContaining([
-                { id: 5, title: 'Group 5'},
-                { id: 6, title: 'Group 6'}
-            ]))
-        })
-
-        expect.objectContaining({
-            id: expect(res[1].id).toBe(4),
-            name: expect(res[1].name).toBe('Daffy Duck'),
-            groupsArray: expect(res[1].groupsArray).toEqual(expect.arrayContaining([
-                { id: 7, title: 'Group 7'},
-                { id: 8, title: 'Group 8'}
-            ]))
-        })
-        
-        done()
+    let response = await usersRef.insertMany(docs)
+    let res = response.data 
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(3),
+        name: expect(res[0].name).toBe('Donald Duck'),
+        groupsArray: expect(res[0].groupsArray).toEqual(expect.arrayContaining([
+            { id: 5, title: 'Group 5'},
+            { id: 6, title: 'Group 6'}
+        ]))
     })
+
+    expect.objectContaining({
+        id: expect(res[1].id).toBe(4),
+        name: expect(res[1].name).toBe('Daffy Duck'),
+        groupsArray: expect(res[1].groupsArray).toEqual(expect.arrayContaining([
+            { id: 7, title: 'Group 7'},
+            { id: 8, title: 'Group 8'}
+        ]))
+    })
+    
+    done()
 })
 
 test('4 -> Collection.insertMany(): #manyDocuments #nestedObject #array #embeddedDoc add 2 parent documents with nestedObject array of document embeds', async (done) => {
@@ -265,9 +263,7 @@ test('7 -> Collection.updateOne(): #update #array #embeddedDoc #nestedObject #ar
             id: expect(res.id).toBe(3),
             name: expect(res.name).toBe('Donald-Duck'),
             groupsArray: expect(res.groupsArray.length).toBe(2),
-            nested: expect.objectContaining({
-                nestedGroupsArray: expect(res.nested.nestedGroupsArray).toBe(undefined)
-            })
+            nested: expect(res.nested).toBe(undefined)
         })
         done()
     })

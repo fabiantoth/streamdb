@@ -375,7 +375,7 @@ test('12 -> Collection.updateOne(): #update #ref should update $ref field to val
     })
 })
 
-test('13 -> Collection.updateMany(): #updateMany #ref should update $ref field to valid subDocs', async (done) => {
+test('13 -> Collection.updateMany(): #updateMany #ref should update $ref fields that already exist, create field and assign if it does not', async (done) => {
     usersRef.updateMany([
         {
             id: 4,
@@ -392,6 +392,7 @@ test('13 -> Collection.updateMany(): #updateMany #ref should update $ref field t
     ])
     .then(response => {
         let res = response.data
+
         expect.objectContaining({
             id: expect(res[0].id).toBe(4),
             groupRef: expect(res[0].groupRef).toBe(2)

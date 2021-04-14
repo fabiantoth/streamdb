@@ -237,7 +237,7 @@ test('9 -> Collection.updateOne(): #update #nestedObject should update 1 nested 
     })
 })
 
-test('10 -> Collection.updateOne(): #nestedObject #setNull should set field to null', async (done) => {
+test('10 -> Collection.updateOne(): #nestedObject #setNull should delete the field', async (done) => {
     usersRef.updateOne({
         id: 4,
         detail: null
@@ -248,7 +248,7 @@ test('10 -> Collection.updateOne(): #nestedObject #setNull should set field to n
             id: expect(res.id).toBe(4),
             name: expect(res.name).toBe('Tom Cat'),
             email: expect(res.email).toBe('tcat@email.com'),
-            detail: expect(res.detail).toBe(null)
+            detail: expect(res.detail).toBe(undefined)
         })
         done()
     })

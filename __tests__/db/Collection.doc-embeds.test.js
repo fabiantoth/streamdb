@@ -120,7 +120,7 @@ test('3 -> Collection.insertMany(): #documents #nestedObject #embeddedDoc should
             }
         },
         {
-            name: 'Tom Cat',
+            name: 'Daffy Duck',
             nested: {
                 nestedGroupDoc: {
                     title: 'Group 5'
@@ -168,7 +168,7 @@ test('3 -> Collection.insertMany(): #documents #nestedObject #embeddedDoc should
         })
 })
 
-test('4 -> Collection.updateOne(): #embeddedDoc #setNull should set document field to null', async (done) => {
+test('4 -> Collection.updateOne(): #embeddedDoc #setNull setting doc field to null should delete the property', async (done) => {
     usersRef.updateOne({
         id: 3,
         groupDoc: null
@@ -178,7 +178,7 @@ test('4 -> Collection.updateOne(): #embeddedDoc #setNull should set document fie
         expect.objectContaining({
             id: expect(res.id).toBe(3),
             name: expect(res.name).toBe('Bugs Bunny'),
-            groupDoc: expect(res.groupDoc).toBe(null)
+            groupDoc: expect(res.groupDoc).toBe(undefined)
         })
         done()
     })
@@ -232,29 +232,42 @@ test('6 -> Collection.updateOne(): #update #nestedObject #embeddedDoc should upd
     })
 })
 
-// test('7 -> Collection.updateMany(): #updateMany #embeddedDoc should update parent and subdocuments', async (done) => {
-//     usersRef.updateOne({
-//         id: 6,
-//         nested: {
-//             nestedGroupDoc: {
-//                 id: 6,
-//                 title: 'Group---6'
+test('7 -> Collection.updateOne(): #update #nestedObject #setNull setting nested object to null should delete field', async (done) => {
+    usersRef.updateOne({
+        id: 5,
+        nested: null
+    })
+    .then(response => {
+        let res = response.data
+        expect.objectContaining({
+            id: expect(res.id).toBe(5),
+            name: expect(res.name).toBe('Daffy Duck'),
+            nested: expect(res.nested).toBe(undefined)
+        })
+        done()
+    })
+})
+
+// test('7 -> Collection.updateMany():#updateMany #embeddedDoc update parents and subdocs', async (done) => {
+//     let userRes = await usersRef.updateMany([
+//         {
+//             id: 1,
+//             groupDoc: {
+//                 id: 1,
+//                 title: 'Group--1'
 //             }
-//         }
-//     })
-//     .then(response => {
-//         let res = response.data
-//         expect.objectContaining({
-//             id: expect(res.id).toBe(6),
-//             nested: expect.objectContaining({
-//                 nestedGroupDoc: expect.objectContaining({
-//                     id: expect(res.nested.nestedGroupDoc.id).toBe(6),
-//                     title: expect(res.nested.nestedGroupDoc.title).toBe('Group---6'),
-//                 })
-//             })
-//         })
-//         done()
-//     })
+//         },
+//         {
+//             id: 3,
+//             groupDoc: {
+//                 id: 3,
+//                 title: 'Group--3'
+//             }
+//         },
+//     ])
+    
+//     console.log(userRes)
+//     done()
 // })
 
 
@@ -263,32 +276,10 @@ test('6 -> Collection.updateOne(): #update #nestedObject #embeddedDoc should upd
 // delete many
 
 
-
-// test('15 -> Collection.updateOne(): #update #embeddedDoc for field that was not there, should do nothing', async (done) => {
-//     usersRef.updateOne({
-//         id: 2,
-//         group: {
-//             id: 2,
-//             title: 'Group 2'
-//         }
-//     })
-//     .then(response => {
-//         let res = response.data
-//         expect.objectContaining({
-//             id: expect(res.id).toBe(2),
-//             group: expect(res.group).toBe(undefined)
-//             // group: expect.objectContaining({
-//             //     id: expect(res.group.id).toBe(2),
-//             //     title: expect(res.group.title).toBe('Group 5'),
-//             //     owner: expect(res.group.owner).toEqual({
-//             //         collection: 'users',
-//             //         model: 'User',
-//             //         $ref: 3
-//             //     })
-//             // })
-//         })
-//         done()
-//     })
+// test('get -> ', async (done) => {
+//     let groupRes = await groupsRef.get()
+//     console.log(groupRes.data)
+//     done()
 // })
 
 
