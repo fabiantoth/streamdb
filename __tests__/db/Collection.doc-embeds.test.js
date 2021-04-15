@@ -248,27 +248,42 @@ test('7 -> Collection.updateOne(): #update #nestedObject #setNull setting nested
     })
 })
 
-// test('7 -> Collection.updateMany():#updateMany #embeddedDoc update parents and subdocs', async (done) => {
-//     let userRes = await usersRef.updateMany([
-//         {
-//             id: 1,
-//             groupDoc: {
-//                 id: 1,
-//                 title: 'Group--1'
-//             }
-//         },
-//         {
-//             id: 3,
-//             groupDoc: {
-//                 id: 3,
-//                 title: 'Group--3'
-//             }
-//         },
-//     ])
+test('8 -> Collection.updateMany():#updateMany #embeddedDoc update parents and subdocs', async (done) => {
+    let userRes = await usersRef.updateMany([
+        {
+            id: 1,
+            groupDoc: {
+                id: 1,
+                title: 'Group--1'
+            }
+        },
+        {
+            id: 3,
+            groupDoc: {
+                id: 3,
+                title: 'Group--3'
+            }
+        },
+    ])
     
-//     console.log(userRes)
-//     done()
-// })
+    let res = userRes.data
+
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(1),
+        groupDoc: expect.objectContaining({
+            id: expect(res[0].groupDoc.id).toBe(1),
+            title: expect(res[0].groupDoc.title).toBe('Group--1')
+        })
+    })
+    expect.objectContaining({
+        id: expect(res[1].id).toBe(3),
+        groupDoc: expect.objectContaining({
+            id: expect(res[1].groupDoc.id).toBe(3),
+            title: expect(res[1].groupDoc.title).toBe('Group--3')
+        })
+    })
+    done()
+})
 
 
 // delete one
