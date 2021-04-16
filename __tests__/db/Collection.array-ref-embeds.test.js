@@ -255,7 +255,7 @@ test('6 -> Collection.insertMany(): #documents #nestedObject #array #embeddedRef
     done()
 })
 
-test('7 -> Collection.updateOne(): #update #array #ref #setNull set array field to empty', async (done) => {
+test('7 -> Collection.updateOne(): #update #array #ref #setNull should delete property', async (done) => {
     usersRef.updateOne({
         id: 1,
         name: 'Jerry-Mouse',
@@ -266,7 +266,7 @@ test('7 -> Collection.updateOne(): #update #array #ref #setNull set array field 
         expect.objectContaining({
             id: expect(res.id).toBe(1),
             name: expect(res.name).toBe('Jerry-Mouse'),
-            groupsRefArray: expect(res.groupsRefArray).toEqual([])
+            groupsRefArray: expect(res.groupsRefArray).toBe(undefined)
         })
         done()
     })

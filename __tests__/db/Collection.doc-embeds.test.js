@@ -285,14 +285,30 @@ test('8 -> Collection.updateMany():#updateMany #embeddedDoc update parents and s
     done()
 })
 
+test('9 -> Collection.deleteOne(): #delete should delete document', async (done) => {
+    usersRef.deleteOne(2)
+    .then(response => {
+        let res = response.data
+        expect(res).toBe(2)
+        done()
+    })
+})
 
-// delete one
+test('10 -> Collection.deleteMany(): #delete should delete 2 documents', async (done) => {
+    usersRef.deleteMany([1,2,4])
+    .then(response => {
+        let res = response.data
+        expect(res).toEqual([1,4])
+        done()
+    })
+})
 
-// delete many
 
 
 // test('get -> ', async (done) => {
+//     let usersRes = await usersRef.get()
 //     let groupRes = await groupsRef.get()
+//     // console.log(usersRes.data)
 //     console.log(groupRes.data)
 //     done()
 // })
@@ -302,22 +318,22 @@ test('8 -> Collection.updateMany():#updateMany #embeddedDoc update parents and s
 // ======= negative tests ========== //
 //
 
-// test('(-1) -> Collection.updateOne(): #error #embeddedDoc should throw error if update obj for embedded document does not contain an id field', () => {
-//     expect.assertions(1)
-//     return usersRef.updateOne({
-//         id: 3,
-//         groupDoc: {
-//             title: 'Group 5'
-//         }
-//     }).catch(e => expect(e).toEqual({
-//         "error": true,
-//         "message": "Updating embedded documents requires id field for 'groupDoc'"
-//     }))
-// })
+test('(-1) -> Collection.updateOne(): #error #embeddedDoc should throw error if update obj for embedded document does not contain an id field', () => {
+    expect.assertions(1)
+    return usersRef.updateOne({
+        id: 3,
+        groupDoc: {
+            title: 'Group 5'
+        }
+    }).catch(e => expect(e).toEqual({
+        "error": true,
+        "message": "Updating embedded documents requires id field for 'groupDoc'"
+    }))
+})
 
 // providing id fields in doc objects should throw error if doc already exists
 
-test('(-1) -> Collection.insertOne(): #error #embeddedDoc should throw error trying to add doc with id field that already exists', () => {
+test('(-2) -> Collection.insertOne(): #error #embeddedDoc should throw error trying to add doc with id field that already exists', () => {
     expect.assertions(1)
     return usersRef.insertOne({ 
         name: 'Jerry Mouse',
@@ -332,7 +348,7 @@ test('(-1) -> Collection.insertOne(): #error #embeddedDoc should throw error try
     }))
 })
 
-test('(-2) -> Collection.insertOne(): #error #nestedObject #embeddedDoc should throw error trying to add doc with id field that already exists', () => {
+test('(-3) -> Collection.insertOne(): #error #nestedObject #embeddedDoc should throw error trying to add doc with id field that already exists', () => {
     expect.assertions(1)
     return usersRef.insertOne({ 
         name: 'Jerry Mouse',

@@ -207,7 +207,7 @@ test('4 -> Collection.insertMany(): #manyDocuments #nestedObject #array #embedde
     })
 })
 
-test('5 -> Collection.updateOne(): #update #array #embeddedDoc #setNull set array field to empty', async (done) => {
+test('5 -> Collection.updateOne(): #update #array #embeddedDoc #setNull should delete property', async (done) => {
     usersRef.updateOne({
         id: 1,
         name: 'Jerry-Mouse',
@@ -218,7 +218,7 @@ test('5 -> Collection.updateOne(): #update #array #embeddedDoc #setNull set arra
         expect.objectContaining({
             id: expect(res.id).toBe(1),
             name: expect(res.name).toBe('Jerry-Mouse'),
-            groupsArray: expect(res.groupsArray).toEqual([])
+            groupsArray: expect(res.groupsArray).toBe(undefined)
         })
         done()
     })
