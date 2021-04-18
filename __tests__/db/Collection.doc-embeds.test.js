@@ -248,7 +248,7 @@ test('7 -> Collection.updateOne(): #update #nestedObject #setNull setting nested
     })
 })
 
-test('8 -> Collection.updateMany():#updateMany #embeddedDoc update parents and subdocs', async (done) => {
+test('8 -> Collection.updateMany():#updateMany #embeddedDoc update parents and subdocs, ignore fields that do not exist', async (done) => {
     let userRes = await usersRef.updateMany([
         {
             id: 1,
@@ -277,10 +277,7 @@ test('8 -> Collection.updateMany():#updateMany #embeddedDoc update parents and s
     })
     expect.objectContaining({
         id: expect(res[1].id).toBe(3),
-        groupDoc: expect.objectContaining({
-            id: expect(res[1].groupDoc.id).toBe(3),
-            title: expect(res[1].groupDoc.title).toBe('Group--3')
-        })
+        groupDoc: expect(res[1].groupDoc).toBe(undefined)
     })
     done()
 })
@@ -302,8 +299,6 @@ test('10 -> Collection.deleteMany(): #delete should delete 2 documents', async (
         done()
     })
 })
-
-
 
 // test('get -> ', async (done) => {
 //     let usersRes = await usersRef.get()

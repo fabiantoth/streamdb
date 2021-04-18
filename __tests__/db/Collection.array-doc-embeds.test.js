@@ -79,20 +79,20 @@ test('1 -> Collection.insertOne(): #document #array #embeddedDoc add 1 parent do
         updated_at: expect.any(Date)
     })
 
-    let groupRes = await groupsRef.getDocs([1,2])
-    let gres = groupRes.data
+    // let groupRes = await groupsRef.getDocs([1,2])
+    // let gres = groupRes.data
     
-    expect(gres).toEqual(expect.arrayContaining([
-        { id: 1, title: 'Group 1'},
-        { id: 2, title: 'Group 2'}
-    ]))
+    // expect(gres).toEqual(expect.arrayContaining([
+    //     { id: 1, title: 'Group 1'},
+    //     { id: 2, title: 'Group 2'}
+    // ]))
 
     done()
     
 })
 
 test('2 -> Collection.insertOne(): #document #nestedObject #array #embeddedDoc add 1 parent document with nestedObject array of document embeds', async (done) => {
-    usersRef.insertOne({ 
+    let response = await usersRef.insertOne({ 
         name: 'Mighty Mouse',
         nested: {
             nestedGroupsArray: [
@@ -101,20 +101,26 @@ test('2 -> Collection.insertOne(): #document #nestedObject #array #embeddedDoc a
             ]
         }
      })
-    .then(response => {
-        let res = response.data 
-        expect.objectContaining({
-            id: expect(res.id).toBe(2),
-            name: expect(res.name).toBe('Mighty Mouse'),
-            nested: expect.objectContaining({
-                nestedGroupsArray: expect(res.nested.nestedGroupsArray).toEqual(expect.arrayContaining([
-                    { id: 3, title: 'Group 3'},
-                    { id: 4, title: 'Group 4'}
-                ]))
-            })
-        })
-        done()
-    })
+     let res = response.data 
+     expect.objectContaining({
+         id: expect(res.id).toBe(2),
+         name: expect(res.name).toBe('Mighty Mouse'),
+         nested: expect.objectContaining({
+             nestedGroupsArray: expect(res.nested.nestedGroupsArray).toEqual(expect.arrayContaining([
+                 { id: 3, title: 'Group 3'},
+                 { id: 4, title: 'Group 4'}
+             ]))
+         })
+     })
+     
+    let groupRes = await groupsRef.getById(3)
+    let gres = groupRes.data
+    
+    expect(gres).toEqual(expect.objectContaining({ 
+        id: 3, 
+        title: 'Group 3'
+    }))
+    done()
 })
 
 test('3 -> Collection.insertMany(): #manyDocuments #array #embeddedDoc add 2 parent documents with array of document embeds', async (done) => {
@@ -154,6 +160,28 @@ test('3 -> Collection.insertMany(): #manyDocuments #array #embeddedDoc add 2 par
         ]))
     })
     
+    done()
+})
+
+test('8 -> Collection.updateOne(): #update #array #embeddedDoc update array embed, use last object if duplicate id', async (done) => {
+    let response = await usersRef.updateOne({
+        id: 3,
+        groupsArray: [
+            { id: 6, title: 'This will not be used in update'},
+            { id: 6, title: 'Group---6'}
+        ],
+        
+    })
+
+    let res = response.data
+    expect.objectContaining({
+        id: expect(res.id).toBe(3),
+        name: expect(res.name).toBe('Donald Duck'),
+        groupsArray: expect(res.groupsArray).toEqual(expect.arrayContaining([
+            { id: 5, title: 'Group 5'},
+            { id: 6, title: 'Group---6'}
+        ]))
+    })
     done()
 })
 
@@ -262,15 +290,80 @@ test('7 -> Collection.updateOne(): #update #array #embeddedDoc #nestedObject #ar
         expect.objectContaining({
             id: expect(res.id).toBe(3),
             name: expect(res.name).toBe('Donald-Duck'),
-            groupsArray: expect(res.groupsArray.length).toBe(2),
+            // groupsArray: expect(res.groupsArray).toEqual(expect.arrayContaining([
+            //     { id: 5, title: 'Group 5'},
+            //     { id: 6, title: 'Group 6'}
+            // ])),
             nested: expect(res.nested).toBe(undefined)
         })
         done()
     })
 })
 
+// test('8 -> Collection.updateOne(): #update #array #embeddedDoc update array embed, use last object if duplicate id', async (done) => {
+//     let response = await usersRef.updateOne({
+//         id: 3,
+//         groupsArray: [
+//             { id: 6, title: 'This will not be used in update'},
+//             { id: 6, title: 'Group---6'}
+//         ],
+        
+//     })
+
+//     let res = response.data
+//     console.log(res)
+//     expect.objectContaining({
+//         id: expect(res.id).toBe(3),
+//         name: expect(res.name).toBe('Donald-Duck'),
+//         groupsArray: expect(res.groupsArray).toEqual(expect.arrayContaining([
+//             { id: 5, title: 'Group 5'},
+//             { id: 6, title: 'Group---6'}
+//         ]))
+//     })
+//     done()
+// })
+
+test('9 -> Collection.updateMany(): #updateMany #array #embeddedDoc update array embeds in many docs', async (done) => {
+    let response = await usersRef.updateMany([
+        { 
+            id: 3,
+            groupsArray: [
+                { id: 5, title: 'Group---5' }
+            ]
+        },
+        { 
+            id: 4,
+            groupsArray: [
+                { id: 8, title: 'Group---8' }
+            ]
+        },
+    ])
+
+    let res = response.data
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(3),
+        name: expect(res[0].name).toBe('Donald-Duck'),
+        groupsArray: expect(res[0].groupsArray).toEqual(expect.arrayContaining([
+            { id: 5, title: 'Group---5'},
+            { id: 6, title: 'Group---6'}
+        ]))
+    })
+
+    expect.objectContaining({
+        id: expect(res[1].id).toBe(4),
+        name: expect(res[1].name).toBe('Daffy Duck'),
+        groupsArray: expect(res[1].groupsArray).toEqual(expect.arrayContaining([
+            { id: 7, title: 'Group 7'},
+            { id: 8, title: 'Group---8'}
+        ]))
+    })
+    done()
+})
+
 // test('get -> ', async (done) => {
+//     // let userRes = await usersRef.get()
 //     let groupRes = await groupsRef.get()
+//     // console.log(userRes.data)
 //     console.log(groupRes.data)
 //     done()
 // })

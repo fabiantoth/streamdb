@@ -247,7 +247,7 @@ test('10 -> Collection.updateOne(): #nestedObject #setNull should delete the fie
         expect.objectContaining({
             id: expect(res.id).toBe(4),
             name: expect(res.name).toBe('Tom Cat'),
-            email: expect(res.email).toBe('tcat@email.com'),
+            email: expect(res.email).toBe(null),
             detail: expect(res.detail).toBe(undefined)
         })
         done()
