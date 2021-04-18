@@ -408,8 +408,8 @@ test('SchemaArray.validateEmbedOptions(): #validate #embeded #string should retu
 
     expect(result1).toMatchObject(['some string'])
     expect(result2).toMatchObject(['some string', 'another string', 'str3'])
-    expect(() => embed.validate(['some string', null])).toThrow(`Expected type string, received: object`)
-    expect(() => embed.validate(['some string', undefined])).toThrow(`Expected type string, received: undefined`)
+    expect(() => embed.validate(['some string', null])).toThrow(`Expected property 'embed' to be type string, received: object`)
+    expect(() => embed.validate(['some string', undefined])).toThrow(`Expected property 'embed' to be type string, received: undefined`)
     expect(() => embed.validate(['some string', 2])).toThrow(`Expected property 'embed' to be type string, received: number`)
 })
 
@@ -421,8 +421,8 @@ test('SchemaArray.validateEmbedOptions(): #validate #embeded #number should retu
 
     expect(result1).toMatchObject([1])
     expect(result2).toMatchObject([1,2,3])
-    expect(() => embed.validate([1, null])).toThrow(`Expected type number, received: object`)
-    expect(() => embed.validate([1, 2 , undefined])).toThrow(`Expected type number, received: undefined`)
+    expect(() => embed.validate([1, null])).toThrow(`Expected property 'embed' to be type number, received: object`)
+    expect(() => embed.validate([1, 2 , undefined])).toThrow(`Expected property 'embed' to be type number, received: undefined`)
     expect(() => embed.validate([1, 'some string', 2])).toThrow(`Expected property 'embed' to be type number, received: string`)
 })
 
@@ -449,10 +449,10 @@ test('SchemaArray.validateEmbedOptions(): #validate #embeded #date should return
 
     expect(result1).toMatchObject([new Date('2020-12-31T23:59:59.000Z')])
     expect(result2).toMatchObject([new Date('2020-12-31T23:59:59.000Z'), date, date2])
-    expect(() => embed.validate([1])).toThrow(`Expected type date or null, received: number`)
-    expect(() => embed.validate([date, 0, date2])).toThrow(`Expected type date or null, received: number`)
-    expect(() => embed.validate([null])).toThrow(`Expected type date, received: object`)
-    expect(() => embed.validate([undefined])).toThrow(`Expected type date, received: undefined`)
+    expect(() => embed.validate([1])).toThrow(`Expected property 'embed' to be type date or null, received: number`)
+    expect(() => embed.validate([date, 0, date2])).toThrow(`Expected property 'embed' to be type date or null, received: number`)
+    expect(() => embed.validate([null])).toThrow(`Expected property 'embed' to be type date, received: object`)
+    expect(() => embed.validate([undefined])).toThrow(`Expected property 'embed' to be type date, received: undefined`)
 })
 
 test('SchemaArray.validateEmbedOptions(): #validate #embeded #array should return value', () => {
