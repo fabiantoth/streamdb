@@ -163,28 +163,6 @@ test('3 -> Collection.insertMany(): #manyDocuments #array #embeddedDoc add 2 par
     done()
 })
 
-test('8 -> Collection.updateOne(): #update #array #embeddedDoc update array embed, use last object if duplicate id', async (done) => {
-    let response = await usersRef.updateOne({
-        id: 3,
-        groupsArray: [
-            { id: 6, title: 'This will not be used in update'},
-            { id: 6, title: 'Group---6'}
-        ],
-        
-    })
-
-    let res = response.data
-    expect.objectContaining({
-        id: expect(res.id).toBe(3),
-        name: expect(res.name).toBe('Donald Duck'),
-        groupsArray: expect(res.groupsArray).toEqual(expect.arrayContaining([
-            { id: 5, title: 'Group 5'},
-            { id: 6, title: 'Group---6'}
-        ]))
-    })
-    done()
-})
-
 test('4 -> Collection.insertMany(): #manyDocuments #nestedObject #array #embeddedDoc add 2 parent documents with nestedObject array of document embeds', async (done) => {
     const docs = [
         { 
@@ -290,38 +268,37 @@ test('7 -> Collection.updateOne(): #update #array #embeddedDoc #nestedObject #ar
         expect.objectContaining({
             id: expect(res.id).toBe(3),
             name: expect(res.name).toBe('Donald-Duck'),
-            // groupsArray: expect(res.groupsArray).toEqual(expect.arrayContaining([
-            //     { id: 5, title: 'Group 5'},
-            //     { id: 6, title: 'Group 6'}
-            // ])),
+            groupsArray: expect(res.groupsArray).toEqual(expect.arrayContaining([
+                { id: 5, title: 'Group 5'},
+                { id: 6, title: 'Group 6'}
+            ])),
             nested: expect(res.nested).toBe(undefined)
         })
         done()
     })
 })
 
-// test('8 -> Collection.updateOne(): #update #array #embeddedDoc update array embed, use last object if duplicate id', async (done) => {
-//     let response = await usersRef.updateOne({
-//         id: 3,
-//         groupsArray: [
-//             { id: 6, title: 'This will not be used in update'},
-//             { id: 6, title: 'Group---6'}
-//         ],
+test('8 -> Collection.updateOne(): #update #array #embeddedDoc update array embed, use last object if duplicate id', async (done) => {
+    let response = await usersRef.updateOne({
+        id: 3,
+        groupsArray: [
+            { id: 6, title: 'This will not be used in update'},
+            { id: 6, title: 'Group---6'}
+        ],
         
-//     })
+    })
 
-//     let res = response.data
-//     console.log(res)
-//     expect.objectContaining({
-//         id: expect(res.id).toBe(3),
-//         name: expect(res.name).toBe('Donald-Duck'),
-//         groupsArray: expect(res.groupsArray).toEqual(expect.arrayContaining([
-//             { id: 5, title: 'Group 5'},
-//             { id: 6, title: 'Group---6'}
-//         ]))
-//     })
-//     done()
-// })
+    let res = response.data
+    expect.objectContaining({
+        id: expect(res.id).toBe(3),
+        name: expect(res.name).toBe('Donald-Duck'),
+        groupsArray: expect(res.groupsArray).toEqual(expect.arrayContaining([
+            { id: 5, title: 'Group 5'},
+            { id: 6, title: 'Group---6'}
+        ]))
+    })
+    done()
+})
 
 test('9 -> Collection.updateMany(): #updateMany #array #embeddedDoc update array embeds in many docs', async (done) => {
     let response = await usersRef.updateMany([
