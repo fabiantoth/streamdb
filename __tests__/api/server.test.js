@@ -242,11 +242,11 @@ test('Server: GET /api/collection/_q/? - where().and() queries', async (done) =>
         let res2 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query2}`).expect(200)
         let res3 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query3}`).expect(200)
         let res4 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query4}`).expect(200)
-
+        
         expect(res.body.data.length).toBe(1)
-        expect(res1.body.data.length).toBe(2)
-        expect(res2.body.data.length).toBe(1)
-        expect(res3.body.data.length).toBe(3)
+        expect(res1.body.data.length).toBe(3)
+        expect(res2.body.data.length).toBe(3)
+        expect(res3.body.data.length).toBe(4)
         expect(res4.body.data.length).toBe(1)
         done()
       }, 50)
@@ -257,8 +257,7 @@ test('Server: GET /api/collection/_q/? - where().or() queries', async (done) => 
 
     setTimeout(async () => {
         let res = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query}`).expect(200)
-
-        expect(res.body.data.length).toBe(3)
+        expect(res.body.data.length).toBe(4)
         done()
       }, 50)
 })
@@ -268,8 +267,7 @@ test('Server: GET /api/collection/_q/? - where().and().or() queries', async (don
 
     setTimeout(async () => {
         let res = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query}`).expect(200)
-
-        expect(res.body.data.length).toBe(2)
+        expect(res.body.data.length).toBe(3)
         done()
       }, 50)
 })
@@ -289,8 +287,8 @@ test('Server: GET /api/collection/_q/? - where(exp, filterFn) queries', async (d
         let res4 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query4}`).expect(200)
 
         expect(res.body.data.length).toBe(2)
-        expect(res1.body.data.length).toBe(2)
-        expect(res2.body.data.length).toBe(1)
+        expect(res1.body.data.length).toBe(3)
+        expect(res2.body.data.length).toBe(2)
         expect(res3.body.data.length).toBe(1)
         expect(res4.body.data.length).toBe(2)
 
