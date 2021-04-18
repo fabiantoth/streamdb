@@ -258,11 +258,67 @@ test('10 -> Collection.updateOne(): #nestedObject #setNull should delete the fie
 // ======= negative tests ========== //
 //
 
-test('(-1) -> Collection.updateOne(): #error #nestedField should throw error trying to assign empty object', () => {
+test('(-1) -> Collection.insertOne(): #error #insertOne should throw error trying to add undefined', () => {
+    expect.assertions(1)
+    return usersRef.insertOne().catch(e => expect(e).toEqual({
+        "error": true,
+        "message": "Documents cannot be created from empty objects"
+    }))
+})
+
+test('(-2) -> Collection.insertOne(): #error #insertOne should throw error trying to add empty object', () => {
+    expect.assertions(1)
+    return usersRef.insertOne({}).catch(e => expect(e).toEqual({
+        "error": true,
+        "message": "Documents cannot be created from empty objects"
+    }))
+})
+
+test('(-3) -> Collection.insertMany(): #error #insertMany should throw error trying to pass non array values', () => {
+    expect.assertions(1)
+    return usersRef.insertMany().catch(e => expect(e).toEqual({
+        "error": true,
+        "message": "insertMany argument must be an array"
+    }))
+})
+
+test('(-4) -> Collection.insertMany(): #error should throw error trying to pass empty arrays', () => {
+    expect.assertions(1)
+    return usersRef.insertMany([]).catch(e => expect(e).toEqual({
+        "error": true,
+        "message": "insertMany array must contain at least one object"
+    }))
+})
+
+test('(-5) -> Collection.updateOne(): #error should throw error trying to pass value that is not an object with an id field', () => {
+    expect.assertions(1)
+    return usersRef.updateOne().catch(e => expect(e).toEqual({
+        "error": true,
+        "message": "UpdateOne argument must include an object with document id"
+    }))
+})
+
+test('(-6) -> Collection.updateOne(): #error #nestedObject should throw error trying to assign empty object', () => {
     expect.assertions(1)
     return usersRef.updateOne({  id: 4, detail: {} }).catch(e => expect(e).toEqual({
         "error": true,
         "message": "Nested object for 'detail' cannot be empty"
+    }))
+})
+
+test('(-7) -> Collection.updateMany(): #error should throw error trying to pass non array values', () => {
+    expect.assertions(1)
+    return usersRef.updateMany({}).catch(e => expect(e).toEqual({
+        "error": true,
+        "message": "updateMany argument must be an array"
+    }))
+})
+
+test('(-8) -> Collection.updateMany(): #error should throw error trying to pass empty arrays', () => {
+    expect.assertions(1)
+    return usersRef.updateMany([]).catch(e => expect(e).toEqual({
+        "error": true,
+        "message": "updateMany array must contain at least one object"
     }))
 })
 
