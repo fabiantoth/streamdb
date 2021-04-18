@@ -233,10 +233,10 @@ test('Schema.validate(): #SchemaType should validate regular schema types', () =
     expect(result6).toMatchObject({ any: 1 })
     expect(result7).toMatchObject({ any: 'one' })
 
-    expect(() => schema.validate({ str: 1 })).toThrow(`Expected type string, received: number`)
-    expect(() => schema.validate({ num: '1' })).toThrow(`Expected type number, received: string`)
-    expect(() => schema.validate({ bool: 0 })).toThrow(`Expected type boolean, received: number`)
-    expect(() => schema.validate({ date: 0 })).toThrow(`Expected type date or null, received: number`)
+    expect(() => schema.validate({ str: 1 })).toThrow(`Expected property 'str' to be type string, received: number`)
+    expect(() => schema.validate({ num: '1' })).toThrow(`Expected property 'num' to be type number, received: string`)
+    expect(() => schema.validate({ bool: 0 })).toThrow(`Expected property 'bool' to be type boolean, received: number`)
+    expect(() => schema.validate({ date: 0 })).toThrow(`Expected property 'date' to be type date or null, received: number`)
     expect(() => schema.validate({ arr: 0 })).toThrow(`Expected 'arr' to be an array, received: number`)
 })
 
@@ -305,8 +305,8 @@ test('Schema.validate(): #NestedObject should validate nested object', () => {
     expect(() => schema2.validate()).toThrow(`Schema validate argument must be a valid object`)
     expect(() => schema1.validate({ detail: 'detail' })).toThrow(`Expected 'detail' to be an object, received: string`)
     expect(() => schema2.validate({ detail: 'detail' })).toThrow(`Expected 'detail' to be an object, received: string`)
-    expect(() => schema1.validate({ detail: { name: 1 } })).toThrow(`Expected type string, received: number`)
-    expect(() => schema2.validate({ detail: { name: 1 } })).toThrow(`Expected type string, received: number`)
+    expect(() => schema1.validate({ detail: { name: 1 } })).toThrow(`Expected property 'name' to be type string, received: number`)
+    expect(() => schema2.validate({ detail: { name: 1 } })).toThrow(`Expected property 'name' to be type string, received: number`)
 })
 
 //
@@ -326,7 +326,7 @@ test('Schema.validate(): #Schema should validate nested schema object', () => {
     expect(result3).toMatchObject({ detail: { age: 18 } })
 
     expect(() => schema1.validate({ detail: 1 })).toThrow(`Expected 'detail' to be an object, received: number`)
-    expect(() => schema1.validate({ detail: { name: 1 } })).toThrow(`Expected type string, received: number`)
+    expect(() => schema1.validate({ detail: { name: 1 } })).toThrow(`Expected property 'name' to be type string, received: number`)
 })
 
 
@@ -343,7 +343,7 @@ test('Schema.validate(): #SchemaArray #embeds #SchemaType should validate array 
     expect(result1).toMatchObject({ strArr: ['bunch', 'of', 'strings'] })
     expect(result2).toMatchObject({ strArr: [] })
     
-    expect(() => schema.validate({ strArr: [1] })).toThrow(`Expected type string, received: number`)
+    expect(() => schema.validate({ strArr: [1] })).toThrow(`Expected property 'strArr' to be type string, received: number`)
 })
 
 test('Schema.validate(): #SchemaArray #embeds #NestedObjects should validate array with embedded objects', () => {
@@ -359,7 +359,7 @@ test('Schema.validate(): #SchemaArray #embeds #NestedObjects should validate arr
     expect(result1).toMatchObject({ objArray: [{ name: 'john', age: 18 }, { name: 'sally', age: 18 }] })
     expect(result2).toMatchObject({ objArray: [] })
 
-    expect(() => schema.validate({ objArray: [{ name: 1 }] })).toThrow(`Expected type string, received: number`)
+    expect(() => schema.validate({ objArray: [{ name: 1 }] })).toThrow(`Expected property 'name' to be type string, received: number`)
     expect(() => schema.validate({ objArray: [{ age: 18 }] })).toThrow(`'name' is required`)
 })
 
@@ -374,7 +374,7 @@ test('Schema.validate(): #SchemaArray #embeds #Schema should validate array with
     expect(result1).toMatchObject({ objArray: [{ name: 'john', age: 18 }, { name: 'sally', age: 18 }] })
     expect(result2).toMatchObject({ objArray: [] })
 
-    expect(() => schema.validate({ objArray: [{ name: 1 }] })).toThrow(`Expected type string, received: number`)
+    expect(() => schema.validate({ objArray: [{ name: 1 }] })).toThrow(`Expected property 'name' to be type string, received: number`)
 })
 
 test('Schema.validate(): #SchemaArray #embeds #Array[SchemaType] should validate array with array embedded types', () => {

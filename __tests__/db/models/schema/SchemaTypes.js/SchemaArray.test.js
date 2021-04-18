@@ -410,7 +410,7 @@ test('SchemaArray.validateEmbedOptions(): #validate #embeded #string should retu
     expect(result2).toMatchObject(['some string', 'another string', 'str3'])
     expect(() => embed.validate(['some string', null])).toThrow(`Expected type string, received: object`)
     expect(() => embed.validate(['some string', undefined])).toThrow(`Expected type string, received: undefined`)
-    expect(() => embed.validate(['some string', 2])).toThrow(`Expected type string, received: number`)
+    expect(() => embed.validate(['some string', 2])).toThrow(`Expected property 'embed' to be type string, received: number`)
 })
 
 test('SchemaArray.validateEmbedOptions(): #validate #embeded #number should return value', () => {
@@ -423,7 +423,7 @@ test('SchemaArray.validateEmbedOptions(): #validate #embeded #number should retu
     expect(result2).toMatchObject([1,2,3])
     expect(() => embed.validate([1, null])).toThrow(`Expected type number, received: object`)
     expect(() => embed.validate([1, 2 , undefined])).toThrow(`Expected type number, received: undefined`)
-    expect(() => embed.validate([1, 'some string', 2])).toThrow(`Expected type number, received: string`)
+    expect(() => embed.validate([1, 'some string', 2])).toThrow(`Expected property 'embed' to be type number, received: string`)
 })
 
 test('SchemaArray.validateEmbedOptions(): #validate #embeded #boolean should return value', () => {
@@ -434,9 +434,9 @@ test('SchemaArray.validateEmbedOptions(): #validate #embeded #boolean should ret
 
     expect(result1).toMatchObject([true])
     expect(result2).toMatchObject([true,false, false])
-    expect(() => embed.validate([1])).toThrow(`Expected type boolean, received: number`)
-    expect(() => embed.validate([true, 0 , true])).toThrow(`Expected type boolean, received: number`)
-    expect(() => embed.validate([null])).toThrow(`Expected type boolean, received: object`)
+    expect(() => embed.validate([1])).toThrow(`Expected property 'embed' to be type boolean, received: number`)
+    expect(() => embed.validate([true, 0 , true])).toThrow(`Expected property 'embed' to be type boolean, received: number`)
+    expect(() => embed.validate([null])).toThrow(`Expected property 'embed' to be type boolean, received: object`)
 })
 
 test('SchemaArray.validateEmbedOptions(): #validate #embeded #date should return value', () => {
@@ -509,8 +509,8 @@ test('SchemaArray.validateEmbedOptions(): #validate #embeded #NestedObject shoul
     expect(result3).toMatchObject([{ age: 12 }])
     expect(() => embeddedObject.validate([null])).toThrow(`Expected array of objects, received: null`)
     expect(() => embeddedObject2.validate([null])).toThrow(`Expected array of objects, received: null`)
-    expect(() => embeddedObject.validate([{ name: 19 }])).toThrow(`Expected type string, received: number`)
-    expect(() => embeddedObject2.validate([{ name: 19 }])).toThrow(`Expected type string, received: number`)
+    expect(() => embeddedObject.validate([{ name: 19 }])).toThrow(`Expected property 'name' to be type string, received: number`)
+    expect(() => embeddedObject2.validate([{ name: 19 }])).toThrow(`Expected property 'name' to be type string, received: number`)
 })
 
 test('SchemaArray.validateEmbedOptions(): #validate #embeded #NestedObject should return value', () => {
@@ -524,7 +524,7 @@ test('SchemaArray.validateEmbedOptions(): #validate #embeded #NestedObject shoul
     const result1 = embeddedObject.validate([{ name: 'some name' }])
     expect(result1).toMatchObject([{ name: 'some name' }])
     expect(() => embeddedObject.validate([null])).toThrow(`Expected array of objects, received: null`)
-    expect(() => embeddedObject.validate([{ name: 19 }])).toThrow(`Expected type string, received: number`)
+    expect(() => embeddedObject.validate([{ name: 19 }])).toThrow(`Expected property 'name' to be type string, received: number`)
 })
 
 

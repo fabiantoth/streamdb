@@ -135,7 +135,7 @@ test('SchemaString.validate(): #null should return null value', () => {
     let result2 = nullValue2.validate(null)
     expect(result1).toBe(null)
     expect(result2).toBe(null)
-    expect(() => nullValue1.validate(1)).toThrow(`Expected type string, received: number`)
+    expect(() => nullValue1.validate(1)).toThrow(`Expected property 'nullValue' to be type string, received: number`)
 })
 
 // 
@@ -145,7 +145,7 @@ test('SchemaString.validate(): #rules #default should return default value when 
     const defaultString = new SchemaString('defaultString', { type: String, default: 'hello' })
     let result = defaultString.validate(undefined)
     expect(result).toBe('hello')
-    expect(() => defaultString.validate(1)).toThrow(`Expected type string, received: number`)
+    expect(() => defaultString.validate(1)).toThrow(`Expected property 'defaultString' to be type string, received: number`)
 })
 
 test('SchemaString.validate(): #rules [#default, #required] should return default value even when required is false', () => {

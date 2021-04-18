@@ -81,9 +81,9 @@ test('SchemaBoolean: #instance #rules #default #required should return a new boo
 test('SchemaBoolean.validate(): #rules #default should return a new boolean instance with default set to null', () => {
     const boolDefaultNull = new SchemaBoolean('boolDefaultNull', Boolean)
     expect(() => boolDefaultNull.validate(null))
-        .toThrow(`Expected type boolean, received: object`)
-    expect(() => boolDefaultNull.validate(1)).toThrow(`Expected type boolean, received: number`)
-    expect(() => boolDefaultNull.validate('str')).toThrow(`Expected type boolean, received: string`)
+        .toThrow(`Expected property 'boolDefaultNull' to be type boolean, received: object`)
+    expect(() => boolDefaultNull.validate(1)).toThrow(`Expected property 'boolDefaultNull' to be type boolean, received: number`)
+    expect(() => boolDefaultNull.validate('str')).toThrow(`Expected property 'boolDefaultNull' to be type boolean, received: string`)
 })
 
 //
@@ -139,5 +139,5 @@ test('SchemaBoolean: #error #required should throw an error not allowing any non
 test('SchemaBoolean.validate(): #rules #default #required=false should return true', () => {
     const boolWrongValue = new SchemaBoolean('boolWrongValue', { type: Boolean, required: false, default: true})
     expect(() => boolWrongValue.validate(3))
-        .toThrow(`Expected type boolean, received: number`)
+        .toThrow(`Expected property 'boolWrongValue' to be type boolean, received: number`)
 })

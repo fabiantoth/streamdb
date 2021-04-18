@@ -100,8 +100,8 @@ test('SchemaDate.validate(): #null should return null value', () => {
     let result2 = nullValue2.validate(null)
     expect(result1).toBe(null)
     expect(result2).toBe(null)
-    expect(() => nullValue1.validate('str')).toThrow(`Expected type date or null, received: string`)
-    expect(() => nullValue2.validate('str')).toThrow(`Expected type date or null, received: string`)
+    expect(() => nullValue1.validate('str')).toThrow(`Expected property 'nullValue' to be type date or null, received: string`)
+    expect(() => nullValue2.validate('str')).toThrow(`Expected property 'nullValue' to be type date or null, received: string`)
 })
 
 //
