@@ -71,24 +71,14 @@ test('1 -> Collection.insertOne(): #document #array #embeddedDoc add 1 parent do
     expect.objectContaining({
         id: expect(res.id).toBe(1),
         name: expect(res.name).toBe('Jerry Mouse'),
-        groupsArray: expect(res.groupsArray).toEqual(expect.arrayContaining([
+        groupsArray: expect(res.groupsArray).toMatchObject([
             { id: 1, title: 'Group 1'},
             { id: 2, title: 'Group 2'}
-        ])),
+        ]),
         created_at: expect.any(Date),
         updated_at: expect.any(Date)
     })
-
-    // let groupRes = await groupsRef.getDocs([1,2])
-    // let gres = groupRes.data
-    
-    // expect(gres).toEqual(expect.arrayContaining([
-    //     { id: 1, title: 'Group 1'},
-    //     { id: 2, title: 'Group 2'}
-    // ]))
-
     done()
-    
 })
 
 test('2 -> Collection.insertOne(): #document #nestedObject #array #embeddedDoc add 1 parent document with nestedObject array of document embeds', async (done) => {
@@ -106,20 +96,20 @@ test('2 -> Collection.insertOne(): #document #nestedObject #array #embeddedDoc a
          id: expect(res.id).toBe(2),
          name: expect(res.name).toBe('Mighty Mouse'),
          nested: expect.objectContaining({
-             nestedGroupsArray: expect(res.nested.nestedGroupsArray).toEqual(expect.arrayContaining([
+             nestedGroupsArray: expect(res.nested.nestedGroupsArray).toMatchObject([
                  { id: 3, title: 'Group 3'},
                  { id: 4, title: 'Group 4'}
-             ]))
+             ])
          })
      })
      
     let groupRes = await groupsRef.getById(3)
     let gres = groupRes.data
     
-    expect(gres).toEqual(expect.objectContaining({ 
+    expect(gres).toMatchObject({ 
         id: 3, 
         title: 'Group 3'
-    }))
+    })
     done()
 })
 
@@ -145,19 +135,19 @@ test('3 -> Collection.insertMany(): #manyDocuments #array #embeddedDoc add 2 par
     expect.objectContaining({
         id: expect(res[0].id).toBe(3),
         name: expect(res[0].name).toBe('Donald Duck'),
-        groupsArray: expect(res[0].groupsArray).toEqual(expect.arrayContaining([
+        groupsArray: expect(res[0].groupsArray).toMatchObject([
             { id: 5, title: 'Group 5'},
             { id: 6, title: 'Group 6'}
-        ]))
+        ])
     })
 
     expect.objectContaining({
         id: expect(res[1].id).toBe(4),
         name: expect(res[1].name).toBe('Daffy Duck'),
-        groupsArray: expect(res[1].groupsArray).toEqual(expect.arrayContaining([
+        groupsArray: expect(res[1].groupsArray).toMatchObject([
             { id: 7, title: 'Group 7'},
             { id: 8, title: 'Group 8'}
-        ]))
+        ])
     })
     
     done()
@@ -191,10 +181,10 @@ test('4 -> Collection.insertMany(): #manyDocuments #nestedObject #array #embedde
             id: expect(res[0].id).toBe(5),
             name: expect(res[0].name).toBe('Bugs Bunny'),
             nested: expect.objectContaining({
-                nestedGroupsArray: expect(res[0].nested.nestedGroupsArray).toEqual(expect.arrayContaining([
+                nestedGroupsArray: expect(res[0].nested.nestedGroupsArray).toMatchObject([
                     { id: 9, title: 'Group 9'},
                     { id: 10, title: 'Group 10'}
-                ]))
+                ])
             })
         })
         
@@ -202,10 +192,10 @@ test('4 -> Collection.insertMany(): #manyDocuments #nestedObject #array #embedde
             id: expect(res[1].id).toBe(6),
             name: expect(res[1].name).toBe('Scooby Doo'),
             nested: expect.objectContaining({
-                nestedGroupsArray: expect(res[1].nested.nestedGroupsArray).toEqual(expect.arrayContaining([
+                nestedGroupsArray: expect(res[1].nested.nestedGroupsArray).toMatchObject([
                     { id: 11, title: 'Group 11'},
                     { id: 12, title: 'Group 12'}
-                ]))
+                ])
             })
         })
         
@@ -268,10 +258,10 @@ test('7 -> Collection.updateOne(): #update #array #embeddedDoc #nestedObject #ar
         expect.objectContaining({
             id: expect(res.id).toBe(3),
             name: expect(res.name).toBe('Donald-Duck'),
-            groupsArray: expect(res.groupsArray).toEqual(expect.arrayContaining([
+            groupsArray: expect(res.groupsArray).toMatchObject([
                 { id: 5, title: 'Group 5'},
                 { id: 6, title: 'Group 6'}
-            ])),
+            ]),
             nested: expect(res.nested).toBe(undefined)
         })
         done()
@@ -292,10 +282,10 @@ test('8 -> Collection.updateOne(): #update #array #embeddedDoc update array embe
     expect.objectContaining({
         id: expect(res.id).toBe(3),
         name: expect(res.name).toBe('Donald-Duck'),
-        groupsArray: expect(res.groupsArray).toEqual(expect.arrayContaining([
+        groupsArray: expect(res.groupsArray).toMatchObject([
             { id: 5, title: 'Group 5'},
             { id: 6, title: 'Group---6'}
-        ]))
+        ])
     })
     done()
 })
@@ -320,19 +310,19 @@ test('9 -> Collection.updateMany(): #updateMany #array #embeddedDoc update array
     expect.objectContaining({
         id: expect(res[0].id).toBe(3),
         name: expect(res[0].name).toBe('Donald-Duck'),
-        groupsArray: expect(res[0].groupsArray).toEqual(expect.arrayContaining([
+        groupsArray: expect(res[0].groupsArray).toMatchObject([
             { id: 5, title: 'Group---5'},
             { id: 6, title: 'Group---6'}
-        ]))
+        ])
     })
 
     expect.objectContaining({
         id: expect(res[1].id).toBe(4),
         name: expect(res[1].name).toBe('Daffy Duck'),
-        groupsArray: expect(res[1].groupsArray).toEqual(expect.arrayContaining([
+        groupsArray: expect(res[1].groupsArray).toMatchObject([
             { id: 7, title: 'Group 7'},
             { id: 8, title: 'Group---8'}
-        ]))
+        ])
     })
     done()
 })

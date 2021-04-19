@@ -81,7 +81,8 @@ test('0 -> setup: #document #array #embeddedDoc add parent documents with array 
             name: 'Hulk'
         },
         { 
-            name: 'Iron Man'
+            name: 'Iron Man',
+            numTags: [1,2,3]
         }
     ])
     done()
@@ -94,7 +95,7 @@ test('1 -> Collection.insertInto(): #array #embeddedDoc should create embedded f
     expect.objectContaining({
         id: expect(res.id).toBe(2),
         name: expect(res.name).toBe('Hulk'),
-        groupDocs: expect(res.groupDocs).toEqual(expect.arrayContaining([
+        groupDocs: expect(res.groupDocs).toEqual(expect.objectContaining([
             { id: 1, title: 'Group 1'}
         ]))
     })
@@ -108,7 +109,7 @@ test('2 -> Collection.insertInto(): #array #embeddedDoc should not insert docs a
     expect.objectContaining({
         id: expect(res.id).toBe(2),
         name: expect(res.name).toBe('Hulk'),
-        groupDocs: expect(res.groupDocs).toEqual(expect.arrayContaining([
+        groupDocs: expect(res.groupDocs).toEqual(expect.objectContaining([
             { id: 1, title: 'Group 1'}
         ]))
     })
@@ -127,7 +128,7 @@ test('3 -> Collection.insertInto(): #array #embeddedDoc should ignore duplicate 
     expect.objectContaining({
         id: expect(res.id).toBe(2),
         name: expect(res.name).toBe('Hulk'),
-        groupDocs: expect(res.groupDocs).toEqual(expect.arrayContaining([
+        groupDocs: expect(res.groupDocs).toEqual(expect.objectContaining([
             { id: 1, title: 'Group 1'},
             { id: 2, title: 'Group 2'},
         ]))
@@ -143,7 +144,7 @@ test('4 -> Collection.insertInto(): #array #refs should create ref field that di
     expect.objectContaining({
         id: expect(res.id).toBe(3),
         name: expect(res.name).toBe('Iron Man'),
-        groupRefs: expect(res.groupRefs).toEqual(expect.arrayContaining([1,2]))
+        groupRefs: expect(res.groupRefs).toEqual(expect.objectContaining([1,2]))
     })
 
     done()
@@ -156,7 +157,20 @@ test('5 -> Collection.insertInto(): #array #refs should ref values and ignore du
     expect.objectContaining({
         id: expect(res.id).toBe(3),
         name: expect(res.name).toBe('Iron Man'),
-        groupRefs: expect(res.groupRefs).toEqual(expect.arrayContaining([1,2,3,4]))
+        groupRefs: expect(res.groupRefs).toEqual(expect.objectContaining([1,2,3,4]))
+    })
+
+    done()
+})
+
+test('6 -> Collection.insertInto(): #array #number should create field and insert values', async (done) => {
+    let userRes = await usersRef.where('id = 3').insertInto('numTags', [2,3,3,4])
+    let res = userRes.data[0] 
+    
+    expect.objectContaining({
+        id: expect(res.id).toBe(3),
+        name: expect(res.name).toBe('Iron Man'),
+        numTags: expect(res.numTags).toEqual(expect.objectContaining([1,2,3,2,3,3,4]))
     })
 
     done()

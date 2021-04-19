@@ -86,7 +86,7 @@ test('1 -> Collection.insertOne(): #document #array #embeddedRef add 1 parent do
         expect.objectContaining({
             id: expect(res.id).toBe(1),
             name: expect(res.name).toBe('Jerry Mouse'),
-            groupsRefArray: expect(res.groupsRefArray).toEqual(expect.arrayContaining([1,2])),
+            groupsRefArray: expect(res.groupsRefArray).toMatchObject([1,2]),
             created_at: expect.any(Date),
             updated_at: expect.any(Date)
         })
@@ -110,7 +110,7 @@ test('2 -> Collection.insertOne(): #document #nestedObject #array #embeddedRef a
             id: expect(res.id).toBe(2),
             name: expect(res.name).toBe('Mighty Mouse'),
             nested: expect.objectContaining({
-                nestedGroupsRefArray: expect(res.nested.nestedGroupsRefArray).toEqual(expect.arrayContaining([3,4]))
+                nestedGroupsRefArray: expect(res.nested.nestedGroupsRefArray).toMatchObject([3,4])
             })
         })
         done()
@@ -140,13 +140,13 @@ test('3 -> Collection.insertMany(): #documents #array #embeddedDoc add 2 parent 
         expect.objectContaining({
             id: expect(res[0].id).toBe(3),
             name: expect(res[0].name).toBe('Donald Duck'),
-            groupsRefArray: expect(res[0].groupsRefArray).toEqual(expect.arrayContaining([5,6]))
+            groupsRefArray: expect(res[0].groupsRefArray).toMatchObject([5,6])
         })
 
         expect.objectContaining({
             id: expect(res[1].id).toBe(4),
             name: expect(res[1].name).toBe('Daffy Duck'),
-            groupsRefArray: expect(res[1].groupsRefArray).toEqual(expect.arrayContaining([7,8]))
+            groupsRefArray: expect(res[1].groupsRefArray).toMatchObject([7,8])
         })
         
         done()
@@ -181,7 +181,7 @@ test('4 -> Collection.insertMany(): #documents #nestedObject #array #embeddedRef
             id: expect(res[0].id).toBe(5),
             name: expect(res[0].name).toBe('Bugs Bunny'),
             nested: expect.objectContaining({
-                nestedGroupsRefArray: expect(res[0].nested.nestedGroupsRefArray).toEqual(expect.arrayContaining([9,10]))
+                nestedGroupsRefArray: expect(res[0].nested.nestedGroupsRefArray).toMatchObject([9,10])
             })
         })
         
@@ -189,7 +189,7 @@ test('4 -> Collection.insertMany(): #documents #nestedObject #array #embeddedRef
             id: expect(res[1].id).toBe(6),
             name: expect(res[1].name).toBe('Scooby Doo'),
             nested: expect.objectContaining({
-                nestedGroupsRefArray: expect(res[1].nested.nestedGroupsRefArray).toEqual(expect.arrayContaining([11,12]))
+                nestedGroupsRefArray: expect(res[1].nested.nestedGroupsRefArray).toMatchObject([11,12])
             })
         })
         
