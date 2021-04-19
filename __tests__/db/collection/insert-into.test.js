@@ -66,7 +66,7 @@ beforeEach(async () => {
     })
 })
 
-test('0 -> setup: #document #array #embeddedDoc add 2 parent documents with array of document embeds', async (done) => {
+test('0 -> setup: #document #array #embeddedDoc add parent documents with array of document embeds', async (done) => {
     let userRes = await usersRef.insertMany([
         { 
             name: 'Captain America',
