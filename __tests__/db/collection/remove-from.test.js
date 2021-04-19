@@ -98,11 +98,11 @@ test('1 -> Collection.removeFrom(): #array #embeddedDoc should remove documents 
     expect.objectContaining({
         id: expect(res.id).toBe(1),
         name: expect(res.name).toBe('Captain America'),
-        groupDocs: expect(res.groupDocs).toEqual(expect.arrayContaining([
+        groupDocs: expect(res.groupDocs).toMatchObject([
             { id: 2, title: 'Group 2'},
             { id: 3, title: 'Group 3'},
             { id: 4, title: 'Group 4'}
-        ]))
+        ])
     })
     done()
 })
@@ -114,9 +114,9 @@ test('2 -> Collection.removeFrom(): #array #embeddedDoc should remove documents 
     expect.objectContaining({
         id: expect(res.id).toBe(1),
         name: expect(res.name).toBe('Captain America'),
-        groupDocs: expect(res.groupDocs).toEqual(expect.arrayContaining([
+        groupDocs: expect(res.groupDocs).toMatchObject([
             { id: 2, title: 'Group 2'}
-        ]))
+        ])
     })
     done()
 })
@@ -128,7 +128,7 @@ test('3 -> Collection.removeFrom(): #array #ref should remove ids providing arra
     expect.objectContaining({
         id: expect(res.id).toBe(2),
         name: expect(res.name).toBe('Hulk'),
-        groupRefs: expect(res.groupRefs).toEqual(expect.arrayContaining([1]))
+        groupRefs: expect(res.groupRefs).toMatchObject([1])
     })
     done()
 })
@@ -140,7 +140,7 @@ test('4 -> Collection.removeFrom(): #array #string should remove all occurances 
     expect.objectContaining({
         id: expect(res.id).toBe(3),
         name: expect(res.name).toBe('Iron Man'),
-        strTags: expect(res.strTags).toEqual(expect.arrayContaining(['one', 'three', 'four']))
+        strTags: expect(res.strTags).toMatchObject(['one', 'three', 'four'])
     })
     done()
 })
@@ -152,7 +152,7 @@ test('5 -> Collection.removeFrom(): #array #number should remove all occurances 
     expect.objectContaining({
         id: expect(res.id).toBe(3),
         name: expect(res.name).toBe('Iron Man'),
-        numTags: expect(res.numTags).toEqual(expect.arrayContaining([1,2,4]))
+        numTags: expect(res.numTags).toMatchObject([1,2,4])
     })
     done()
 })
