@@ -19,8 +19,8 @@ beforeAll(async (done) => {
     await streamDb.createDb(dbSettings)
     db = new streamDb.DB('array-doc-embeds')
 
-    groupMeta = await db.addCollection('groups')
-    userMeta = await db.addCollection('users')
+    await db.addCollection('groups')
+    await db.addCollection('users')
 
     
     const GroupSchema = new Schema({
