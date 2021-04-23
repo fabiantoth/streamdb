@@ -162,12 +162,9 @@ test('2 -> Collection.updateArray(): #whereArray #singlePath should ignore dupli
 test('3 -> Collection.updateArray(): #whereQuery #expr update all matches with given value', async (done) => {
     let userRes = await usersRef.where('id != $undefined')
                                 .include(['groupDocs'])
-                                // .updateArray('isActive === $undefined', [true]) // update first matching
                                 .updateArray('isActive = $undefined', [true]) // update all matching
 
     let res = userRes.data
-    // console.log(res[2])
-    // console.log(res[3])
     expect.objectContaining({
         id: expect(res[0].id).toBe(1),
         groupDocs: expect(res[0].groupDocs).toEqual(expect.objectContaining([
@@ -191,9 +188,6 @@ test('3 -> Collection.updateArray(): #whereQuery #expr update all matches with g
             { id: 4, title: 'Group 4', level: 4, isActive: true }
         ]))
     })
-
-    // let allRes = await usersRef.get()
-    // console.log(allRes.data[3])
     done()
 })
 
@@ -203,32 +197,62 @@ test('4 -> Collection.updateArray(): #whereQuery #singlePath #nonid update all m
                                 .updateArray('isActive', [false])
 
     let res = userRes.data
-    // expect.objectContaining({
-    //     id: expect(res[0].id).toBe(1),
-    //     groupDocs: expect(res[0].groupDocs).toEqual(expect.objectContaining([
-    //         { id: 1, title: 'Group 1', level: 1, isActive: false },
-    //         { id: 2, title: 'Group 2', level: 2, isActive: false },
-    //         { id: 3, title: 'Group 3', level: 3, isActive: false },
-    //         { id: 4, title: 'Group 4', level: 4, isActive: false }
-    //     ]))
-    // })
-    // expect.objectContaining({
-    //     id: expect(res[1].id).toBe(2),
-    //     groupDocs: expect(res[1].groupDocs).toEqual(expect.objectContaining([
-    //         { id: 1, title: 'Group 1', level: 1, isActive: false },
-    //         { id: 2, title: 'Group 2', level: 2, isActive: false }
-    //     ]))
-    // })
-    // expect.objectContaining({
-    //     id: expect(res[2].id).toBe(3),
-    //     groupDocs: expect(res[2].groupDocs).toEqual(expect.objectContaining([
-    //         { id: 3, title: 'Group 3', level: 3, isActive: false },
-    //         { id: 4, title: 'Group 4', level: 4, isActive: false }
-    //     ]))
-    // })
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(1),
+        groupDocs: expect(res[0].groupDocs).toEqual(expect.objectContaining([
+            { id: 1, title: 'Group 1', level: 1, isActive: false },
+            { id: 2, title: 'Group 2', level: 2, isActive: false },
+            { id: 3, title: 'Group 3', level: 3, isActive: false },
+            { id: 4, title: 'Group 4', level: 4, isActive: false }
+        ]))
+    })
+    expect.objectContaining({
+        id: expect(res[1].id).toBe(2),
+        groupDocs: expect(res[1].groupDocs).toEqual(expect.objectContaining([
+            { id: 1, title: 'Group 1', level: 1, isActive: false },
+            { id: 2, title: 'Group 2', level: 2, isActive: false }
+        ]))
+    })
+    expect.objectContaining({
+        id: expect(res[2].id).toBe(3),
+        groupDocs: expect(res[2].groupDocs).toEqual(expect.objectContaining([
+            { id: 3, title: 'Group 3', level: 3, isActive: false },
+            { id: 4, title: 'Group 4', level: 4, isActive: false }
+        ]))
+    })
+    done()
+})
 
-    // let allRes = await usersRef.get()
-    // console.log(allRes.data[3])
+test('5 -> Collection.updateArray(): #whereQuery #singlePath #nonid update only first match with given value', async (done) => {
+    let userRes = await usersRef.where('id != $undefined')
+                                .include(['groupDocs'])
+                                .updateArray('isActive === $false', [true])
+
+    let res = userRes.data
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(1),
+        groupDocs: expect(res[0].groupDocs).toEqual(expect.objectContaining([
+            { id: 1, title: 'Group 1', level: 1, isActive: true },
+            { id: 2, title: 'Group 2', level: 2, isActive: false },
+            { id: 3, title: 'Group 3', level: 3, isActive: false },
+            { id: 4, title: 'Group 4', level: 4, isActive: false }
+        ]))
+    })
+    expect.objectContaining({
+        id: expect(res[1].id).toBe(2),
+        groupDocs: expect(res[1].groupDocs).toEqual(expect.objectContaining([
+            { id: 1, title: 'Group 1', level: 1, isActive: true },
+            { id: 2, title: 'Group 2', level: 2, isActive: false }
+        ]))
+    })
+    expect.objectContaining({
+        id: expect(res[2].id).toBe(3),
+        groupDocs: expect(res[2].groupDocs).toEqual(expect.objectContaining([
+            { id: 3, title: 'Group 3', level: 3, isActive: true },
+            { id: 4, title: 'Group 4', level: 4, isActive: false }
+        ]))
+    })
+
     done()
 })
 
@@ -237,7 +261,7 @@ test('4 -> Collection.updateArray(): #whereQuery #singlePath #nonid update all m
 //
 // ======= negative tests ========== //
 //
-test('(-1) -> Collection.updateArray(): #error #subdocArray should throw error if any arr objects are missing an id value', () => {
+test('(-1) -> Collection.updateArray(): #error #docArray should throw error if any arr objects are missing an id value', () => {
     expect.assertions(1)
     return usersRef.where('groupDocs.length > 1')
                     .include(['groupDocs'])
@@ -248,7 +272,7 @@ test('(-1) -> Collection.updateArray(): #error #subdocArray should throw error i
     }))
 })
 
-test('(-2) -> Collection.updateArray(): #error #subdocArray should throw error if any arr contains ids that do not exist', () => {
+test('(-2) -> Collection.updateArray(): #error #docArray should throw error if any arr contains ids that do not exist', () => {
     expect.assertions(1)
     return usersRef.where('groupDocs.length > 1')
                     .include(['groupDocs'])
@@ -259,7 +283,7 @@ test('(-2) -> Collection.updateArray(): #error #subdocArray should throw error i
     }))
 })
 
-test('(-3) -> Collection.updateArray(): #error #subdocArray #expr should throw error passing more than 1 value when using an expr', () => {
+test('(-3) -> Collection.updateArray(): #error #docArray #expr should throw error passing more than 1 value when using an expr', () => {
     expect.assertions(1)
     return usersRef.where('groupDocs != $undefined')
                     .include(['groupDocs'])
@@ -270,7 +294,7 @@ test('(-3) -> Collection.updateArray(): #error #subdocArray #expr should throw e
     }))
 })
 
-test('(-4) -> Collection.updateArray(): #error #subdocArray #singlePath should throw error passing more than 1 value when path != id', () => {
+test('(-4) -> Collection.updateArray(): #error #docArray #singlePath should throw error passing more than 1 value when path != id', () => {
     expect.assertions(1)
     return usersRef.where('groupDocs != $undefined')
                     .include(['groupDocs'])
@@ -278,5 +302,16 @@ test('(-4) -> Collection.updateArray(): #error #subdocArray #singlePath should t
     .catch(e => expect(e).toEqual({
         "error": true,
         "message": `Only 1 update value is permitted when setting expression match rules or path is not 'id'`
+    }))
+})
+
+test('(-5) -> Collection.updateArray(): #error #docArray #expr should throw error using $item kw with docs', () => {
+    expect.assertions(1)
+    return usersRef.where('groupDocs != $undefined')
+                    .include(['groupDocs'])
+                    .updateArray('$item', [true])
+    .catch(e => expect(e).toEqual({
+        "error": true,
+        "message": `The '$item' keyword is not permitted for Document types`
     }))
 })

@@ -67,7 +67,8 @@ test('0 -> setup: #document #array #ref create docs and add refs to parents', as
         { title: 'Group 3' },
         { title: 'Group 4' },
         { title: 'Group 5' },
-        { title: 'Group 6' }
+        { title: 'Group 6' },
+        { title: 'Group 7' }
     ])
 
     let userRes = await usersRef.insertMany([
@@ -81,7 +82,7 @@ test('0 -> setup: #document #array #ref create docs and add refs to parents', as
         },
         { 
             name: 'Fred',
-            groupRefs: [3,4]
+            groupRefs: [3,4,5]
         }
     ])
 
@@ -89,14 +90,11 @@ test('0 -> setup: #document #array #ref create docs and add refs to parents', as
 })
 
 test('(1) -> Collection.updateArray(): #ref should update all docs replace ref id with given value', async (done) => {
-    // const filterFn = (arr) => arr.filter(ref => ref === 2)
     let userRes = await usersRef.where('groupRefs.length > 0')
-                    .include(['groupRefs'])
-                    .updateArray('$item = 2', [5])
+                                .include(['groupRefs'])
+                                .updateArray('$item = 2', [5])
     
     let res = userRes.data
-    // console.log(res[0])
-    // console.log(res[1])
     expect.objectContaining({
         id: expect(res[0].id).toBe(1),
         groupRefs: expect(res[0].groupRefs).toEqual(expect.objectContaining([1,5,3,4]))
@@ -105,17 +103,33 @@ test('(1) -> Collection.updateArray(): #ref should update all docs replace ref i
         id: expect(res[1].id).toBe(2),
         groupRefs: expect(res[1].groupRefs).toEqual(expect.objectContaining([1,5]))
     })
+    expect.objectContaining({
+        id: expect(res[2].id).toBe(3),
+        groupRefs: expect(res[2].groupRefs).toEqual(expect.objectContaining([3,4,5]))
+    })
     done()
 })
-// test('(1) -> Collection.updateArray(): #ref should swap items in expr, with array values', async (done) => {
-//     const filterFn = (arr) => arr.filter(ref => ref <= 2)
-//     let userRes = await usersRef.where('groupRefs', filterFn)
-//                     .include(['groupRefs'])
-//                     .updateArray('$item = [1,2]', [5,6])
-    
+
+// test('2 -> Collection.updateArray(): #array #refs should ref values and ignore duplicates or values that already exist', async (done) => {
+//     let userRes = await usersRef.where('groupRefs.length > 0')
+//                                 .include(['groupRefs'])
+//                                 .updateArray('$item = 1', [5])
 //     let res = userRes.data
+//     expect.objectContaining({
+//         id: expect(res[0].id).toBe(1),
+//         groupRefs: expect(res[0].groupRefs).toEqual(expect.objectContaining([1,5,3,4]))
+//     })
+//     expect.objectContaining({
+//         id: expect(res[1].id).toBe(2),
+//         groupRefs: expect(res[1].groupRefs).toEqual(expect.objectContaining([1,5]))
+//     })
+//     expect.objectContaining({
+//         id: expect(res[2].id).toBe(3),
+//         groupRefs: expect(res[2].groupRefs).toEqual(expect.objectContaining([3,4,5]))
+//     })
 //     done()
 // })
+
 
 //
 // ======= negative tests ========== //
@@ -131,28 +145,25 @@ test('(-1) -> Collection.updateArray(): #error #ref should throw error if ref id
         "message": `Document with id '10' does not exist`
     }))
 })
-// test('(-1) -> Collection.updateArray(): #error #ref should throw error if ref id value does not exist', () => {
-//     const filterFn = (arr) => arr.filter(ref => ref <= 2)
-//     expect.assertions(1)
 
-//     return usersRef.where('groupRefs', filterFn)
-//                     .include(['groupRefs'])
-//                     .updateArray('$item = [1,2]', [5,6])
-//     .catch(e => expect(e).toEqual({
-//         "error": true,
-//         "message": `Document with id "undefined" does not exist`
-//     }))
-// })
+test('(-2) -> Collection.updateArray(): #error #ref should throw error if $item keyword is not used', () => {
+    expect.assertions(1)
+    return usersRef.where('groupRefs.length > 0')
+                    .include(['groupRefs'])
+                    .updateArray('id = 2', [10])
+    .catch(e => expect(e).toEqual({
+        "error": true,
+        "message": `Arrays that don't contain objects must use the '$item' keyword`
+    }))
+})
 
-// test('(-2) -> Collection.updateArray(): #error #ref should throw error if pathExpr does not include $item kw', () => {
-//     const filterFn = (arr) => arr.filter(ref => ref <= 2)
-//     expect.assertions(1)
-
-//     return usersRef.where('groupRefs', filterFn)
-//                     .include(['groupRefs'])
-//                     .updateArray('groupRefs', [5,6])
-//     .catch(e => expect(e).toEqual({
-//         "error": true,
-//         "message": `Document with id "undefined" does not exist`
-//     }))
-// })
+test('(-3) -> Collection.updateArray(): #error #ref should throw error if update arr contains more than 1 value', () => {
+    expect.assertions(1)
+    return usersRef.where('groupRefs.length > 0')
+                    .include(['groupRefs'])
+                    .updateArray('$item = 1', [5,6])
+    .catch(e => expect(e).toEqual({
+        "error": true,
+        "message": `Only 1 update value is permitted when setting non-object arrays`
+    }))
+})
