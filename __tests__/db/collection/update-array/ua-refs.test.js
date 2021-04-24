@@ -93,7 +93,6 @@ test('(1) -> Collection.updateArray(): #ref should update all docs replace ref i
     let userRes = await usersRef.where('groupRefs.length > 0')
                                 .include(['groupRefs'])
                                 .updateArray('$item = 2', [5])
-    
     let res = userRes.data
     expect.objectContaining({
         id: expect(res[0].id).toBe(1),
@@ -103,32 +102,28 @@ test('(1) -> Collection.updateArray(): #ref should update all docs replace ref i
         id: expect(res[1].id).toBe(2),
         groupRefs: expect(res[1].groupRefs).toEqual(expect.objectContaining([1,5]))
     })
-    expect.objectContaining({
-        id: expect(res[2].id).toBe(3),
-        groupRefs: expect(res[2].groupRefs).toEqual(expect.objectContaining([3,4,5]))
-    })
     done()
 })
 
-// test('2 -> Collection.updateArray(): #array #refs should ref values and ignore duplicates or values that already exist', async (done) => {
-//     let userRes = await usersRef.where('groupRefs.length > 0')
-//                                 .include(['groupRefs'])
-//                                 .updateArray('$item = 1', [5])
-//     let res = userRes.data
-//     expect.objectContaining({
-//         id: expect(res[0].id).toBe(1),
-//         groupRefs: expect(res[0].groupRefs).toEqual(expect.objectContaining([1,5,3,4]))
-//     })
-//     expect.objectContaining({
-//         id: expect(res[1].id).toBe(2),
-//         groupRefs: expect(res[1].groupRefs).toEqual(expect.objectContaining([1,5]))
-//     })
-//     expect.objectContaining({
-//         id: expect(res[2].id).toBe(3),
-//         groupRefs: expect(res[2].groupRefs).toEqual(expect.objectContaining([3,4,5]))
-//     })
-//     done()
-// })
+test('2 -> Collection.updateArray(): #array #refs should not make any updates but return success no changes message', async (done) => {
+    let userRes = await usersRef.where('groupRefs.length > 0')
+                                .include(['groupRefs'])
+                                .updateArray('$item = 1', [5])
+    expect(userRes.message).toBe('Update query ran successfully but no changes were made')
+    done()
+})
+
+test('3 -> Collection.updateArray(): #array #refs should update ref values and ignore duplicates or values that already exist', async (done) => {
+    let userRes = await usersRef.where('groupRefs.length > 0')
+                                .include(['groupRefs'])
+                                .updateArray('$item = 5', [4])
+    let res = userRes.data
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(2),
+        groupRefs: expect(res[0].groupRefs).toEqual(expect.objectContaining([1,4]))
+    })
+    done()
+})
 
 
 //
