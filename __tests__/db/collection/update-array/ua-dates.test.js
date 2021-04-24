@@ -56,33 +56,73 @@ beforeEach(async () => {
 })
 
 test('0 -> setup: #array #schemaObject add documents with array of schema objects, ignore any settings in embedded arrays', async (done) => {
-    let date = new Date()
+    let date1 = new Date(2020, 10, 10)
+    let date2 = new Date(2020, 10, 11)
+    let date3 = new Date(2020, 10, 12)
+    let date4 = new Date(2020, 10, 13)
     let userRes = await usersRef.insertMany([
         { 
             name: 'John',
-            dates: [date]
+            dates: [date1, date2]
         },
         { 
             name: 'Jane',
-            dates: [date]
+            dates: [date1, date2, date3]
         },
         { 
             name: 'Fred',
-            dates: [date]
+            dates: [date1]
         },
         { 
             name: 'Fred',
-            dates: [date]
+            dates: [date4]
         },
     ])
 
     let res = userRes.data
-    // expect.objectContaining({
-    //     id: expect(res[0].id).toBe(1),
-    //     name: expect(res[0].name).toBe('John'),
-    //     dates: expect(res[0].dates).toEqual(expect.objectContaining(date.toString()))
-    // })
+    console.log(res)
     
+    done()
+})
+
+
+test('(1) -> Collection.updateArray(): #SchemaType #date should update all matching values', async (done) => {
+    let userRes = await usersRef.where('dates.length > 0')
+                                .include(['dates'])
+                                .updateArray('$item = 2020-11-10T06:00:00.000Z', ['2020-11-11T06:00:00.000Z'])
+    let res = userRes.data
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(1),
+        dates: expect(res[0].dates).toMatchObject(expect.arrayContaining(['2020-11-11T06:00:00.000Z', '2020-11-11T06:00:00.000Z']))
+    })
+    expect.objectContaining({
+        id: expect(res[1].id).toBe(2),
+        dates: expect(res[1].dates).toEqual(expect.arrayContaining(['2020-11-11T06:00:00.000Z', '2020-11-11T06:00:00.000Z']))
+    })
+    expect.objectContaining({
+        id: expect(res[2].id).toBe(3),
+        dates: expect(res[2].dates).toEqual(expect.arrayContaining(['2020-11-11T06:00:00.000Z']))
+    })
+    done()
+})
+
+test('(2) -> Collection.updateArray(): #SchemaType #date should update only first matching value', async (done) => {
+    let userRes = await usersRef.where('dates.length > 0')
+                                .include(['dates'])
+                                .updateArray('$item === 2020-11-11T06:00:00.000Z', ['2021-04-25T06:00:00.000Z'])
+    let res = userRes.data
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(1),
+        dates: expect(res[0].dates).toEqual(expect.objectContaining(['2021-04-25T06:00:00.000Z', '2020-11-11T06:00:00.000Z']))
+    })
+    expect.objectContaining({
+        id: expect(res[1].id).toBe(2),
+        dates: expect(res[1].dates).toEqual(expect.objectContaining(['2021-04-25T06:00:00.000Z', '2020-11-11T06:00:00.000Z']))
+    })
+    expect.objectContaining({
+        id: expect(res[2].id).toBe(3),
+        dates: expect(res[2].dates).toEqual(expect.objectContaining(['2021-04-25T06:00:00.000Z']))
+    })
     done()
 })
 

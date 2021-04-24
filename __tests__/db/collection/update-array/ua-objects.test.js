@@ -37,7 +37,8 @@ beforeAll(async (done) => {
 
     const AuthorSchema = new Schema({
         author: String,
-        articles: [ArticleSchema]
+        articles: [ArticleSchema],
+        // Date,Array,Any
     }, 
     {
         strict: true,
