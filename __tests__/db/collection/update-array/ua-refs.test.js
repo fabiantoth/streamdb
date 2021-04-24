@@ -92,7 +92,7 @@ test('0 -> setup: #document #array #ref create docs and add refs to parents', as
 test('(1) -> Collection.updateArray(): #ref should update all docs replace ref id with given value', async (done) => {
     let userRes = await usersRef.where('groupRefs.length > 0')
                                 .include(['groupRefs'])
-                                .updateArray('$item = 2', [5])
+                                .updateArray('$item === 2', [5])
     let res = userRes.data
     expect.objectContaining({
         id: expect(res[0].id).toBe(1),
@@ -108,7 +108,7 @@ test('(1) -> Collection.updateArray(): #ref should update all docs replace ref i
 test('2 -> Collection.updateArray(): #array #refs should not make any updates but return success no changes message', async (done) => {
     let userRes = await usersRef.where('groupRefs.length > 0')
                                 .include(['groupRefs'])
-                                .updateArray('$item = 1', [5])
+                                .updateArray('$item === 1', [5])
     expect(userRes.message).toBe('Update query ran successfully but no changes were made')
     done()
 })
@@ -116,7 +116,7 @@ test('2 -> Collection.updateArray(): #array #refs should not make any updates bu
 test('3 -> Collection.updateArray(): #array #refs should update ref values and ignore duplicates or values that already exist', async (done) => {
     let userRes = await usersRef.where('groupRefs.length > 0')
                                 .include(['groupRefs'])
-                                .updateArray('$item = 5', [4])
+                                .updateArray('$item === 5', [4])
     let res = userRes.data
     expect.objectContaining({
         id: expect(res[0].id).toBe(2),
@@ -134,7 +134,7 @@ test('(-1) -> Collection.updateArray(): #error #ref should throw error if ref id
     expect.assertions(1)
     return usersRef.where('groupRefs', filterFn)
                     .include(['groupRefs'])
-                    .updateArray('$item = 2', [10])
+                    .updateArray('$item === 2', [10])
     .catch(e => expect(e).toEqual({
         "error": true,
         "message": `Document with id '10' does not exist`
@@ -145,10 +145,10 @@ test('(-2) -> Collection.updateArray(): #error #ref should throw error if $item 
     expect.assertions(1)
     return usersRef.where('groupRefs.length > 0')
                     .include(['groupRefs'])
-                    .updateArray('id = 2', [10])
+                    .updateArray('id === 2', [10])
     .catch(e => expect(e).toEqual({
         "error": true,
-        "message": `Arrays that don't contain objects must use the '$item' keyword`
+        "message": `$ref arrays must use the '$item' keyword, (===) operator, and id value`
     }))
 })
 
@@ -156,9 +156,31 @@ test('(-3) -> Collection.updateArray(): #error #ref should throw error if update
     expect.assertions(1)
     return usersRef.where('groupRefs.length > 0')
                     .include(['groupRefs'])
-                    .updateArray('$item = 1', [5,6])
+                    .updateArray('$item === 1', [5,6])
     .catch(e => expect(e).toEqual({
         "error": true,
         "message": `Only 1 update value is permitted when setting non-object arrays`
+    }))
+})
+
+test('(-4) -> Collection.updateArray(): #error #ref should throw error if operator is not strict equality', () => {
+    expect.assertions(1)
+    return usersRef.where('groupRefs.length > 0')
+                    .include(['groupRefs'])
+                    .updateArray('$item = 1', [2])
+    .catch(e => expect(e).toEqual({
+        "error": true,
+        "message": `Only strict (===) find and update first match operator allowed for $ref arrays`
+    }))
+})
+
+test('(-5) -> Collection.updateArray(): #error #ref should throw error if there are less than 3 expr literals', () => {
+    expect.assertions(1)
+    return usersRef.where('groupRefs.length > 0')
+                    .include(['groupRefs'])
+                    .updateArray('$item "hello"', [2])
+    .catch(e => expect(e).toEqual({
+        "error": true,
+        "message": `$ref arrays must use the '$item' keyword, (===) operator, and id value`
     }))
 })
