@@ -40,7 +40,7 @@ beforeAll(async (done) => {
         groupDocs: [GroupModel]
     }, 
     {
-        strict: true,
+        strict: false,
         timestamps: {
             created_at: true,
             updated_at: true
@@ -162,7 +162,7 @@ test('2 -> Collection.updateArray(): #whereArray #singlePath should ignore dupli
 test('3 -> Collection.updateArray(): #whereQuery #expr update all matches with given value', async (done) => {
     let userRes = await usersRef.where('id != $undefined')
                                 .include(['groupDocs'])
-                                .updateArray('isActive = $undefined', [true]) // update all matching
+                                .updateArray('isActive = $undefined', [{ isActive: true }]) // update all matching
 
     let res = userRes.data
     expect.objectContaining({
@@ -191,10 +191,10 @@ test('3 -> Collection.updateArray(): #whereQuery #expr update all matches with g
     done()
 })
 
-test('4 -> Collection.updateArray(): #whereQuery #singlePath #nonid update all matches with given value', async (done) => {
+test('4 -> Collection.updateArray(): #whereQuery #expr only update the first matching value in each array', async (done) => {
     let userRes = await usersRef.where('id != $undefined')
                                 .include(['groupDocs'])
-                                .updateArray('isActive', [false])
+                                .updateArray('isActive === $true', [{ isActive: false }])
 
     let res = userRes.data
     expect.objectContaining({
@@ -203,7 +203,7 @@ test('4 -> Collection.updateArray(): #whereQuery #singlePath #nonid update all m
             { id: 1, title: 'Group 1', level: 1, isActive: false },
             { id: 2, title: 'Group 2', level: 2, isActive: false },
             { id: 3, title: 'Group 3', level: 3, isActive: false },
-            { id: 4, title: 'Group 4', level: 4, isActive: false }
+            { id: 4, title: 'Group 4', level: 4, isActive: true }
         ]))
     })
     expect.objectContaining({
@@ -226,30 +226,30 @@ test('4 -> Collection.updateArray(): #whereQuery #singlePath #nonid update all m
 test('5 -> Collection.updateArray(): #whereQuery #singlePath #nonid update only first match with given value', async (done) => {
     let userRes = await usersRef.where('id != $undefined')
                                 .include(['groupDocs'])
-                                .updateArray('isActive === $false', [true])
+                                .updateArray('level', [{ isActive: true }])
 
     let res = userRes.data
     expect.objectContaining({
         id: expect(res[0].id).toBe(1),
         groupDocs: expect(res[0].groupDocs).toEqual(expect.objectContaining([
             { id: 1, title: 'Group 1', level: 1, isActive: true },
-            { id: 2, title: 'Group 2', level: 2, isActive: false },
-            { id: 3, title: 'Group 3', level: 3, isActive: false },
-            { id: 4, title: 'Group 4', level: 4, isActive: false }
+            { id: 2, title: 'Group 2', level: 2, isActive: true },
+            { id: 3, title: 'Group 3', level: 3, isActive: true },
+            { id: 4, title: 'Group 4', level: 4, isActive: true }
         ]))
     })
     expect.objectContaining({
         id: expect(res[1].id).toBe(2),
         groupDocs: expect(res[1].groupDocs).toEqual(expect.objectContaining([
             { id: 1, title: 'Group 1', level: 1, isActive: true },
-            { id: 2, title: 'Group 2', level: 2, isActive: false }
+            { id: 2, title: 'Group 2', level: 2, isActive: true }
         ]))
     })
     expect.objectContaining({
         id: expect(res[2].id).toBe(3),
         groupDocs: expect(res[2].groupDocs).toEqual(expect.objectContaining([
             { id: 3, title: 'Group 3', level: 3, isActive: true },
-            { id: 4, title: 'Group 4', level: 4, isActive: false }
+            { id: 4, title: 'Group 4', level: 4, isActive: true }
         ]))
     })
 
