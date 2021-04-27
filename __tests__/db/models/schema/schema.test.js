@@ -352,6 +352,8 @@ test('Schema.validate(): #SchemaArray #embeds #NestedObjects should validate arr
             name: { type: String, required: true },
             age: Number
         }]
+    }, {
+        strict: true
     })
 
     const result1 = schema.validate({ objArray: [{ name: 'john', age: 18 }, { name: 'sally', age: 18 }] })
