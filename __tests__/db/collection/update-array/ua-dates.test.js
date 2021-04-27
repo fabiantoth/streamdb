@@ -78,10 +78,6 @@ test('0 -> setup: #array #schemaObject add documents with array of schema object
             dates: [date4]
         },
     ])
-
-    let res = userRes.data
-    console.log(res)
-    
     done()
 })
 
