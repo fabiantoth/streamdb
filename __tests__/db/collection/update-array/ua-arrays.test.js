@@ -26,7 +26,9 @@ beforeAll(async (done) => {
 
     const UserSchema = new Schema({
         strEmbed: [[String]],
-        numEmbed: [[Number]]
+        numEmbed: [[Number]],
+        emptyEmbed: [[]],
+        emptyArr: []
     })
 
     db.addSchema('User', UserSchema)
@@ -52,11 +54,15 @@ test('0 -> setup: #array #arrays add documents with array of schema objects, ign
     await usersRef.insertMany([
         { 
             strEmbed: [['item 1'], ['tag 2']],
-            numEmbed: [[0,1,2,3],[0,1,2,3]]
+            numEmbed: [[0,1,2,3],[0,1,2,3]],
+            emptyEmbed: [[1, 1, 'one'], [2, 2, { field: 1 }]],
+            emptyArr: [2, 2, { field: 1 }]
         },
         { 
             strEmbed: [['item 1', 'item 1', 'item 2'], ['tag 1', 'tag 1', 'tag 2']],
-            numEmbed: [[0,1,2,3],[0,1,2,3]]
+            numEmbed: [[0,1,2,3],[0,1,2,3]],
+            emptyEmbed: [[1, 1, 1], [1, 1, { field: 1 }], [2, 2, { field: 2 }]],
+            emptyArr: [1, 1, { field: 1 }]
         }
     ])
     done()
@@ -90,6 +96,38 @@ test('2 -> Collection.updateArray(): #expr should replace an entire array with v
     done()
 })
 
+test('3 -> Collection.updateArray(): #expr should replace an entire array with value where there is match', async (done) => {
+    let usersRes = await usersRef.where('emptyEmbed.length > 0')
+                                .include(['emptyEmbed'])
+                                .updateArray('field === 1', [[2, 2, 'two']])
+    let res = usersRes.data
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(1),
+        emptyEmbed: expect(res[0].emptyEmbed).toEqual(expect.arrayContaining([[1, 1, 'one'], [2, 2, 'two']]))
+    })
+    expect.objectContaining({
+        id: expect(res[1].id).toBe(2),
+        emptyEmbed: expect(res[1].emptyEmbed).toEqual(expect.arrayContaining([[1, 1, 1], [2, 2, 'two'], [2, 2, { field: 2 }]]))
+    })
+    done()
+})
+
+test('4 -> Collection.updateArray(): #expr should replace an entire array with value where there is match', async (done) => {
+    let usersRes = await usersRef.where('emptyArr.length > 0')
+                                .include(['emptyArr'])
+                                .updateArray('field === 1', [1])
+    let res = usersRes.data
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(1),
+        emptyArr: expect(res[0].emptyArr).toEqual(expect.arrayContaining([2, 2, 1]))
+    })
+    expect.objectContaining({
+        id: expect(res[1].id).toBe(2),
+        emptyArr: expect(res[1].emptyArr).toEqual(expect.arrayContaining([1, 1, 1]))
+    })
+    done()
+})
+
 
 //
 // ======= negative tests ========== //
@@ -102,5 +140,16 @@ test('(-1) -> Collection.updateArray(): #error #singlePath should throw error if
     .catch(e => expect(e).toEqual({
         "error": true,
         "message": `Arrays that don't contain objects must use the '$item' keyword`
+    }))
+})
+
+test('(-2) -> Collection.updateArray(): #error #expr should throw error using object key matcher with non (===) operator', () => {
+    expect.assertions(1)
+    return usersRef.where('emptyEmbed.length > 0')
+                .include(['emptyEmbed'])
+                .updateArray('field = 1', [[2, 2, 'two']])
+    .catch(e => expect(e).toEqual({
+        "error": true,
+        "message": `Matchers that dont use the '$item' keyword can only be used with (===) operator`
     }))
 })
