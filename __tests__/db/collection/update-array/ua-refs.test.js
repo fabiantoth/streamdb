@@ -159,7 +159,7 @@ test('(-3) -> Collection.updateArray(): #error #ref should throw error if update
                     .updateArray('$item === 1', [5,6])
     .catch(e => expect(e).toEqual({
         "error": true,
-        "message": `Only 1 update value is permitted when setting non-object arrays`
+        "message": `Only 1 update value is permitted when setting expression match rules`
     }))
 })
 
@@ -181,6 +181,6 @@ test('(-5) -> Collection.updateArray(): #error #ref should throw error if there 
                     .updateArray('$item "hello"', [2])
     .catch(e => expect(e).toEqual({
         "error": true,
-        "message": `$ref arrays must use the '$item' keyword, (===) operator, and id value`
+        "message": `updateArray() pathExpr must be a valid path or string expression`
     }))
 })
