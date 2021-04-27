@@ -180,3 +180,13 @@ test('(4) -> Collection.updateArray(): #SchemaType #boolean should update only f
 //
 // ======= negative tests ========== //
 //
+test('(-1) -> Collection.updateArray(): #error #expr should throw error if operator not permitted', () => {
+    expect.assertions(1)
+    return usersRef.where('boolTags.length > 0')
+                    .include(['boolTags'])
+                    .updateArray('$item > 1', [{ message: 'First Note' }])
+    .catch(e => expect(e).toEqual({
+        "error": true,
+        "message": `Value, '>', is not a valid pathExpr operator for updateArray()`
+    }))
+})

@@ -371,3 +371,14 @@ test('(-7) -> Collection.updateArray(): #error #expr should throw error if array
         "message": `Cannot pass empty or non objects for updating Document types`
     }))
 })
+
+test('(-8) -> Collection.updateArray(): #error #expr should throw error if operator not permitted', () => {
+    expect.assertions(1)
+    return usersRef.where('groupDocs != $undefined')
+                    .include(['groupDocs'])
+                    .updateArray('level > 1', [true])
+    .catch(e => expect(e).toEqual({
+        "error": true,
+        "message": `Value, '>', is not a valid pathExpr operator for updateArray()`
+    }))
+})

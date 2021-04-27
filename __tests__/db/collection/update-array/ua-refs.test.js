@@ -129,7 +129,7 @@ test('3 -> Collection.updateArray(): #array #refs should update ref values and i
 //
 // ======= negative tests ========== //
 //
-test('(-1) -> Collection.updateArray(): #error #ref should throw error if ref id value does not exist', () => {
+test('(-1) -> Collection.updateArray(): #error #expr should throw error if ref id value does not exist', () => {
     const filterFn = (arr) => arr.filter(ref => ref === 2)
     expect.assertions(1)
     return usersRef.where('groupRefs', filterFn)
@@ -141,7 +141,7 @@ test('(-1) -> Collection.updateArray(): #error #ref should throw error if ref id
     }))
 })
 
-test('(-2) -> Collection.updateArray(): #error #ref should throw error if $item keyword is not used', () => {
+test('(-2) -> Collection.updateArray(): #error #expr should throw error if $item keyword is not used', () => {
     expect.assertions(1)
     return usersRef.where('groupRefs.length > 0')
                     .include(['groupRefs'])
@@ -152,7 +152,7 @@ test('(-2) -> Collection.updateArray(): #error #ref should throw error if $item 
     }))
 })
 
-test('(-3) -> Collection.updateArray(): #error #ref should throw error if update arr contains more than 1 value', () => {
+test('(-3) -> Collection.updateArray(): #error #expr should throw error if update arr contains more than 1 value', () => {
     expect.assertions(1)
     return usersRef.where('groupRefs.length > 0')
                     .include(['groupRefs'])
@@ -163,7 +163,7 @@ test('(-3) -> Collection.updateArray(): #error #ref should throw error if update
     }))
 })
 
-test('(-4) -> Collection.updateArray(): #error #ref should throw error if operator is not strict equality', () => {
+test('(-4) -> Collection.updateArray(): #error #expr should throw error if operator is not strict equality', () => {
     expect.assertions(1)
     return usersRef.where('groupRefs.length > 0')
                     .include(['groupRefs'])
@@ -174,7 +174,7 @@ test('(-4) -> Collection.updateArray(): #error #ref should throw error if operat
     }))
 })
 
-test('(-5) -> Collection.updateArray(): #error #ref should throw error if there are less than 3 expr literals', () => {
+test('(-5) -> Collection.updateArray(): #error #expr should throw error if there are less than 3 expr literals', () => {
     expect.assertions(1)
     return usersRef.where('groupRefs.length > 0')
                     .include(['groupRefs'])
@@ -182,5 +182,16 @@ test('(-5) -> Collection.updateArray(): #error #ref should throw error if there 
     .catch(e => expect(e).toEqual({
         "error": true,
         "message": `updateArray() pathExpr must be a valid path or string expression`
+    }))
+})
+
+test('(-6) -> Collection.updateArray(): #error #expr should throw error if operator not permitted', () => {
+    expect.assertions(1)
+    return usersRef.where('groupRefs.length > 0')
+                    .include(['groupRefs'])
+                    .updateArray('$item > 1', [3])
+    .catch(e => expect(e).toEqual({
+        "error": true,
+        "message": `Value, '>', is not a valid pathExpr operator for updateArray()`
     }))
 })

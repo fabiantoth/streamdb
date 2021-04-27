@@ -177,3 +177,14 @@ test('(-2) -> Collection.updateArray(): #error #expr should throw error if more 
         "message": `Only 1 update value is permitted when setting expression match rules`
     }))
 })
+
+test('(-3) -> Collection.updateArray(): #error #expr should throw error if operator not permitted', () => {
+    expect.assertions(1)
+    return authorsRef.where('notes.length > 0')
+                    .include(['notes'])
+                    .updateArray('noteId > 1', [{ message: 'First Note' }])
+    .catch(e => expect(e).toEqual({
+        "error": true,
+        "message": `Value, '>', is not a valid pathExpr operator for updateArray()`
+    }))
+})
