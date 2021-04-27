@@ -26,8 +26,7 @@ beforeAll(async (done) => {
 
     const UserSchema = new Schema({
         strEmbed: [[String]],
-        numEmbed: [[Number]],
-        boolEmbed: [[Boolean]]
+        numEmbed: [[Number]]
     })
 
     db.addSchema('User', UserSchema)
@@ -53,13 +52,11 @@ test('0 -> setup: #array #arrays add documents with array of schema objects, ign
     await usersRef.insertMany([
         { 
             strEmbed: [['item 1'], ['tag 2']],
-            numEmbed: [[0,1,2,3],[0,1,2,3]],
-            boolEmbed: [[true, true],[true, false]]
+            numEmbed: [[0,1,2,3],[0,1,2,3]]
         },
         { 
             strEmbed: [['item 1', 'item 1', 'item 2'], ['tag 1', 'tag 1', 'tag 2']],
-            numEmbed: [[0,1,2,3],[0,1,2,3]],
-            boolEmbed: [[true, true],[true, false]]
+            numEmbed: [[0,1,2,3],[0,1,2,3]]
         }
     ])
     done()

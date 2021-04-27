@@ -197,13 +197,6 @@ test('SchemaArray: #embeds #nestedObject should return value', () => {
             _TypedSchema: expect(embeddedObject.embeddedType._TypedSchema).not.toBe(undefined)
         })
     })
-    // expect.objectContaining({
-    //     params: expect.objectContaining({
-    //         params: expect(embeddedObject.embeddedType.schema).toMatchObject({ name: String }),
-    //         instance: expect(embeddedObject.embeddedType.instance).toBe('schema'),
-    //         _TypedSchema: expect(embeddedObject.embeddedType._TypedSchema).not.toBe(undefined)
-    //     })
-    // })
 })
 
 test('SchemaArray: #embeds #schemaObjects should return value', () => {
@@ -219,9 +212,14 @@ test('SchemaArray: #embeds #schemaObjects should return value', () => {
 })
 
 //
-// Array Embeds -> 
+// Nested Array Embeds -> 
 //
-
+test('SchemaArray: #NestedArray #SchemaTypes return SchemaType array embeds', () => {
+    const array = new SchemaArray('array', [[String]])
+    const array1 = new SchemaArray('array', [[Number]])
+    expect(array.embeddedType.embeddedType.instance).toBe('string')
+    expect(array1.embeddedType.embeddedType.instance).toBe('number')
+})
 
 
 // ==== validate() method use-cases ==== //
@@ -622,4 +620,13 @@ test('SchemaArray: #error #minLength trying to set negative value for minLength'
 test('SchemaArray: #error #maxLength trying to set non whole integer value for maxLength', () => {
     expect(() => new SchemaArray('array', { type: Array, maxLength: 1.5 }))
         .toThrow(`'maxLength' field can only be set to positive whole integers`)
+})
+
+test('SchemaArray: #error #NestedArray trying to set nested array embed value not string or number', () => {
+    expect(() => new SchemaArray('array', [[Boolean]]))
+        .toThrow(`Embedding ${Boolean} is not allowed!`)
+    expect(() => new SchemaArray('array', [[Date]]))
+        .toThrow(`Embedding ${Date} is not allowed!`)
+    expect(() => new SchemaArray('array', [[{}]]))
+        .toThrow(`Embedding ${{}} is not allowed!`)
 })
