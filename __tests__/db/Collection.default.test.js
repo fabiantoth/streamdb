@@ -39,12 +39,15 @@ afterAll(async (done) => {
 beforeEach(async () => {
     await new Promise(async (resolve) => {
         setTimeout(() => {
+            i++
             resolve()
         }, 10)
     })
 })
 
-test('Collection.insertOne(): Should add one new document', async (done) => {
+let i = 0
+
+test(`1 -> Collection.insertOne(): Should add one new document`, async (done) => {
     const user = {
         firstname: 'Jerry',
         lastname: 'Mouse',
@@ -63,14 +66,14 @@ test('Collection.insertOne(): Should add one new document', async (done) => {
     done()
 })
 
-test('Collection: #version should be updated version number 2', async (done) => {
+test(`2 -> Collection: #version should be updated version number 2`, async (done) => {
     let collection = db.collection('users')
     let colMeta = collection.colMeta
     expect(colMeta.version).toBe(1)
     done()
 })
 
-test('Collection.insertMany(): Should add 5 new documents', async (done) => {
+test(`3 -> Collection.insertMany(): Should add 5 new documents`, async (done) => {
     const users = [
         {
             firstname: 'Bugs',
@@ -141,7 +144,7 @@ test('Collection.insertMany(): Should add 5 new documents', async (done) => {
         })
 })
 
-test('Collection.getById(): Should get document matching id 2', async (done) => {
+test(`4 -> Collection.getById(): Should get document matching id 2`, async (done) => {
     const match = {
         id: 2,
         firstname: 'Bugs',
@@ -156,7 +159,7 @@ test('Collection.getById(): Should get document matching id 2', async (done) => 
         })
 })
 
-test('Collection.getDocs(): Should get 4 matching documents, filter out duplicate ids', async (done) => {
+test(`5 -> Collection.getDocs(): Should get 4 matching documents, filter out duplicate ids`, async (done) => {
     const docs = [1,3,3,5,6,5]
     const match = [
         {
@@ -193,7 +196,7 @@ test('Collection.getDocs(): Should get 4 matching documents, filter out duplicat
         })
 })
 
-test('Collection.getDocs(): Should return empty array if no ids found', async (done) => {
+test(`6 -> Collection.getDocs(): Should return empty array if no ids found`, async (done) => {
     db.collection('users').getDocs([10, 11, 12])
         .then(res => {
             expect(res.data).toMatchObject([])
@@ -201,7 +204,7 @@ test('Collection.getDocs(): Should return empty array if no ids found', async (d
         })
 })
 
-test('Collection.updateOne(): Should update one document with id 2', async (done) => {
+test(`7 -> Collection.updateOne(): Should update one document with id 2`, async (done) => {
     const update = {
         id: 2,
         email: 'b-bunny@email.com'
@@ -214,7 +217,7 @@ test('Collection.updateOne(): Should update one document with id 2', async (done
         })
 })
 
-test('Collection.deleteOne(): Should delete document with id 2', async (done) => {
+test(`8 -> Collection.deleteOne(): Should delete document with id 2`, async (done) => {
     db.collection('users').deleteOne(2)
         .then(res => {
             expect(res.success).toBe(true)
@@ -224,7 +227,7 @@ test('Collection.deleteOne(): Should delete document with id 2', async (done) =>
         })
 })
 
-test('Collection.updateMany(): Should update 2 documents', async (done) => {
+test(`9 -> Collection.updateMany(): Should update 2 documents`, async (done) => {
     const updates = [
         {
             id: 3,
@@ -251,7 +254,7 @@ test('Collection.updateMany(): Should update 2 documents', async (done) => {
         })
 })
 
-test('Collection.deleteMany(): Should delete 3 documents and remove duplidate id', async (done) => {
+test(`10 -> Collection.deleteMany(): Should delete 3 documents and remove duplidate id`, async (done) => {
     const docsToDelete = [1,3,3,4]
     
     db.collection('users').deleteMany(docsToDelete)
@@ -261,7 +264,7 @@ test('Collection.deleteMany(): Should delete 3 documents and remove duplidate id
         })
 })
 
-test('Collection.deleteMany(): Should return an empty array when no ids found to delete', async (done) => {
+test(`10 -> Collection.deleteMany(): Should return an empty array when no ids found to delete`, async (done) => {
     db.collection('users').deleteMany([9,10,11,12])
         .then(res => {
             expect(res.data).toMatchObject([])
@@ -269,7 +272,7 @@ test('Collection.deleteMany(): Should return an empty array when no ids found to
         })
 })
 
-test('Collection.where(): Should return 2 documents', async (done) => {
+test(`11 -> Collection.where(): Should return 2 documents`, async (done) => {
     const expectedDocs = [
         {
             id: 5,
@@ -295,7 +298,7 @@ test('Collection.where(): Should return 2 documents', async (done) => {
         })
 })
 
-test('Collection.where().and(): Should return 1 match', async (done) => {
+test(`12 -> Collection.where().and(): Should return 1 match`, async (done) => {
     const expectedDocs = [
         {
             id: 6,
@@ -315,7 +318,7 @@ test('Collection.where().and(): Should return 1 match', async (done) => {
         })
 })
 
-test('Collection.where().setProperty(): Should return value of update', async (done) => {
+test(`13 -> Collection.where().setProperty(): Should return value of update`, async (done) => {
     const update = [{
         id: 6,
         email: "daf-duck@email.com", 
@@ -333,7 +336,7 @@ test('Collection.where().setProperty(): Should return value of update', async (d
         })
 })
 
-test('Collection.where().deleteProperty(): Should return success msg', async (done) => {
+test(`14 -> Collection.where().deleteProperty(): Should return success msg`, async (done) => {
     const update = [{
         id: 6, 
         firstname: "Daffy",  
@@ -350,7 +353,7 @@ test('Collection.where().deleteProperty(): Should return success msg', async (do
         })
 })
 
-test('Collection.where().insertInto(): Should success msg', async (done) => {
+test(`15 -> Collection.where().insertInto(): Should success msg`, async (done) => {
     const tagValues = ['string', 55, { testObj: 'value1' }]
     const update = [{
         id: 6, 
@@ -363,12 +366,18 @@ test('Collection.where().insertInto(): Should success msg', async (done) => {
         .where('id = 6')
         .insertInto('tags', tagValues)
         .then(res => {
-            expect(res.data).toMatchObject(update)
+            res = res.data[0]
+            expect.objectContaining({
+                id: expect(res.id).toBe(6),
+                firstname: expect(res.firstname).toBe('Daffy'),
+                lastname: expect(res.lastname).toBe('Duck'),
+                tags: expect(res.tags).toEqual(expect.arrayContaining(['string', 55, {testObj: 'value1'} ]))
+            })
             done()
         })
 })
 
-test('Collection.where().removeFrom(): Should return success msg', async (done) => {
+test(`16 -> Collection.where().removeFrom(): Should return success msg`, async (done) => {
     const tagValues = [55]
     const update = [{
         id: 6, 
@@ -386,7 +395,7 @@ test('Collection.where().removeFrom(): Should return success msg', async (done) 
         })
 })
 
-test('Collection.where().updateArray(): Should return success msg', async (done) => {
+test(`17 -> Collection.where().updateArray(): Should return success msg`, async (done) => {
     const updateFn = (arr) => {
         return arr.filter(item => {
             if (Object.prototype.toString.call(item) === '[object Object]') {
@@ -405,14 +414,15 @@ test('Collection.where().updateArray(): Should return success msg', async (done)
 
     db.collection('users')
         .where('id = 6')
-        .updateArray('tags', updateFn)
+        .include(['tags'])
+        .updateArray('testObj === "value1"', [{ testObj: 'updated value' }])
         .then(res => {
             expect(res.data).toMatchObject(update)
             done()
         })
 })
 
-test('Collection.where().include(): Should return matching obj', async (done) => {
+test(`18 -> Collection.where().include(): Should return matching obj`, async (done) => {
     const expectedResult = [{
         firstname: 'SpongeBob',
         email: 'sbsp@email.com'
@@ -428,7 +438,7 @@ test('Collection.where().include(): Should return matching obj', async (done) =>
         })
 })
 
-test('Collection.where().exclude(): Should return matching obj', async (done) => {
+test(`19 -> Collection.where().exclude(): Should return matching obj`, async (done) => {
     const expectedResult = [{
         id: 5,
         firstname: 'SpongeBob',
@@ -445,7 +455,7 @@ test('Collection.where().exclude(): Should return matching obj', async (done) =>
         })
 })
 
-test('Collection: #version should be updated version number 11', async (done) => {
+test(`20 -> Collection: #version should be updated version number 11`, async (done) => {
     let collection = db.collection('users')
     let colMeta = collection.colMeta
     expect(colMeta.version).toBe(11)
@@ -456,7 +466,7 @@ test('Collection: #version should be updated version number 11', async (done) =>
 //
 // ======= negative tests ========== //
 //
-test('Collection.getById(): #error should return reject error object when id does not exist', async (done) => {
+test(`(-1) -> Collection.getById(): #error should return reject error object when id does not exist`, async (done) => {
     expect.assertions(1)
     await expect(db.collection('users').getById(2)).rejects.toEqual({
         error: true,
@@ -466,7 +476,7 @@ test('Collection.getById(): #error should return reject error object when id doe
     done()
 })
 
-test('Collection.deleteOne(): #error should return reject error object when id does not exist', async (done) => {
+test(`(-2) -> Collection.deleteOne(): #error should return reject error object when id does not exist`, async (done) => {
     expect.assertions(1)
     await expect(db.collection('users').deleteOne(2)).rejects.toEqual({
         error: true,
@@ -476,17 +486,17 @@ test('Collection.deleteOne(): #error should return reject error object when id d
     done()
 })
 
-test('Collection.getDocs(): #error Should throw error if passed value is not an array', async (done) => {
+test(`(-3) -> Collection.getDocs(): #error Should throw error if passed value is not an array`, async (done) => {
     expect(db.collection('users').getDocs()).rejects.toMatch(`Value must be an array, received: ${typeof undefined}`)
     done()
 })
 
-test('Collection.getDocs(): #error Should throw error if array is empty', async (done) => {
+test(`(-4) -> Collection.getDocs(): #error Should throw error if array is empty`, async (done) => {
     expect(db.collection('users').getDocs([])).rejects.toMatch(`Array cannot be empty`)
     done()
 })
 
-test('Collection.updateOne(): #error should return reject error object when document id does not exist', async (done) => {
+test(`(-5) -> Collection.updateOne(): #error should return reject error object when document id does not exist`, async (done) => {
     const update = { id: 1 }
     expect.assertions(1)
     await expect(db.collection('users').updateOne(update)).rejects.toEqual({
@@ -497,7 +507,7 @@ test('Collection.updateOne(): #error should return reject error object when docu
     done()
 })
 
-test('Collection.updateOne(): #error should return reject error object when document id does not exist', async (done) => {
+test(`(-6) -> Collection.updateOne(): #error should return reject error object when document id does not exist`, async (done) => {
     const updates = [
         { id: 1 },
         { id: 2 },
