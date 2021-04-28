@@ -94,3 +94,62 @@ test('0 -> setup: #array #embeddedDoc setup parent docs and insert subdocs', asy
     
     done()
 })
+
+test('1 -> Collection.insertInto(): #document should create embedded field that did not exist and add object', async (done) => {
+    let userRes = await usersRef.where('id = 2').insertInto('groupDocs', [{ id: 1, title: 'Group 1'}])
+    let res = userRes.data[0] 
+    expect.objectContaining({
+        id: expect(res.id).toBe(2),
+        name: expect(res.name).toBe('Jane'),
+        groupDocs: expect(res.groupDocs).toEqual(expect.objectContaining([
+            { id: 1, title: 'Group 1'}
+        ]))
+    })
+    done()
+})
+
+test('2 -> Collection.insertInto(): #document should not insert docs already in array', async (done) => {
+    let userRes = await usersRef.where('id = 2').insertInto('groupDocs', [{ id: 1, title: 'this will not be inserted'}])
+    let res = userRes.data[0] 
+    expect.objectContaining({
+        id: expect(res.id).toBe(2),
+        groupDocs: expect(res.groupDocs).toEqual(expect.objectContaining([
+            { id: 1, title: 'Group 1'}
+        ]))
+    })
+    done()
+})
+
+test('3 -> Collection.insertInto(): #document should ignore duplicate doc ids and insert last value, ignore doc ids already in array', async (done) => {
+    let userRes = await usersRef.where('id = 2').insertInto('groupDocs', [
+        { id: 1, title: 'this will be ignored'},
+        { id: 2, title: 'this will not be inserted'},
+        { id: 2, title: 'Group 2'}
+    ])
+    let res = userRes.data[0] 
+    expect.objectContaining({
+        id: expect(res.id).toBe(2),
+        name: expect(res.name).toBe('Jane'),
+        groupDocs: expect(res.groupDocs).toEqual(expect.objectContaining([
+            { id: 1, title: 'Group 1'},
+            { id: 2, title: 'Group 2'},
+        ]))
+    })
+    done()
+})
+
+
+
+//
+// ======= negative tests ========== //
+//
+test('(-1) -> Collection.insertInto(): #error #document should throw error trying to insert document that does not exist', () => {
+    expect.assertions(1)
+    return usersRef.where('id = 1').insertInto('groupDocs', [
+        { id: 10, title: 'should fail'}
+    ])
+    .catch(e => expect(e).toEqual({
+        "error": true,
+        "message": `Document with id "10" does not exist`
+    }))
+})

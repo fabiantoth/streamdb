@@ -16,7 +16,6 @@ const dbSettings = {
 }
 
 let db
-let groupsRef // for negative tests
 let usersRef
 
 beforeAll(async (done) => {
@@ -55,16 +54,112 @@ test('0 -> setup: #array #arrays add documents with array of schema objects, ign
     await usersRef.insertMany([
         { 
             strEmbed: [['item 1'], ['tag 2']],
-            numEmbed: [[0,1,2,3],[0,1,2,3]],
-            emptyEmbed: [[1, 1, 'one'], [2, 2, { field: 1 }]],
-            emptyArr: [2, 2, { field: 1 }]
         },
         { 
-            strEmbed: [['item 1', 'item 1', 'item 2'], ['tag 1', 'tag 1', 'tag 2']],
-            numEmbed: [[0,1,2,3],[0,1,2,3]],
-            emptyEmbed: [[1, 1, 1], [1, 1, { field: 1 }], [2, 2, { field: 2 }]],
-            emptyArr: [1, 1, { field: 1 }]
+            numEmbed: [[0,0],[0,1]],
+            emptyEmbed: [[1, 1, 1], [1, 1, { field: 1 }], [2, 2, { field: 2 }]]
         }
     ])
     done()
+})
+
+test('1 -> Collection.insertInto(): #array #string should create field and insert values', async (done) => {
+    let usersRes = await usersRef.where('id = 2')
+                                .insertInto('strEmbed', [['tag 1', 'tag 2']])
+    let res = usersRes.data
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(2),
+        strEmbed: expect(res[0].strEmbed).toEqual(expect.arrayContaining([['tag 1', 'tag 2']]))
+    })
+    done()
+})
+
+test('2 -> Collection.insertInto(): #array #string should insert and add values to existing values', async (done) => {
+    let usersRes = await usersRef.where('id = 2')
+                                .insertInto('strEmbed', [['item 1'], ['item 2']])
+    let res = usersRes.data
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(2),
+        strEmbed: expect(res[0].strEmbed).toEqual(expect.arrayContaining([['tag 1', 'tag 2'],['item 1'], ['item 2']]))
+    })
+    done()
+})
+
+test('3 -> Collection.insertInto(): #array #number should create field and insert values', async (done) => {
+    let usersRes = await usersRef.where('id = 1')
+                                .insertInto('numEmbed', [[0,0]])
+    let res = usersRes.data
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(1),
+        numEmbed: expect(res[0].numEmbed).toEqual(expect.arrayContaining([[0,0]]))
+    })
+    done()
+})
+
+test('4 -> Collection.insertInto(): #array #number should insert and add values to existing values', async (done) => {
+    let usersRes = await usersRef.where('id = 2')
+                                .insertInto('numEmbed', [[1,1], [1,2]])
+    let res = usersRes.data
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(2),
+        numEmbed: expect(res[0].numEmbed).toEqual(expect.arrayContaining([[0,0],[0,1],[1,1], [1,2]]))
+    })
+    done()
+})
+
+test('5 -> Collection.insertInto(): #array #emptyEmbed should insert all values', async (done) => {
+    let usersRes = await usersRef.where('id = 1')
+                                .insertInto('emptyEmbed', [[1, 1, 'one'], [2, 2, { field: 1 }]])
+    let res = usersRes.data
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(1),
+        emptyEmbed: expect(res[0].emptyEmbed).toEqual(expect.arrayContaining([[1, 1, 'one'], [2, 2, { field: 1 }]]))
+    })
+    done()
+})
+
+test('6 -> Collection.insertInto(): #emptyArray should insert all values', async (done) => {
+    let usersRes = await usersRef.where('id = 2')
+                                .insertInto('emptyArr', [1, 1, { field: 1 }])
+    let res = usersRes.data
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(2),
+        emptyArr: expect(res[0].emptyArr).toEqual(expect.arrayContaining([1, 1, { field: 1 }]))
+    })
+    done()
+})
+
+
+
+//
+// ======= negative tests ========== //
+//
+test('(-1) -> Collection.insertInto(): #error #array should throw error if not a nested array', () => {
+    expect.assertions(1)
+    return usersRef.where('id = 1')
+                    .insertInto('strEmbed', ['item 5'])
+    .catch(e => expect(e).toEqual({
+        "error": true,
+        "message": `Expected 'strEmbed' to be an array, received: string`
+    }))
+})
+
+test('(-2) -> Collection.insertInto(): #error #string should throw error if not a string in nested array', () => {
+    expect.assertions(1)
+    return usersRef.where('id = 1')
+                    .insertInto('strEmbed', [[5]])
+    .catch(e => expect(e).toEqual({
+        "error": true,
+        "message": `Expected property 'strEmbed' to be type string, received: number`
+    }))
+})
+
+test('(-3) -> Collection.insertInto(): #error #emptyEmbed should throw error if not a nested array', () => {
+    expect.assertions(1)
+    return usersRef.where('id = 1')
+                    .insertInto('emptyEmbed', [5])
+    .catch(e => expect(e).toEqual({
+        "error": true,
+        "message": `Expected 'emptyEmbed' to be an array, received: number`
+    }))
 })

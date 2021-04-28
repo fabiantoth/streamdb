@@ -60,7 +60,7 @@ beforeEach(async () => {
     })
 })
 
-test('0 -> setup: #document #array #ref create docs and add refs to parents', async (done) => {
+test('0 -> setup: #array #document #ref create docs and add refs to parents', async (done) => {
     await groupsRef.insertMany([
         { title: 'Group 1' },
         { title: 'Group 2' },
@@ -87,4 +87,42 @@ test('0 -> setup: #document #array #ref create docs and add refs to parents', as
     ])
 
     done()
+})
+test('1 -> Collection.insertInto(): #refs should insert ref values into refs array', async (done) => {
+    let userRes = await usersRef.where('id = 3').insertInto('groupRefs', [1,2])
+    let res = userRes.data[0] 
+    
+    expect.objectContaining({
+        id: expect(res.id).toBe(3),
+        name: expect(res.name).toBe('Fred'),
+        groupRefs: expect(res.groupRefs).toEqual(expect.objectContaining([1,2,3,4,5]))
+    })
+
+    done()
+})
+
+test('2 -> Collection.insertInto(): #refs should ignore duplicates or values that already exist', async (done) => {
+    let userRes = await usersRef.where('id = 2').insertInto('groupRefs', [2,3,3,4])
+    let res = userRes.data[0] 
+    
+    expect.objectContaining({
+        id: expect(res.id).toBe(2),
+        name: expect(res.name).toBe('Jane'),
+        groupRefs: expect(res.groupRefs).toEqual(expect.objectContaining([1,2,3,4]))
+    })
+
+    done()
+})
+
+
+//
+// ======= negative tests ========== //
+//
+test('(-1) -> Collection.insertInto(): #error #ref should throw error trying to insert ref id that does not exist', () => {
+    expect.assertions(1)
+    return usersRef.where('id = 1').insertInto('groupRefs', [5,8])
+    .catch(e => expect(e).toEqual({
+        "error": true,
+        "message": `Document with id '8' does not exist`
+    }))
 })

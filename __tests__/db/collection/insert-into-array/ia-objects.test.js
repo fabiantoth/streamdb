@@ -64,7 +64,7 @@ beforeEach(async () => {
     })
 })
 
-test('0 -> setup: #array #schemaObject add documents with array of schema objects, ignore any settings in embedded arrays', async (done) => {
+test('0 -> setup: #array #NestedObject add documents with array of schema objects, ignore any settings in embedded arrays', async (done) => {
     let authorRes = await authorsRef.insertMany([
         { 
             author: 'John',
@@ -80,6 +80,9 @@ test('0 -> setup: #array #schemaObject add documents with array of schema object
                 { noteId: 2, message: 'second note' },
                 { noteId: 3, message: 'third note' }
             ]
+        },
+        {
+            author: 'Fred'
         }
     ])
 
@@ -103,4 +106,53 @@ test('0 -> setup: #array #schemaObject add documents with array of schema object
     })
     
     done()
+})
+
+test('1 -> Collection.insertInto(): #NestedObject should create field and insert values', async (done) => {
+    let authorsRes = await authorsRef.where('id = 3').insertInto('notes', [
+        { noteId: 1, message: 'first note' },
+        { noteId: 2, message: 'second note' }
+    ])
+    let res = authorsRes.data
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(3),
+        author: expect(res[0].author).toBe('Fred'),
+        notes: expect(res[0].notes).toEqual(expect.objectContaining([
+            { noteId: 1, message: 'first note' },
+            { noteId: 2, message: 'second note' }
+        ]))
+    })
+    done()
+})
+
+test('2 -> Collection.insertInto(): #NestedObject should insert and add values', async (done) => {
+    let authorsRes = await authorsRef.where('id = 1').insertInto('notes', [
+        { noteId: 3, message: 'third note' }
+    ])
+    let res = authorsRes.data
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(1),
+        author: expect(res[0].author).toBe('John'),
+        notes: expect(res[0].notes).toEqual(expect.objectContaining([
+            { noteId: 1, message: 'first note' },
+            { noteId: 2, message: 'second note'},
+            { noteId: 3, message: 'third note' }
+        ]))
+    })
+    done()
+})
+
+
+//
+// ======= negative tests ========== //
+//
+test('(-1) -> Collection.insertInto(): #error #required should throw error trying to insert object with missing field', () => {
+    expect.assertions(1)
+    return authorsRef.where('id = 1').insertInto('notes', [
+        { message: 'third note' }
+    ])
+    .catch(e => expect(e).toEqual({
+        "error": true,
+        "message": `'noteId' is required`
+    }))
 })
