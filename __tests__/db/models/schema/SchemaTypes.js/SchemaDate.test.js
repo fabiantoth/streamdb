@@ -254,7 +254,7 @@ test('SchemaDate: #error #validate should throw a wrong param type error', () =>
 test('SchemaDate.validate(undefined): #error [#startsAfter, #startsBefore] should throw validation error', () => {
     const testDate = new Date('December 30, 2020')
     const validateUndefinedMinMax = new SchemaDate('validateUndefinedMinMax', { type: Date, startsAfter: testDate, startsBefore: testDate })
-    expect(() => validateUndefinedMinMax.validate(undefined)).toThrow(`'validateUndefinedMinMax' date must start after ${testDate}`)
+    expect(() => validateUndefinedMinMax.validate(new Date('December 29, 2020'))).toThrow(`'validateUndefinedMinMax' date must be after ${testDate}`)
 })
 
 test('SchemaDate.validate(laterDate): #error [#startsAfter, #startsBefore] should throw validation error', () => {

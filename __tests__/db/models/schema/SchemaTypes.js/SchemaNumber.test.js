@@ -129,32 +129,20 @@ test('SchemaNumber.validate(): #rules [#default, #required] should return defaul
     expect(result).toBe(18)
 })
 
-test('SchemaNumber.validate(): #rules [#default, #required] should return null value', () => {
-    const defaultNumber = new SchemaNumber('defaultNumber', { type: Number, default: null, required: true })
-    let result = defaultNumber.validate()
-    expect(result).toBe(null)
-})
-
-test('SchemaNumber: #rules [#default, #min, #max] should return null, number, or default value', () => {
+test('SchemaNumber: #rules [#default, #min, #max] should return default value, or valid number', () => {
     const defaultMinMax = new SchemaNumber('defaultMinMax', { type: Number, default: 0, min: 0, max: 2 })
     let result = defaultMinMax.validate()
     let result2 = defaultMinMax.validate(null)
     let result3 = defaultMinMax.validate(1)
 
     expect(result).toBe(0)
-    expect(result2).toBe(null)
+    expect(result2).toBe(0)
     expect(result3).toBe(1)
 })
 
 //
 // required -> number; use-case -> validate against undefined, combine w/...required=false, min, max
 //
-test('SchemaNumber.validate(null): #rules #required should return null value', () => {
-    const validateRequired = new SchemaNumber('validateRequired', { type: Number, required: true })
-    let result = validateRequired.validate(null)
-    expect(result).toBe(null)
-})
-
 test('SchemaNumber.validate(undefined): #error #required should throw error if value is undefined', () => {
     const validateRequired = new SchemaNumber('validateRequired', { type: Number, required: true })
     expect(() => validateRequired.validate()).toThrow(`'validateRequired' is required`)
@@ -189,11 +177,10 @@ test('SchemaNumber.validate(): #rules #min should return null and undefined', ()
 
 test('SchemaNumber.validate(): #rules [#min, #required] should return validated number, null, but not undefined, throw err on too small', () => {
     const validateMinRequired = new SchemaNumber('validateMinRequired', { type: Number, min: 0, required: true })
-    let result = validateMinRequired.validate(null)
-    let result2 = validateMinRequired.validate(10)
-    expect(result).toBe(null)
-    expect(result2).toBe(10)
-    expect(() => validateMinRequired.validate()).toThrow(`'validateMinRequired' is required`)
+    let result = validateMinRequired.validate(10)
+    expect(result).toBe(10)
+    expect(() => validateMinRequired.validate(undefined)).toThrow(`'validateMinRequired' is required`)
+    expect(() => validateMinRequired.validate(null)).toThrow(`'validateMinRequired' is required`)
     expect(() => validateMinRequired.validate(-1)).toThrow(`'validateMinRequired' min is 0, received -1`)
 })
 
@@ -206,16 +193,7 @@ test('SchemaNumber.validate(): #rules #max should return null and undefined', ()
     let result2 = validateMax.validate(undefined)
     expect(result).toBe(null)
     expect(result2).toBe(undefined)
-})
-
-test('SchemaNumber.validate(): #rules [#max, #required] should return validated number, null, but not undefined, throw err on too big', () => {
-    const validateMaxRequired = new SchemaNumber('validateMaxRequired', { type: Number, max: 6, required: true })
-    let result = validateMaxRequired.validate(null)
-    let result2 = validateMaxRequired.validate(6)
-    expect(result).toBe(null)
-    expect(result2).toBe(6)
-    expect(() => validateMaxRequired.validate()).toThrow(`'validateMaxRequired' is required`)
-    expect(() => validateMaxRequired.validate(8)).toThrow(`'validateMaxRequired' max is 6, received 8`)
+    expect(() => validateMax.validate(8)).toThrow(`'validateMax' max is 6, received 8`)
 })
 
 //
@@ -265,18 +243,23 @@ test('SchemaNumber.validate(): #validate should run the abs value function again
 //
 // ======= negative tests ========== //
 //
-test('SchemaNumber: #error should throw a wrong field type error', () => {
+test('(-1) -> SchemaNumber: #error should throw a wrong field type error', () => {
     expect(() => new SchemaNumber('wrong', String))
         .toThrow(`Invalid type for SchemaNumber, expected Number global function.`)
 })
 
-test('SchemaNumber: #error #type should throw a typing error for wrong "type" keyword value', () => {
+test('(-2) -> SchemaNumber.validate(): #error [#default, #required] should throw trying to set null value with required', () => {
+    expect(() => new SchemaNumber('defaultNumber', { type: Number, default: null, required: true }))
+        .toThrow(`cannot set default value to null when required is set to true`)
+})
+
+test('(-3) -> SchemaNumber: #error #type should throw a typing error for wrong "type" keyword value', () => {
     expect(() => new SchemaNumber('wrongType', {
         type: Array
     })).toThrow(`Invalid type for SchemaNumber, expected 'type' field to be Number global function.`)
 })
 
-test('SchemaNumber: #error #default should throw a wrong "default" param, schema error', () => {
+test('(-4) -> SchemaNumber: #error #default should throw a wrong "default" param, schema error', () => {
     expect(() => new SchemaNumber('wrongDefaultType', {
         type: Number,
         default: [15]
