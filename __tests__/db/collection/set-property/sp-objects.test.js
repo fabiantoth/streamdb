@@ -95,7 +95,7 @@ test('0 -> setup: #array #NestedObject add documents with array of schema object
 })
 
 test('1 -> Collection.setProperty(): #NestedObject should create field and set values', async (done) => {
-    let authorsRes = await authorsRef.where('id = 1').setProperty('bio.body', { body: `This is John's intro` })
+    let authorsRes = await authorsRef.where('id = 1').setProperty('bio.body', `This is John's intro`)
     let res = authorsRes.data
     expect.objectContaining({
         id: expect(res[0].id).toBe(1),
@@ -105,7 +105,7 @@ test('1 -> Collection.setProperty(): #NestedObject should create field and set v
 })
 
 test('2 -> Collection.setProperty(): #NestedObject should replace current values', async (done) => {
-    let authorsRes = await authorsRef.where('id = 1').setProperty('bio.body', { body: `This is an updated version` })
+    let authorsRes = await authorsRef.where('id = 1').setProperty('bio.body', `This is an updated version`)
     let res = authorsRes.data
     expect.objectContaining({
         id: expect(res[0].id).toBe(1),
@@ -115,7 +115,7 @@ test('2 -> Collection.setProperty(): #NestedObject should replace current values
 })
 
 test('3 -> Collection.setProperty(): #NestedObject #rules should apply string capitalize rules', async (done) => {
-    let authorsRes = await authorsRef.where('id = 2').setProperty('author', { name: `jane smith` })
+    let authorsRes = await authorsRef.where('id = 2').setProperty('author', `jane smith`)
     let res = authorsRes.data
     expect.objectContaining({
         id: expect(res[0].id).toBe(2),
@@ -130,7 +130,7 @@ test('3 -> Collection.setProperty(): #NestedObject #rules should apply string ca
 //
 test('(-1) -> Collection.setProperty(): #error #strict should throw error trying set field not in schema and strict settings', () => {
     expect.assertions(1)
-    return authorsRef.where('id = 1').setProperty('name', { name: `jane smith` })
+    return authorsRef.where('id = 1').setProperty('name', `jane smith`)
     .catch(e => expect(e).toEqual({
         "error": true,
         "message": `"name" must be defined in the schema model to use, setProperty(), when strict mode is set to true`

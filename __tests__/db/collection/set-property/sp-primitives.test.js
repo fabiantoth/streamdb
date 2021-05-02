@@ -100,32 +100,31 @@ test('1 -> Collection.setProperty(): [#string, #number, #boolean, #date, #any, #
     let res9 = userRes9.data[0] 
 
     expect.objectContaining({
-        str: expect(res1.str).toBe('String 1'),
-        // numTags: expect(res.numTags).toEqual(expect.objectContaining([2,3,3,4]))
+        str: expect(res1.str).toBe('String 1')
     })
     expect.objectContaining({
-        num: expect(res2.num).toBe(1),
+        num: expect(res2.num).toBe(1)
     })
     expect.objectContaining({
-        bool: expect(res3.bool).toBe(true),
+        bool: expect(res3.bool).toBe(true)
     })
     expect.objectContaining({
-        date: expect(res4.date).toBe(date.toJSON()),
+        date: expect(res4.date).toBe(date.toJSON())
     })
     expect.objectContaining({
-        any: expect(res5.any).toBe('any value'),
+        any: expect(res5.any).toBe('any value')
     })
     expect.objectContaining({
-        strType: expect(res6.strType).toBe('Capitalize This'),
+        strType: expect(res6.strType).toBe('Capitalize This')
     })
     expect.objectContaining({
-        numType: expect(res7.numType).toBe(3),
+        numType: expect(res7.numType).toBe(3)
     })
     expect.objectContaining({
-        dateType: expect(res8.dateType).toBe(date1.toJSON()),
+        dateType: expect(res8.dateType).toBe(date1.toJSON())
     })
     expect.objectContaining({
-        anyType: expect(res9.anyType).toBe(-20),
+        anyType: expect(res9.anyType).toBe(-20)
     })
     done()
 })
@@ -169,5 +168,14 @@ test(`(-4) -> Collection.setProperty(): #error #Any should throw error trying to
     .catch(e => expect(e).toEqual({
         "error": true,
         "message": `'anyType' does not match 'anyOf' declared types`
+    }))
+})
+
+test(`(-5) -> Collection.setProperty(): #error #string should throw error trying to set field to non string type`, () => {
+    expect.assertions(1)
+    return usersRef.where('id = 1').setProperty('str', 1)
+    .catch(e => expect(e).toEqual({
+        "error": true,
+        "message": `Expected property 'str' to be type string, received: number`
     }))
 })

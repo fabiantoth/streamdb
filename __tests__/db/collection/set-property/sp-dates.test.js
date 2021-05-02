@@ -107,7 +107,7 @@ test('(-1) -> Collection.setProperty(): #error #date should throw error if not a
                     .setProperty('date', { date: new Date(2020, 10, 12)})
     .catch(e => expect(e).toEqual({
         "error": true,
-        "message": `setProperty() value cannot be an object for path "date"`
+        "message": `Expected property 'date' to be type date or null, received: object`
     }))
 })
 

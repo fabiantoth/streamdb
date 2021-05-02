@@ -166,7 +166,7 @@ test(`(-4) -> Collection.setProperty(): #error #document should throw trying to 
     }))
 })
 
-test(`(-5) -> Collection.setProperty(): #error #ref should throw trying to set doc arrays`, () => {
+test(`(-5) -> Collection.setProperty(): #error #ref should throw trying to set ref arrays`, () => {
     expect.assertions(1)
     return usersRef.where('id != $undefined').setProperty('refEmbed', [1,2,3])
     .catch(e => expect(e).toEqual({
