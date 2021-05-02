@@ -57,15 +57,15 @@ test('4 -> SchemaRef.validate(): #rules should return values with model field op
     const refObj3 = new SchemaRef('refObj', { collection: 'col', $ref: String })
     const refObj4 = new SchemaRef('refObj', { collection: 'col', $ref: Number })
 
-    const result = refObj.validate({ collection: 'col', model: 'Col', $ref: 'strref' })
-    const result2 = refObj2.validate({ collection: 'col', model: 'Col', $ref: 1 })
-    const result3 = refObj3.validate({ collection: 'col', $ref: 'strref' })
-    const result4 = refObj4.validate({ collection: 'col', $ref: 1 })
+    const result = refObj.validate('strref', 'strref')
+    const result2 = refObj2.validate(1, 1)
+    const result3 = refObj3.validate('strref', 'strref')
+    const result4 = refObj4.validate(1, 1)
     
-    expect(result).toMatchObject({ collection: 'col', model: 'Col', $ref: 'strref' })
-    expect(result2).toMatchObject({ collection: 'col', model: 'Col', $ref: 1 })
-    expect(result3).toMatchObject({ collection: 'col', $ref: 'strref' })
-    expect(result4).toMatchObject({ collection: 'col', $ref: 1 })
+    expect(result).toBe('strref')
+    expect(result2).toBe(1)
+    expect(result3).toBe('strref')
+    expect(result4).toBe(1)
 })
 
 
@@ -102,32 +102,19 @@ test('(-6) -> SchemaRef: #error #reftype should throw an error if $ref is not a 
         .toThrow(`'$ref' field can only be Number or String types`)
 })
 
-test('(-7) -> SchemaRef.validate(): #error #rules should throw an error if value is not an object', () => {
-    const refObj = new SchemaRef('refObj', { collection: 'col', model: 'Collection', $ref: Number })
-    expect(() => refObj.validate(5))
-        .toThrow(`"refObj" is a $ref object type and must be an object, received: [object Number]`)
-})
-
-test('(-8) -> SchemaRef.validate(): #error #rules should throw an error if object contains non allowed field', () => {
-    const refObj = new SchemaRef('refObj', { collection: 'col', model: 'Collection', $ref: Number })
-    expect(() => refObj.validate({ collection: 'col', $ref: 1, str: 'hello' }))
+test('(-7) -> SchemaRef.validate(): #error #rules should throw an error if object contains non allowed field', () => {
+    expect(() => new SchemaRef('refObj', { collection: 'col', model: 'Collection', str: 'hello', $ref: Number }))
         .toThrow(`"str" is not a valid option for $ref objects`)
 })
 
-test('(-9) -> SchemaRef.validate(): #error #rules should throw an error if collection name does not match', () => {
+test('(-8) -> SchemaRef.validate(): #error #rules should throw an error if $ref type is not a number', () => {
     const refObj = new SchemaRef('refObj', { collection: 'col', model: 'Collection', $ref: Number })
-    expect(() => refObj.validate({ collection: 'wrong', $ref: 1 }))
-        .toThrow(`collection must be 'col', received: "wrong"`)
+    expect(() => refObj.validate('string'))
+        .toThrow(`Expected 'refObj' to have id of type: number, recieved: string`)
 })
 
-test('(-10) -> SchemaRef.validate(): #error #rules should throw an error if $ref type is not a number', () => {
-    const refObj = new SchemaRef('refObj', { collection: 'col', model: 'Collection', $ref: Number })
-    expect(() => refObj.validate({ collection: 'col', $ref: 'string' }))
-        .toThrow(`$ref field must be a number, recieved: string`)
-})
-
-test('(-11) -> SchemaRef.validate(): #error #rules should throw an error if $ref type is not a string', () => {
+test('(-9) -> SchemaRef.validate(): #error #rules should throw an error if $ref type is not a string', () => {
     const refObj = new SchemaRef('refObj', { collection: 'col', model: 'Collection', $ref: String })
-    expect(() => refObj.validate({ collection: 'col', $ref: 1 }))
-        .toThrow(`$ref field must be a string, recieved: number`)
+    expect(() => refObj.validate(5))
+        .toThrow(`Expected 'refObj' to have id of type: string, recieved: number`)
 })
