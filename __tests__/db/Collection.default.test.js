@@ -12,6 +12,7 @@ const dbSettings = {
 }
 
 let db
+let usersRef
 
 beforeAll(async (done) => {
     const testDbMeta = await streamDb.createDb(dbSettings)
@@ -28,6 +29,7 @@ beforeAll(async (done) => {
     }
 
     const users = await db.addCollection('users', usersColSettings)
+    usersRef = db.collection('users')
     done()
 })
 
@@ -61,7 +63,7 @@ test(`1 -> Collection.insertOne(): Should add one new document`, async (done) =>
         email: 'jmouse@email.com'
     }
 
-    let res = await db.collection('users').insertOne(user)
+    let res = await usersRef.insertOne(user)
     expect(res.data).toMatchObject(expectedDoc)
     done()
 })
@@ -137,11 +139,9 @@ test(`3 -> Collection.insertMany(): Should add 5 new documents`, async (done) =>
         }
     ]
 
-    db.collection('users').insertMany(users)
-        .then(res => {
-            expect(res.data).toMatchObject(expectedDocs)
-            done()
-        })
+    let res = await usersRef.insertMany(users)
+    expect(res.data).toMatchObject(expectedDocs)
+    done()
 })
 
 test(`4 -> Collection.getById(): Should get document matching id 2`, async (done) => {
@@ -152,11 +152,9 @@ test(`4 -> Collection.getById(): Should get document matching id 2`, async (done
         email: 'bbunny@email.com'
     }
 
-    db.collection('users').getById(2)
-        .then(res => {
-            expect(res.data).toMatchObject(match)
-            done()
-        })
+    let res = await usersRef.getById(2)
+    expect(res.data).toMatchObject(match)
+    done()
 })
 
 test(`5 -> Collection.getDocs(): Should get 4 matching documents, filter out duplicate ids`, async (done) => {
@@ -189,19 +187,15 @@ test(`5 -> Collection.getDocs(): Should get 4 matching documents, filter out dup
         }
     ]
 
-    db.collection('users').getDocs(docs)
-        .then(res => {
-            expect(res.data).toMatchObject(match)
-            done()
-        })
+    let res = await usersRef.getDocs(docs)
+    expect(res.data).toMatchObject(match)
+    done()
 })
 
 test(`6 -> Collection.getDocs(): Should return empty array if no ids found`, async (done) => {
-    db.collection('users').getDocs([10, 11, 12])
-        .then(res => {
-            expect(res.data).toMatchObject([])
-            done()
-        })
+    let res = await usersRef.getDocs([10, 11, 12])
+    expect(res.data).toMatchObject([])
+    done()
 })
 
 test(`7 -> Collection.updateOne(): Should update one document with id 2`, async (done) => {
@@ -210,11 +204,9 @@ test(`7 -> Collection.updateOne(): Should update one document with id 2`, async 
         email: 'b-bunny@email.com'
     }
 
-    db.collection('users').updateOne(update)
-        .then(res => {
-            expect(res.data).toMatchObject(update)
-            done()
-        })
+    let res = await usersRef.updateOne(update)
+    expect(res.data).toMatchObject(update)
+    done()
 })
 
 test(`8 -> Collection.deleteOne(): Should delete document with id 2`, async (done) => {
@@ -239,37 +231,29 @@ test(`9 -> Collection.updateMany(): Should update 2 documents`, async (done) => 
         }
     ]
 
-    db.collection('users').updateMany(updates)
-        .then(res => {
-            let response = res.data
-            expect.objectContaining({
-                id: expect(response[0].id).toBe(3),
-                email: expect(response[0].email).toBe('s-doo@email.com'),
-            })
-            expect.objectContaining({
-                id: expect(response[1].id).toBe(4),
-                email: expect(response[1].email).toBe('t-cat@email.com'),
-            })
-            done()
-        })
+    let res = await usersRef.updateMany(updates)
+    let response = res.data
+    expect.objectContaining({
+        id: expect(response[0].id).toBe(3),
+        email: expect(response[0].email).toBe('s-doo@email.com'),
+    })
+    expect.objectContaining({
+        id: expect(response[1].id).toBe(4),
+        email: expect(response[1].email).toBe('t-cat@email.com'),
+    })
+    done()
 })
 
 test(`10 -> Collection.deleteMany(): Should delete 3 documents and remove duplidate id`, async (done) => {
-    const docsToDelete = [1,3,3,4]
-    
-    db.collection('users').deleteMany(docsToDelete)
-        .then(res => {
-            expect(res.data).toMatchObject([1,3,4])
-            done()
-        })
+    let res = await usersRef.deleteMany([1,3,3,4])
+    expect(res.data).toMatchObject([1,3,4])
+    done()
 })
 
 test(`10 -> Collection.deleteMany(): Should return an empty array when no ids found to delete`, async (done) => {
-    db.collection('users').deleteMany([9,10,11,12])
-        .then(res => {
-            expect(res.data).toMatchObject([])
-            done()
-        })
+    let res = await usersRef.deleteMany([9,10,11,12])
+    expect(res.data).toMatchObject([])
+    done()
 })
 
 test(`11 -> Collection.where(): Should return 2 documents`, async (done) => {
@@ -289,13 +273,9 @@ test(`11 -> Collection.where(): Should return 2 documents`, async (done) => {
         }
     ]
 
-    db.collection('users')
-        .where('id > 4')
-        .find()
-        .then(res => {
-            expect(res.data).toMatchObject(expectedDocs)
-            done()
-        })
+    let res = await usersRef.where('id > 4').find()
+    expect(res.data).toMatchObject(expectedDocs)
+    done()
 })
 
 test(`12 -> Collection.where().and(): Should return 1 match`, async (done) => {
@@ -309,13 +289,9 @@ test(`12 -> Collection.where().and(): Should return 1 match`, async (done) => {
         }
     ]
 
-    db.collection('users')
-        .where('id > 4').and('lastname = Duck')
-        .find()
-        .then(res => {
-            expect(res.data).toMatchObject(expectedDocs)
-            done()
-        })
+    let res = await usersRef.where('id > 4').and('lastname = Duck').find()
+    expect(res.data).toMatchObject(expectedDocs)
+    done()
 })
 
 test(`13 -> Collection.where().setProperty(): Should return value of update`, async (done) => {
@@ -327,13 +303,10 @@ test(`13 -> Collection.where().setProperty(): Should return value of update`, as
         tags: []
     }]
 
-    db.collection('users')
-        .where('id = 6')
-        .setProperty('email', 'daf-duck@email.com')
-        .then(res => {
-            expect(res.data).toMatchObject(update)
-            done()
-        })
+    let res = await usersRef.where('id = 6')
+                            .setProperty('email', 'daf-duck@email.com')
+    expect(res.data).toMatchObject(update)
+    done()
 })
 
 test(`14 -> Collection.where().deleteProperty(): Should return success msg`, async (done) => {
@@ -344,13 +317,10 @@ test(`14 -> Collection.where().deleteProperty(): Should return success msg`, asy
         tags: []
     }]
 
-    db.collection('users')
-        .where('id = 6')
-        .deleteProperty('email')
-        .then(res => {
-            expect(res.data).toMatchObject(update)
-            done()
-        })
+    let res = await usersRef.where('id = 6')
+                            .deleteProperty('email')
+    expect(res.data).toMatchObject(update)
+    done()
 })
 
 test(`15 -> Collection.where().insertInto(): Should success msg`, async (done) => {
@@ -362,19 +332,15 @@ test(`15 -> Collection.where().insertInto(): Should success msg`, async (done) =
         tags: ["string", 55, {testObj: "value1"} ]
     }]
 
-    db.collection('users')
-        .where('id = 6')
-        .insertInto('tags', tagValues)
-        .then(res => {
-            res = res.data[0]
-            expect.objectContaining({
-                id: expect(res.id).toBe(6),
-                firstname: expect(res.firstname).toBe('Daffy'),
-                lastname: expect(res.lastname).toBe('Duck'),
-                tags: expect(res.tags).toEqual(expect.arrayContaining(['string', 55, {testObj: 'value1'} ]))
-            })
-            done()
-        })
+    let res = await usersRef.where('id = 6').insertInto('tags', tagValues)
+    res = res.data[0]
+    expect.objectContaining({
+        id: expect(res.id).toBe(6),
+        firstname: expect(res.firstname).toBe('Daffy'),
+        lastname: expect(res.lastname).toBe('Duck'),
+        tags: expect(res.tags).toEqual(expect.arrayContaining(['string', 55, {testObj: 'value1'} ]))
+    })
+    done()
 })
 
 test(`16 -> Collection.where().removeFrom(): Should return success msg`, async (done) => {
@@ -386,25 +352,12 @@ test(`16 -> Collection.where().removeFrom(): Should return success msg`, async (
         tags: ["string", 55, {testObj: "value1"}, 55 ]
     }]
 
-    db.collection('users')
-        .where('id = 6')
-        .insertInto('tags', tagValues)
-        .then(res => {
-            expect(res.data).toMatchObject(update)
-            done()
-        })
+    let res = await usersRef.where('id = 6').insertInto('tags', tagValues)
+    expect(res.data).toMatchObject(update)
+    done()
 })
 
 test(`17 -> Collection.where().updateArray(): Should return success msg`, async (done) => {
-    const updateFn = (arr) => {
-        return arr.filter(item => {
-            if (Object.prototype.toString.call(item) === '[object Object]') {
-                item.testObj = 'updated value'
-            }
-            return item
-        })
-    }
-
     const update = [{
         id: 6, 
         firstname: "Daffy",  
@@ -412,14 +365,11 @@ test(`17 -> Collection.where().updateArray(): Should return success msg`, async 
         tags: ["string", 55, { testObj: "updated value" }, 55 ]
     }]
 
-    db.collection('users')
-        .where('id = 6')
-        .include(['tags'])
-        .updateArray('testObj === "value1"', [{ testObj: 'updated value' }])
-        .then(res => {
-            expect(res.data).toMatchObject(update)
-            done()
-        })
+    let res = await usersRef.where('id = 6')
+                            .include(['tags'])
+                            .updateArray('testObj === "value1"', [{ testObj: 'updated value' }])
+    expect(res.data).toMatchObject(update)
+    done()
 })
 
 test(`18 -> Collection.where().include(): Should return matching obj`, async (done) => {
@@ -428,14 +378,11 @@ test(`18 -> Collection.where().include(): Should return matching obj`, async (do
         email: 'sbsp@email.com'
     }]
 
-    db.collection('users')
-        .where('id = 5')
-        .include(['firstname','email'])
-        .find()
-        .then(res => {
-            expect(res.data).toEqual(expectedResult)
-            done()
-        })
+    let res = await usersRef.where('id = 5')
+                            .include(['firstname','email'])
+                            .find()
+    expect(res.data).toEqual(expectedResult)
+    done()
 })
 
 test(`19 -> Collection.where().exclude(): Should return matching obj`, async (done) => {
@@ -445,14 +392,11 @@ test(`19 -> Collection.where().exclude(): Should return matching obj`, async (do
         lastname: 'SquarePants'
     }]
 
-    db.collection('users')
-        .where('id = 5')
-        .exclude(['email'])
-        .find()
-        .then(res => {
-            expect(res.data).toEqual(expectedResult)
-            done()
-        })
+    let res = await usersRef.where('id = 5')
+                            .exclude(['email'])
+                            .find()
+    expect(res.data).toEqual(expectedResult)
+    done()
 })
 
 test(`20 -> Collection: #version should be updated version number 11`, async (done) => {
