@@ -30,14 +30,14 @@ afterEach(async () => {
 
 test('Queue: Should take about 1 second', async (done) => {
     let res = await methods.methodA(20, 5)
-    expect(res).toBeGreaterThanOrEqual(1000)
-    expect(res).toBeLessThan(1200)
+    expect(res).toBeGreaterThanOrEqual(900)
+    expect(res).toBeLessThan(1250)
     done()
 })
 
 test('Queue: Should take about the same time or faster than 20 concurrent calls', async (done) => {
     let res = await methods.methodA(20, 32)
-    expect(res).toBeGreaterThanOrEqual(1000)
-    expect(res).toBeLessThan(1200)
+    expect(res).toBeGreaterThanOrEqual(900)
+    expect(res).toBeLessThan(1250)
     done()
 })
