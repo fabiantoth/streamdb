@@ -8,6 +8,8 @@ const dbSettings = {
     dbName: 'ia-dates',
     initRoutes: false,
     routesAutoDelete: false,
+    initSchemas: false,
+    modelsAutoDelete: false, 
     routesDir: 'api',
     defaultModel: {
         type: 'schema',

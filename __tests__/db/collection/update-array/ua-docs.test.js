@@ -8,6 +8,8 @@ const dbSettings = {
     dbName: 'ua-docs',
     initRoutes: false,
     routesAutoDelete: false,
+    initSchemas: false,
+    modelsAutoDelete: false, 
     routesDir: 'api',
     defaultModel: {
         type: 'schema',

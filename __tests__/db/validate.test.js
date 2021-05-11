@@ -2,7 +2,13 @@ const validate = require('../../lib/db/validate')
 const streamDb = require('../../lib/index')
 
 beforeAll(async (done) => {
-    const existsMeta = await streamDb.createDb({ dbName: 'thisExists' })
+    const existsMeta = await streamDb.createDb({ 
+        dbName: 'thisExists', 
+        defaultModel: {
+            type: 'default',
+            id: '$incr'
+           }  
+        })
     done()
 })
 
@@ -107,16 +113,22 @@ test('validate: (dirAvailable) Should throw error if dir name already exists', a
 })
 
 test('validate: (defaultModel) return valid defaultModel object', () => {
-    let default1 = { 
-        type: 'default', 
+    let defaultSchema = { 
+        type: 'schema', 
         id: '$incr', 
         maxValue: 10000
     }
 
     let defaultModel1 = { 
-        type: 'schema', 
+        type: 'default', 
         id: '$incr', 
         maxValue: 10000
+    }
+
+    let defaultUid = { 
+        type: 'default', 
+        id: '$uid', 
+        maxValue: 11
     }
 
     let defaultModel2 = { 
@@ -126,19 +138,21 @@ test('validate: (defaultModel) return valid defaultModel object', () => {
     }
 
     let defaultModel3 = { 
-        type: 'default', 
+        type: 'schema', 
         id: '$uid', 
         maxValue: 11
     }
    
     let expectedDefault = defaultModel(undefined)
     let expectedDefault1 = defaultModel({})
-    let model1 = defaultModel({ type: 'schema' })
+    let model = defaultModel({ type: 'default', id: '$uid' })
+    let model1 = defaultModel({ type: 'default' })
     let model2 = defaultModel({ type: 'schema', id: '$uid', maxValue: 24 })
     let model3 = defaultModel({ id: '$uid' })
 
-    expect(expectedDefault).toMatchObject(default1)
-    expect(expectedDefault1).toMatchObject(default1)
+    expect(expectedDefault).toMatchObject(defaultSchema)
+    expect(expectedDefault1).toMatchObject(defaultSchema)
+    expect(model).toMatchObject(defaultUid)
     expect(model1).toMatchObject(defaultModel1)
     expect(model2).toMatchObject(defaultModel2)
     expect(model3).toMatchObject(defaultModel3)

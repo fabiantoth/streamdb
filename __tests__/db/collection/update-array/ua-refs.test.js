@@ -8,6 +8,8 @@ const dbSettings = {
     dbName: 'ua-refs',
     initRoutes: false,
     routesAutoDelete: false,
+    initSchemas: false,
+    modelsAutoDelete: false, 
     routesDir: 'api',
     defaultModel: {
         type: 'schema',

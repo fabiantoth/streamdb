@@ -6,10 +6,14 @@ const dbSettings = {
     dbName: 'testUserDB',
     storesMax: 131072,  
     initRoutes: true, 
-    initSchemas: true,
+    initSchemas: false,
     routesAutoDelete: true, 
-    modelsAutoDelete: true, 
-    routesDir: 'api' 
+    modelsAutoDelete: false, 
+    routesDir: 'api',
+    defaultModel: {
+        type: 'default',
+        id: '$incr'
+    } 
 }
 
 let db

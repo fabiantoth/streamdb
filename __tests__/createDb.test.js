@@ -9,9 +9,9 @@ const defaultMeta = {
     routesPath: './streamDB/api',
     modelsPath: './streamDB/models',
     initRoutes: true,
-    initSchemas: false,
+    initSchemas: true,
     routesAutoDelete: true,
-    modelsAutoDelete: false,
+    modelsAutoDelete: true,
     storesMax: 131072,
     total: 0,
     routes: [
@@ -19,7 +19,7 @@ const defaultMeta = {
     ],
     collections: [],
     defaultModel: { 
-        type: 'default', 
+        type: 'schema', 
         id: '$incr', 
         maxValue: 10000
     }
