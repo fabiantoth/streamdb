@@ -9,7 +9,12 @@ const dbSettings = {
     initSchemas: false,
     routesAutoDelete: true,
     modelsAutoDelete: false,
-    routesDir: 'api'
+    routesDir: 'api',
+    defaultModel: {
+        type: 'default',
+        id: '$incr',
+        maxValue: 10000
+    }
 }
 
 const dbFullMeta = {
