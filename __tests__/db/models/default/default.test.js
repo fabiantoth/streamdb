@@ -34,7 +34,7 @@ beforeAll(async (done) => {
 
     db.addCollection('users', defaultSettings)
         .then(res => {
-            colMeta = res
+            colMeta = res.data
             done()
         })
 })

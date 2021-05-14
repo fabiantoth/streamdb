@@ -29,8 +29,6 @@ afterAll(async (done) => {
     done()
 })
 
-
-
 test('1 -> db.addCollection(): Should return new collection meta file', async (done) => {
 
     const usersColSettings = {
@@ -43,7 +41,8 @@ test('1 -> db.addCollection(): Should return new collection meta file', async (d
         }
     }
 
-    const usersMeta = await db.addCollection('users', usersColSettings)
+    const response = await db.addCollection('users', usersColSettings)
+    const usersMeta = response.data
 
     expect.objectContaining({
         colName: expect(usersMeta.colName).toBe('users'),
@@ -86,8 +85,8 @@ test('2 -> db.addCollection(): should override out of range min/max values when 
         uidLength: 11
     }
 
-    const groupsMeta = await db.addCollection('groups', groupsColSettings)
-
+    const response = await db.addCollection('groups', groupsColSettings)
+    const groupsMeta = response.data
     expect(groupsMeta.model).toMatchObject(expectedModel)
     done()
 })
@@ -99,15 +98,13 @@ test('3 -> db.addSchema(): Should add a new schema to db schemas', async (done) 
     })
 
     const updatedDb = db.addSchema('Detail', DetailSchema)
-
     expect(Object.keys(updatedDb.schemas).length).toBe(1)
     done()
 })
 
 test('4 -> db.dropCollection(): Should delete users collection and return success message', async (done) => {
     const deleted = await db.dropCollection('users')
-
-    expect(deleted).toBe('Collection "users" has been deleted')
+    expect(deleted.message).toBe('Collection "users" has been deleted')
     done()
 })
 
@@ -121,7 +118,6 @@ test('(-1) -> db.addSchema(): #error Should throw error trying to add model name
         age: Number,
         email: String
     })
-
     expect(() => db.addSchema('Detail', DetailSchema))
         .toThrow(`Model 'Detail' already exists`)
     done()

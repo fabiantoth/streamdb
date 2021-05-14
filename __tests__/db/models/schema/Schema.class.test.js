@@ -96,8 +96,8 @@ beforeAll(async (done) => {
     let res2 = await db.addCollection('eagles')
     await db.addCollection('users')
 
-    CowboyModel = streamDb.model('Cowboy', CowboySchema, res1)
-    EagleModel = streamDb.model('Eagle', EagleSchema, res2)
+    CowboyModel = streamDb.model('Cowboy', CowboySchema, res1.data)
+    EagleModel = streamDb.model('Eagle', EagleSchema, res2.data)
 
     done()
 })
@@ -307,8 +307,6 @@ test('Schema Class: (insertOne) Should add one new document with type definition
 })
 
 test('Document: (insertOne) Should add one new document with a nested object', async (done) => {
-    // let collection = await db.addCollection('users')
-
     const UserSchema = new Schema({
         name: String,
         details: {
