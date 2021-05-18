@@ -8,7 +8,7 @@ const program = new commander.Command()
 
 program.version('0.1.0')
 
-// create-db                    Create a new db
+// create                       Create a new db
 // [-d, --dbName]               Set the name of the db
 // [-s, --storesMax]            Set the default storesMax value
 // [-m, --maxValue <value>]     Set the default id maxValue
@@ -19,9 +19,9 @@ program.version('0.1.0')
 // [--no-routesAutoDelete]      Set routesAutoDelete to false
 // [--no-modelsAutoDelete]      Set modelsAutoDelete to false
 program
-    .command('create-db')
+    .command('create')
     .description('Create a new streamdb directory')
-    .option('-d, --dbName <value>', 'Set the name of new db', 'streamDB')
+    .option('-d, --db <value>', 'Set the name of new db', 'streamDB')
     .option('-s, --storesMax <number>', 'Set the default storesMax value', 131072)
     .option('-m, --maxValue <value>', 'Set the default id maxValue')
     .option('-r, --routesDir <value>', 'Set the name of the routes directory', 'api')
@@ -33,7 +33,7 @@ program
     
     .action((options) => {
         let settings = {
-            dbName: options.dbName,
+            dbName: options.db,
             storesMax: options.storesMax,
             routesDir: options.routesDir,
             initRoutes: options.initRoutes,
@@ -51,21 +51,54 @@ program
         }
 
         createDb(settings)
+            .then(res => {
+                console.log()
+                console.log(`New database '${res.dbName}' created.`)
+            })
+            .catch(e => console.log(e))
+    })
+
+program
+    .command('delete')
+    .description('Delete db directory')
+    .option('-d, --db <value>', 'Select the name of new db')
+    .action((options) => {
+        const dbName = options.db
+        deleteDb(`${dbName}`)
             .then(res => console.log(res))
             .catch(e => console.log(e))
     })
 
 program
-    .command('db <dbName>')
-    .description('Select the db to use')
+    .arguments('<dbName>')
     .option('-a, --add [values...]', 'Add collections to db')
+    .option('-r, --remove [values...]', 'Remove collection from db')
     .action((dbName, options) => {
         const db = new DB(`${dbName}`)
-        const colnames = options.add
+        const colnames = options.add || null
+        const remove = options.remove || null
         
-        db.addCollections(colnames)
-            .then(res => console.log(res))
+        if (colnames && remove) {
+            throw new Error('cannot use --add (-a) and --remove (-r) together')
+        }
+
+        if (colnames) {
+            db.addCollections(colnames)
+                .then(res => {
+                    let collections = colnames.join()
+                    console.log(`Collections '${collections}', added to '${dbName}'`)
+                })
             .catch(e => console.log(e))
+        } else if (remove) {
+            let collection = remove[0]
+            db.dropCollection(collection)
+                .then(res => {
+                    let collections = remove.join()
+                    console.log(`Collections '${collections}', removed from '${dbName}'`)
+                })
+            .catch(e => console.log(e))
+        }
+        
     })
 
 program.parse(process.argv)
