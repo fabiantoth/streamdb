@@ -9,7 +9,7 @@ const program = new commander.Command()
 program.version('0.1.0')
 
 // create                       Create a new db
-// [-d, --dbName]               Set the name of the db
+// [-d, --db]                   Set the name of the db
 // [-s, --storesMax]            Set the default storesMax value
 // [-m, --maxValue <value>]     Set the default id maxValue
 // [-r, --routesDir <value>]    Set the name of the routes directory
@@ -58,6 +58,8 @@ program
             .catch(e => console.log(e))
     })
 
+// delete       Delete a db
+// [-d, --db]   Select the name of the db
 program
     .command('delete')
     .description('Delete db directory')
@@ -69,32 +71,34 @@ program
             .catch(e => console.log(e))
     })
 
+// dbName                       Select db to update
+// [-a, --add [values...]]      Add new collections to db
+// [-r, --remove [values...]]   Remove collection from db
 program
     .arguments('<dbName>')
     .option('-a, --add [values...]', 'Add collections to db')
-    .option('-r, --remove [values...]', 'Remove collection from db')
+    .option('-r, --remove <value>',  'Remove collection from db')
     .action((dbName, options) => {
         const db = new DB(`${dbName}`)
-        const colnames = options.add || null
+        const colNames = options.add || null
         const remove = options.remove || null
         
-        if (colnames && remove) {
+        if (colNames && remove) {
             throw new Error('cannot use --add (-a) and --remove (-r) together')
         }
 
-        if (colnames) {
-            db.addCollections(colnames)
+        if (colNames) {
+            db.addCollections(colNames)
                 .then(res => {
-                    let collections = colnames.join()
+                    let collections = colNames.join()
                     console.log(`Collections '${collections}', added to '${dbName}'`)
                 })
             .catch(e => console.log(e))
         } else if (remove) {
-            let collection = remove[0]
-            db.dropCollection(collection)
+            let colName = remove
+            db.dropCollection(`${colName}`)
                 .then(res => {
-                    let collections = remove.join()
-                    console.log(`Collections '${collections}', removed from '${dbName}'`)
+                    console.log(`Collection '${colName}' has been removed from '${dbName}'`)
                 })
             .catch(e => console.log(e))
         }
