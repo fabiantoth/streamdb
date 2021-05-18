@@ -1,8 +1,9 @@
 {
   "name": "streamdb",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "A Node streams-based JSON document-model DB",
   "main": "lib/index.js",
+  "bin": "bin/index.js",
   "scripts": {
     "test": "jest --runInBand --watchAll"
   },
@@ -34,6 +35,7 @@
   "dependencies": {
     "caller-id": "0.1.0",
     "camelcase": "6.2.0",
+    "commander": "^7.2.0",
     "cors": "2.8.5",
     "del": "6.0.0",
     "dot-prop": "6.0.1",
