@@ -6,7 +6,24 @@ const deleteDb = require('../lib/deleteDb')
 
 const program = new commander.Command()
 
-program.version('0.1.0')
+program
+    .version('0.1.0')
+    .name("streamdb")
+    .usage("<dbName>/<command> [options]")
+
+program
+    .addHelpText('after', `
+create [options]:
+    dbName:                     [-d, --db] <value>
+    storesMax:                  [-s, --storesMax] <value>
+    routesDir:                  [-r, --routesDir] <value>
+    initRoutes = false:         --no-initRoutes
+    initSchemas = false:        --no-initSchemas
+    routesAutoDelete = false:   --no-routesAutoDelete
+    modelsAutoDelete = false:   --no-modelsAutoDelete
+    defaultModel:
+                maxValue:       [-m, --maxValue] <value>
+                id = $uid:       --uid`)
 
 // create                       Create a new db
 // [-d, --db]                   Set the name of the db
@@ -20,7 +37,7 @@ program.version('0.1.0')
 // [--no-modelsAutoDelete]      Set modelsAutoDelete to false
 program
     .command('create')
-    .description('Create a new streamdb directory')
+    .description('$ streamdb create [options]')
     .option('-d, --db <value>', 'Set the name of new db', 'streamDB')
     .option('-s, --storesMax <number>', 'Set the default storesMax value', 131072)
     .option('-m, --maxValue <value>', 'Set the default id maxValue')
@@ -30,7 +47,6 @@ program
     .option('--no-initSchemas', 'Set initSchemas to false')
     .option('--no-routesAutoDelete', 'Set routesAutoDelete to false')
     .option('--no-modelsAutoDelete', 'Set modelsAutoDelete to false')
-    
     .action((options) => {
         let settings = {
             dbName: options.db,
@@ -62,7 +78,7 @@ program
 // [-d, --db]   Select the name of the db
 program
     .command('delete')
-    .description('Delete db directory')
+    .description('$ streamdb delete --db <dbName>')
     .option('-d, --db <value>', 'Select the name of new db')
     .action((options) => {
         const dbName = options.db
@@ -76,6 +92,9 @@ program
 // [-r, --remove [values...]]   Remove collection from db
 program
     .arguments('<dbName>')
+    .description('Update collections:', {
+        dbName: '$ streamdb <dbName> [--add/--remove] [collection]'
+      })
     .option('-a, --add [values...]', 'Add collections to db')
     .option('-r, --remove <value>',  'Remove collection from db')
     .action((dbName, options) => {
