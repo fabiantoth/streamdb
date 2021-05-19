@@ -29,6 +29,7 @@
   - [Set Custom Model](#set-custom-schema-model)
   - [Collection Methods](#collection-methods)
   - [Queries & Query Chains](#queries--query-chains)
+- [CLI Usage](#cli-usage)
 - <a target="_blank" href="CHANGELOG.md">CHANGELOG</a>
 - [Tests](#tests)
 - [Stability Notice](#stability-notice) 
@@ -1556,6 +1557,38 @@ Returns:
 
 **[back to top](#readme)**
 
+## CLI Usage
+
+```sh
+streamdb <dbName>/<command> [options]
+
+Update collections:
+
+Arguments:
+  dbName                 $ streamdb <dbName> [--add/--remove] [collection]
+
+Options:
+  -V, --version          output the version number
+  -a, --add [values...]  Add collections to db
+  -r, --remove <value>   Remove collection from db
+  -h, --help             display help for command
+
+Commands:
+  create [options]       $ streamdb create [options]
+  delete [options]       $ streamdb delete --db <dbName>
+
+  create [options]:
+    dbName:                     [-d, --db] <value>
+    storesMax:                  [-s, --storesMax] <value>
+    routesDir:                  [-r, --routesDir] <value>
+    initRoutes = false:         --no-initRoutes
+    initSchemas = false:        --no-initSchemas
+    routesAutoDelete = false:   --no-routesAutoDelete
+    modelsAutoDelete = false:   --no-modelsAutoDelete
+    defaultModel:
+                maxValue:       [-m, --maxValue] <value>
+                id = $uid:       --uid
+```
 
 ## Tests
 
