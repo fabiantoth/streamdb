@@ -1,3 +1,5 @@
+<h1 align="center"> API Reference </h1>
+
 ----------------
 
 <p align="center">
@@ -7,9 +9,9 @@
 
 ----------------
 
-<h1 id="collapse"> API Reference </h1>
+<h2 id="table-of-contents"> :book: API List</h2>
 
-<details>
+<details id="collapse">
 	<summary> Click to expand </summary>
 
 ### [streamDB Methods](#db-methods)
@@ -65,6 +67,8 @@
 [▲ back to top](#collapse)  
 
 </details>
+
+<br>
 
 ## DB Methods:
 
