@@ -370,12 +370,50 @@ Creating new collections scaffolds a new Router file with the following routes y
 
 <br>
 
+**Sample Route From Router Template:**
+<p align="left"> 
+  <img src="https://github.com/fabiantoth/streamdb/blob/cdc80830e6fe97d50bd785c68aa9f79ea88ebbe5/assets/get-route.svg" alt="route template" style="max-height: 420px;">
+</p>
+
 **[▲ back to top](#table-of-contents)**
 
 -------------------------------------------------------------
 
 ## Using Schema Validation:
 
+### Starter Schema Model Template:
+
+<p align="left"> 
+  <img src="https://github.com/fabiantoth/streamdb/blob/cdc80830e6fe97d50bd785c68aa9f79ea88ebbe5/assets/model-template.svg" alt="model template" style="max-height: 440px;">
+</p>
+
+Edit template if you wish to add validation and document settings:
+
+```js
+// User Model
+const streamdb = require('streamdb')
+const Schema = streamdb.Schema
+
+const User = new Schema({
+    id: streamdb.Types.$incr,
+    firstname: String,
+    lastname: String,
+    email: {
+    	type: String,
+	required: true,
+        maxlength: 100
+    }
+}, 
+    {
+        strict: false,
+        timestamps: {
+            created_at: true,
+            updated_at: true
+    }
+})
+
+module.exports = streamdb.model('User', User)
+```
 
 
 **[▲ back to top](#table-of-contents)**
