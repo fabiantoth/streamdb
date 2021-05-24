@@ -259,7 +259,116 @@ db.collection('users').deleteMany([2,3])
 
 ## Starter Collection Routes:
 
+Creating new collections scaffolds a new Router file with the following routes you may edit/add to:
 
+<table>
+	<tr>
+		<th>Request</th>
+		<th>Route</th>
+		<th>Description</th>
+		<th>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp-&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+		<th>Method</th>
+	</tr>
+	  <tr>
+		<td align="center">GET</td>
+		<td>
+		   <code>/api/collection
+		   </code>
+		</td>
+		<td colspan="2">Get all docs</td>
+		<td align="center">
+		  <code>
+			  get()
+		  </code>
+		</td>
+	  </tr>
+	<tr>
+		<td align="center">GET</td>
+		<td>
+		  <code>
+		  	/api/collection/:id
+		  </code>
+		</td>
+		<td colspan="2">Get by id</td>
+		<td align="center">
+		  <code>
+			  getById()
+		  </code>
+		</td>
+  	</tr>
+	<tr>
+		<td align="center">GET</td>
+		<td>
+		  <code>
+		  	/api/collection/_q/
+		  </code>
+		</td>
+		<td colspan="2">Run compound queries</td>
+		<td align="center">
+		  <code>
+			helper_methods
+		  </code>
+		</td>
+  	</tr>
+	<tr>
+		<td align="center">POST</td>
+		<td>
+		  <code>
+		  	/api/collection
+		  </code>
+		</td>
+		<td colspan="2">Insert many docs</td>
+		<td align="center">
+		  <code>
+			  insertMany()
+		  </code>
+		</td>
+  	</tr>
+	<tr>
+		<td align="center">PUT</td>
+		<td>
+		  <code>
+		  	/api/collection
+		  </code>
+		</td>
+		<td colspan="2">Update many docs</td>
+		<td align="center">
+		  <code>
+			  updateMany()
+		  </code>
+		</td>
+  	</tr>
+	<tr>
+		<td align="center">PUT</td>
+		<td>
+		  <code>
+		  	/api/collection/_q/
+		  </code>
+		</td>
+		<td colspan="2">Run update queries</td>
+		<td align="center">
+		  <code>
+			helper_methods
+		  </code>
+		</td>
+  	</tr>
+	<tr>
+		<td align="center">DELETE</td>
+		<td>
+		  <code>
+		  	/api/collection/:id
+		  </code>
+		</td>
+		<td colspan="2">Delete by id</td>
+		<td align="center">
+		  <code>
+			  deleteOne()
+		  </code>
+		</td>
+  	</tr>
+</table>
+
+<br>
 
 **[▲ back to top](#table-of-contents)**
 
@@ -275,7 +384,30 @@ db.collection('users').deleteMany([2,3])
 
 ## Launching/Using Server:
 
+```js
+const streamdb = require('streamdb')
 
+const api = streamdb.server('sampleDB', 'api', 3000)
+
+// open browser (or send GET query)..
+// get all --> get(): http://localhost:3000/api/users
+// get by id --> getById(1): http://localhost:3000/api/users/1
+
+// sending POST request with JSON data in body..
+// add many --> insertMany(docs): http://localhost:3000/api/users
+
+// in POST body:
+// [{
+//  "firstname": "john",
+//  "lastname": "smith",
+//  "email": "jsmith@email.com"
+//	},
+//	{
+//  "firstname": "mary",
+//  "lastname": "jane",
+//  "email": "mj@email.com"
+//	}]
+```
 
 **[▲ back to top](#table-of-contents)**
 
