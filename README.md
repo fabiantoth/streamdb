@@ -18,160 +18,131 @@
 
 <p align="center">Designed for front-end development so you can just focus on building your awesome application.</p>
 
+<p align="center"> 
+  <img src="https://github.com/fabiantoth/streamdb/blob/903b1b88cd545f39910c6a01684af2809f533adb/assets/intro.gif" alt="quick start setup" style="max-height: 550px;">
+</p>
+
+
+## Key Features
+
+<img align="left" alt="db-icon" src="https://github.com/fabiantoth/streamdb/blob/903b1b88cd545f39910c6a01684af2809f533adb/assets/db-gear.svg" width="30px" />
+
+<details>
+<summary><strong>A Full Featured Database</strong></summary>
+
+<br>
+	
+- Generated ids (``incr``, ``uid``)
+- Timestamps (``created_at``, ``updated-at``)
+- Queries (includes ``geo-search``)
+- Splits JSON store files, as data grows
+- Uses **[Node Streams](https://nodejs.dev/learn/nodejs-streams)** to *literallly zoom through* data
+
+---
+
+</details>
+
+<img align="left" alt="model-icon" src="https://github.com/fabiantoth/streamdb/blob/903b1b88cd545f39910c6a01684af2809f533adb/assets/model-icon.svg" width="30px" />
+
+<details>
+<summary><strong>Data Model + Validation</strong></summary>
+	
+<br>
+
+- Schema validation & settings
+- Parent/subdocument refs
+- **[Mongoose](https://mongoosejs.com/)** inspired syntax and modeling
+
+---
+
+</details>
+
+<img align="left" alt="server-icon" src="https://github.com/fabiantoth/streamdb/blob/903b1b88cd545f39910c6a01684af2809f533adb/assets/server-icon.svg" width="30px" />
+
+<details>
+<summary><strong>Server + API Routes</strong></summary>
+
+<br>
+
+- Built with **[Express Framework](https://expressjs.com/)**
+- Simple CRUD starter routes
+- Helper methods to help you customize routes faster
+- Launch as standalone, or mount onto existing server
+
+---
+
+</details>
+
+``➤`` Launch server with one line of code  
+``➤`` Simple *promise-based CRUD* methods  
+``➤`` Automatically creates router + model files 
 
 
 ## Table of Contents
-- [Install](#install)
-- [2-Minute Quickstart](#2-minute-quickstart)
-- [Directories Overview](#directories-overview)
-- [DB Settings](#db-settings)
-- [Collections](#collections)
-- [Schemas](#schemas)
-- [API](#api)
-  - [DB Methods](#db-methods)
-    - [Launching Server](#launching-db-server)
-    - [Request Methods Helpers](#request-methods-helpers)
-  - [DB Class](#db-class)
-  - [Set Custom Model](#set-custom-schema-model)
-  - [Collection Methods](#collection-methods)
-  - [Queries & Query Chains](#queries--query-chains)
-- [CLI Usage](#cli-usage)
+
+- [Usage](#usage)
+- [Starter Routes](#starter-collection-routes)
+- [Using Schema Models](#using-schema-validation)
+- [Launching Server](#launchingusing-server)
+- [➥ Guide ](docs/guide.md)
+- [➥ API Reference ](docs/api.md)
 - <a target="_blank" href="CHANGELOG.md">CHANGELOG</a>
 - [Tests](#tests)
-- [Stability Notice](#stability-notice) 
+- [Stability Notice](#stability-notice)
 
 
+## Usage
 
-## Install:
+### Install:
 
 ```sh
 $ npm i streamdb
 ```
+ 
+### Create DB:
 
-## 2-Minute Quickstart
+In terminal:
 
-To see how easy it is to use streamDB, follow this quickstart example which will get your backend setup and launched in under 2 minutes.  
+```sh
+$ streamdb create --db sampleDB
+```
 
-In this example we will:  
-
-1. Setup the DB
-2. Create a collection
-3. Add sample data
-4. Launch the server
-
-
-### 1. DB Setup:
-
-Create a new file in your root directory to initialize the DB directories:  
-
-- **setup.js**: run this just once for initial setup (call it whatever you wish, it doesn't matter)
+Or, run in file:
 
 ```js
-// setup.js
-const streamDb = require('streamdb')
+const streamdb = require('streamdb')
 
-streamDb.createDb()
+streamdb.createDb({ dbName: 'sampleDB' })
   .then(res => console.log(res))
   .catch(e => console.log(e))
 ```
 
-Save and run script:
+### Add Collections:
+
+In terminal:
+
 ```sh
-$ node setup.js
+$ streamdb sampleDB --add users 
 ```
- 
 
-<details>
-  <summary><strong>Details</strong></summary>
-  
-<br>
-  This will scaffold the following directory structure in your root directory:
-<br><br>
-  
-<pre>
-─ streamDB
-    ├── <b>api</b>
-    │   └── db.js
-    ├── <b>collections</b>  
-    ├── <b>models</b>
-    └── streamDb.meta.json
-</pre>
-  
-  Leaving <code>createDb()</code> empty will just scaffold the default settings.
-<br>
-  <blockquote> See how to change db settings in <a href="#db-settings-options">DB Settings Options</a>. </blockquote>
-</details>
-
-
-### 2. Create Collection:
-
-Next, let's create our first collection. Create a separate file:
-
-- **run.js**: to run our basic examples (create collection & add data) 
-
+Or, run in file:
 
 ```js
-// run.js
-const streamDb = require('streamdb')
-const db = new streamDb.DB('streamDB')
+const streamdb = require('streamdb')
+const db = new streamdb.DB('sampleDB')
 
 db.addCollection('users')
   .then(res => console.log(res))
   .catch(e => console.log(e))
 ```
- 
-Save and run script:
-```sh
-$ node run.js
-``` 
 
-
-<details>
-  <summary><strong>Details</strong></summary>
-  
-<br>
-  This will update the db directory as follows:
-<br><br>
-
-<pre>
-─ streamDB
-    ├── <b>api</b>
-    │   ├── db.js
-    │   └── users.js
-    ├── <b>collections</b>
-    │       │
-    │       └── <b>users</b>
-    │            ├── users.0.json 
-    │            └── users.meta.json
-    ├── <b>models</b>
-    │       // should be empty
-    │  
-    └── streamDb.meta.json
-
-</pre>
-
- Passing only 1 argument in <code>addCollection('users')</code> will scaffold the default settings. 
-<br>
-
-  <blockquote> See how to change collection settings in <a href="#collection-settings-options">Collection Settings Options</a>. </blockquote>
-  
-</details>
-
-
-### 3. Add Sample Data:
-
-And finally, let's add some dummy data. Comment out the addCollection() code and paste in the rest as shown below:   
+### Add Documents:
 
 ```js
-// run.js
-const streamDb = require('streamdb')
-const db = new streamDb.DB('streamDB')
+const streamdb = require('streamdb')
+const db = new streamdb.DB('sampleDB')
 
-// db.addCollection('users')
-//   .then(res => console.log(res))
-//   .catch(e => console.log(e))
-
-let documents = [
+const documents = [
   {
     firstname: 'Bugs',
     lastname: 'Bunny',
@@ -186,11 +157,6 @@ let documents = [
     firstname: 'Tom',
     lastname: 'Cat',
     email: 'tcat@email.com'
-  },
-  {
-    firstname: 'Jerry',
-    lastname: 'Mouse',
-    email: 'jmouse@email.com'
   }
 ]
 
@@ -199,71 +165,140 @@ db.collection('users').insertMany(documents)
   .catch(e => console.log(e))
 ```
 
-Save and run script:
-```sh
-$ node run.js
-```
+### Read Documents:
 
-
-<details>
-  <summary><strong>Details</strong></summary>
-  
-<br>
-  If you examine the <code>users.0.json</code> and <code>users.meta.json</code> files located in the <code>/collections/users</code> directory, you will see the new data.
-<br><br>
-<ul>
-  <li>The collection data in each json file must remain in an array.</li>
-  <li>All document objects are required to have a unique & valid id field.</li>
-  <li>You may change/edit the data directly in the collection json file, the meta file will update when you run the next query.</li>
-  <li>You may also edit the meta file, but be careful changing settings after adding data.</li>
-  <li>You can always just delete the entire db directory and restart (it's pain free!!)</li>
-</ul>
-  
-</details>
-
-
-### 3. Launch Server:
-
-The last step is to get our endpoints running on the server. Create and add the following code to your file:
-
-- **server.js**: to launch localhost server with new endpoints
 
 ```js
-// server.js
-const streamDb = require('streamdb')
+const streamdb = require('streamdb')
+const db = new streamdb.DB('sampleDB')
 
-const api = streamDb.server('streamDB', 'api', 3000)
+db.collection('users').getById(1)
+  .then(res => console.log(res))
+  .catch(e => console.log(e))
 
+// using queries:
+// db.collection('users')
+//  .where('id = 1')
+//  .and('firstname = Bugs')
+//  .find()
+//  .then(..)
+
+// Response object: 
+//{
+//  success: true,
+//  data: [
+//    {
+//      id: 1,
+//      firstname: 'Bugs',
+//      lastname: 'Bunny',
+//      email: 'bbunny@email.com'
+//    }
+//  ]
+//}
 ```
 
-Save and launch the server:
+### Update Documents:
+
+
+```js
+const streamdb = require('streamdb')
+const db = new streamdb.DB('sampleDB')
+
+const docUpdate = {
+  id: 1,
+  email: b-bunny@email.com
+}
+
+db.collection('users').updateOne(docUpdate)
+  .then(res => console.log(res))
+  .catch(e => console.log(e))
+
+// using queries:
+// db.collection('users')
+//  .where('id = 1')
+//  .setProperty('email', 'b-bunny@email.com')
+//  .then(..)
+
+// Response object: 
+//{
+//  success: true,
+//  message: 'Document 1 updated successfully'
+//  data: [
+//    {
+//      id: 1,
+//      firstname: 'Bugs',
+//      lastname: 'Bunny',
+//      email: 'b-bunny@email.com'
+//    }
+//  ]
+//}
+```
+
+### Delete Documents:
+
+
+```js
+const streamdb = require('streamdb')
+const db = new streamdb.DB('sampleDB')
+
+db.collection('users').deleteMany([2,3])
+  .then(res => console.log(res))
+  .catch(e => console.log(e))
+
+// Response object: 
+//{
+//  success: true,
+//  message: '2 documents removed from "users" collection'
+//  data: [2,3]
+//}
+```
+
+**[▲ back to top](##table-of-contents)**
+
+-------------------------------------------------------------
+
+## Starter Collection Routes:
+
+
+-------------------------------------------------------------
+
+## Using Schema Validation:
+
+
+-------------------------------------------------------------
+
+## Launching/Using Server:
+
+-------------------------------------------------------------
+
+## Tests
+
+Tests are implemented using the [Jest Framework](https://jestjs.io/), and located in the [\_\_tests\_\_](https://github.com/fabiantoth/streamdb/tree/main/__tests__) directory.  
+To run tests, install dev dependencies and run: 
 
 ```sh
-$ node server.js
+$ npm test
 ```
 
-Your new backend is live with endpoints at: 
-- db: ``http://localhost:3000/api/db``
-- users collection: ``http://localhost:3000/api/users``
-- accepts `Content-Type: application/json` requests
+-------------------------------------------------------------
 
-<details>
-  <summary><strong>Details</strong></summary>
-  
-<br>
+## Stability Notice 
 
-<ul>
-  <li>The first 2 arguments ('streamDB', & 'api' in this example) are based on the <code>dbName</code> and <code>routesDir</code> in the db settings.</li>
-  <li>If you change those 2 default values make sure to replace them when you run <code>server()</code>.</li>
-</ul>
-  
-</details>
+- streamDB is mainly for prototyping, do not use in production, use sensitive, or data you don't want to lose. 
+- Early v0.x.x updates may be breaking, experimental, or temporary (keep track of updates, [CHANGELOG](https://github.com/fabiantoth/streamdb/blob/main/CHANGELOG.md)).
 
-**That's it!!**
+This project grew out of a less ambitious desire to just have a MUCH simpler way to support prototyping without being tied to an env or dealing with account limits...in short, this was not a planned library.  
+
+In lieu of a roadmap that doesn't exist yet, I thought it would be proper to at least outline the current priorities:
+
+1. Bugs/logic error fixes
+2. Code refactor & lots of cleanup
+3. Adding examples & working through testing use-cases
+
+**[▲ back to top](##table-of-contents)**
 
 
-
-**[back to top](#readme)**
+## Old..
 
 ## Directories Overview
 
