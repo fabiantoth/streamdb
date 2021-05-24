@@ -19,7 +19,7 @@
 <p align="center">Designed for front-end development so you can just focus on building your awesome application.</p>
 
 <p align="center"> 
-  <img src="https://github.com/fabiantoth/streamdb/blob/903b1b88cd545f39910c6a01684af2809f533adb/assets/intro.gif" alt="quick start setup" style="max-height: 550px;">
+  <img src="https://github.com/fabiantoth/streamdb/blob/0ad96855ae3967ece7cb8a1bce6469a58add7c7e/assets/intro.gif" alt="quick start setup" style="max-height: 550px;">
 </p>
 
 
