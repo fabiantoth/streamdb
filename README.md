@@ -253,21 +253,31 @@ db.collection('users').deleteMany([2,3])
 //}
 ```
 
-**[▲ back to top](##table-of-contents)**
+**[▲ back to top](#table-of-contents)**
 
 -------------------------------------------------------------
 
 ## Starter Collection Routes:
 
 
+
+**[▲ back to top](#table-of-contents)**
+
 -------------------------------------------------------------
 
 ## Using Schema Validation:
 
 
+
+**[▲ back to top](#table-of-contents)**
+
 -------------------------------------------------------------
 
 ## Launching/Using Server:
+
+
+
+**[▲ back to top](#table-of-contents)**
 
 -------------------------------------------------------------
 
@@ -279,6 +289,8 @@ To run tests, install dev dependencies and run:
 ```sh
 $ npm test
 ```
+
+**[▲ back to top](#table-of-contents)**
 
 -------------------------------------------------------------
 
@@ -295,7 +307,7 @@ In lieu of a roadmap that doesn't exist yet, I thought it would be proper to at 
 2. Code refactor & lots of cleanup
 3. Adding examples & working through testing use-cases
 
-**[▲ back to top](##table-of-contents)**
+**[▲ back to top](#table-of-contents)**
 
 
 ## Old..
