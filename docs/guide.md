@@ -32,7 +32,7 @@
 
 ### What is streamDB?
 
-> streamDB is **``a document-oriented JSON database & development toolkit``**. It utilizes blazingly fast **[Node Streams](https://nodejs.org/api/stream.html)** and **[Express](https://expressjs.com/)** to create a nifty, customizable, and ready-to-go database right in your project directory
+> streamDB is **``a document-oriented JSON database & API development toolkit``**. It utilizes blazingly fast **[Node Streams](https://nodejs.org/api/stream.html)** and **[Express](https://expressjs.com/)** to create a nifty, customizable, and ready-to-go database right in your project directory
 
 
 ### Purpose/Why?
