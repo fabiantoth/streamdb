@@ -9,7 +9,7 @@
 
 ----------------
 
-<h2 id="table-of-contents"> :book: API List</h2>
+<h2 id="table-of-contents"> :book: Table of Contents</h2>
 
 <details id="collapse">
 	<summary> Click to expand </summary>
