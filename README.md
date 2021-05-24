@@ -1,18 +1,24 @@
-# streamDB
+<h1 align="center">
+  streamDB
+  <br>
+</h1>
 
-> A Node streams-based JSON document-model DB, with automatically generated REST API endpoints
+<h3 align="center">A working back-end + API service in 60 seconds.</h3>
 
-### Purpose/Why?
-1. Have a back-end for fast prototyping that is an npm install away
-2. Keep data with the project...work on it anywhere, no quotas, no limits
-3. A DB that supports collections/documents relationships, with a minimal interface and easy API access
+----------------
 
-### Features
-- Run server with one line of code OR integrate into your Express app
-- Simple promise based methods to create, update, and query your collections.
-- Scaffold Express server REST API endpoints, and Models for faster workflow
-- Mongoose-like Schema models
-- Basic Geo-Search support
+<p align="center">
+  <a href="#key-features">Features</a> &nbsp | &nbsp
+  <a href="#usage">Usage</a> &nbsp | &nbsp 
+  <a href="docs/guide.md">Guide</a> &nbsp | &nbsp
+  <a href="docs/api.md">API</a>
+</p>
+
+----------------
+
+<p align="center">Designed for front-end development so you can just focus on building your awesome application.</p>
+
+
 
 ## Table of Contents
 - [Install](#install)
