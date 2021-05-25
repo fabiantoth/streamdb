@@ -16,7 +16,7 @@ program
 create [options]:
     dbName:                     [-d, --db] <value>
     storesMax:                  [-s, --storesMax] <value>
-    routesDir:                  [-r, --routesDir] <value>
+    routesDir:                  [-R, --routesDir] <value>
     initRoutes = false:         --no-initRoutes
     initSchemas = false:        --no-initSchemas
     routesAutoDelete = false:   --no-routesAutoDelete
@@ -29,7 +29,7 @@ create [options]:
 // [-d, --db]                   Set the name of the db
 // [-s, --storesMax]            Set the default storesMax value
 // [-m, --maxValue <value>]     Set the default id maxValue
-// [-r, --routesDir <value>]    Set the name of the routes directory
+// [-R, --routesDir <value>]    Set the name of the routes directory
 // [--uid]                      Set the id type to $uid
 // [--no-initRoutes]            Set initRoutes to false
 // [--no-initSchemas]           Set initSchemas to false
@@ -41,7 +41,7 @@ program
     .option('-d, --db <value>', 'Set the name of new db', 'streamDB')
     .option('-s, --storesMax <number>', 'Set the default storesMax value', 131072)
     .option('-m, --maxValue <value>', 'Set the default id maxValue')
-    .option('-r, --routesDir <value>', 'Set the name of the routes directory', 'api')
+    .option('-R, --routesDir <value>', 'Set the name of the routes directory', 'api')
     .option('--uid', 'Set the id type to $uid')
     .option('--no-initRoutes', 'Set initRoutes to false')
     .option('--no-initSchemas', 'Set initSchemas to false')
