@@ -92,7 +92,7 @@ program
 // [-r, --remove [values...]]   Remove collection from db
 program
     .arguments('<dbName>')
-    .description('Update collections:', {
+    .description('add/remove collections:', {
         dbName: '$ streamdb <dbName> [--add/--remove] [collection]'
       })
     .option('-a, --add [values...]', 'Add collections to db')
