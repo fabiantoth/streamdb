@@ -86,12 +86,13 @@
 - [Launching Server](#launchingusing-server)
 - [➥ Guide ](docs/guide.md)
 - [➥ API Reference ](docs/api.md)
-- <a target="_blank" href="CHANGELOG.md">CHANGELOG</a>
+- [➥ Examples](examples)
 - [Tests](#tests)
-- [Stability Notice](#stability-notice)
+- [What's Next](#whats-next)
+- <a target="_blank" href="CHANGELOG.md">CHANGELOG</a>
 
 
-## Usage
+## [Usage]((#table-of-contents))
 
 ### Install:
 
@@ -257,7 +258,7 @@ db.collection('users').deleteMany([2,3])
 
 -------------------------------------------------------------
 
-## Starter Collection Routes:
+## [Starter Collection Routes]((#table-of-contents))
 
 Creating new collections scaffolds a new Router file with the following routes you may edit/add to:
 
@@ -379,7 +380,7 @@ Creating new collections scaffolds a new Router file with the following routes y
 
 -------------------------------------------------------------
 
-## Using Schema Validation:
+## [Using Schema Validation]((#table-of-contents))
 
 ### Starter Schema Model Template:
 
@@ -420,12 +421,12 @@ module.exports = streamdb.model('User', User)
 
 -------------------------------------------------------------
 
-## Launching/Using Server:
+## [Launching/Using Server](#table-of-contents)
 
 ```js
 const streamdb = require('streamdb')
 
-const api = streamdb.server('sampleDB', 'api', 3000)
+const app = streamdb.server('sampleDB', 'api', 3000)
 
 // open browser (or send GET query)..
 // get all --> get(): http://localhost:3000/api/users
@@ -451,7 +452,7 @@ const api = streamdb.server('sampleDB', 'api', 3000)
 
 -------------------------------------------------------------
 
-## Tests
+## [Tests](#table-of-contents)
 
 Tests are implemented using the [Jest Framework](https://jestjs.io/), and located in the [\_\_tests\_\_](https://github.com/fabiantoth/streamdb/tree/main/__tests__) directory.  
 To run tests, install dev dependencies and run: 
@@ -464,18 +465,19 @@ $ npm test
 
 -------------------------------------------------------------
 
+## [What's Next](#table-of-contents)
+
+- [ ] remove legacy 'default' workflow from codebase
+- [ ] add populate() to chainQuery helper
+- [ ] add 'unique' index schema option
+- [ ] add text-search feature
+- [ ] build demo w/FE Framework
+- [ ] refactor cache to support multiple dbs
+- [ ] add CI automation
+
+----------
+
 ## Stability Notice 
 
-- streamDB is mainly for prototyping, do not use in production, use sensitive, or data you don't want to lose. 
+- streamDB is mainly for prototyping, do not use in production, use sensitive/important. 
 - Early v0.x.x updates may be breaking, experimental, or temporary (keep track of updates, [CHANGELOG](https://github.com/fabiantoth/streamdb/blob/main/CHANGELOG.md)).
-
-This project grew out of a less ambitious desire to just have a MUCH simpler way to support prototyping without being tied to an env or dealing with account limits...in short, this was not a planned library.  
-
-In lieu of a roadmap that doesn't exist yet, I thought it would be proper to at least outline the current priorities:
-
-1. Bugs/logic error fixes
-2. Code refactor & lots of cleanup
-3. Adding examples & working through testing use-cases
-
-**[▲ back to top](#table-of-contents)**
-
