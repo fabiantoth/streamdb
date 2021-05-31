@@ -151,7 +151,7 @@ Returns:
 ### [streamdb.chainQuery(colRef, query)](#table-of-contents)
 
 A helper method added to chain req queries 
-> See chaining [collection queries](#-whereexp-filterfnoptional).
+> See chaining [collection queries](#whereexp-filterfnoptional).
 
  - The default collection query route is `/api/colName/_q/
  - Query chains can be added after question mark (?) (ex, `/api/colName/_q/?where=id,>=,50&limit=20`
