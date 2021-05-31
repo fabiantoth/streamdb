@@ -947,7 +947,7 @@ const User = new Schema({
 
 Refer to the Schema section in the Guid:
 
-> See details in **[Schema Guide](guide.md#4-data-types)**
+> See details in **[Schema Guide](guide.md#4-schemas)**
 
 **[▲ back to top](#table-of-contents)**
 	
