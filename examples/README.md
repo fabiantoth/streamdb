@@ -1,4 +1,4 @@
 # Examples
 
-- [➤ Integrating with Express](integrate-express/README.md)
-- [➤ Query Recipes](recipes/README.md)
+- [➤ Integrating with Express](integrate-express)
+- [➤ Query Recipes](recipes)
