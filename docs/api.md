@@ -203,7 +203,7 @@ router.get('/_q/', async (req, res) => {
 ### [streamdb.filterArray(whereQuery)](#table-of-contents)
 
 A helper method to add a simple array filter to the query chain
-> See [collection queries](#-whereexp-filterfnoptional).
+> See [collection queries](#whereexp-filterfnoptional).
 
  - Query chains can be added after question mark (?)  
  - Use the **`$item`** keyword if you wish to filter values directly
@@ -224,7 +224,7 @@ Translates to api call
 `where('privilages, (arr) => arr.filter(item => item == 'admin')`  
 
 
- > See [filterArray helper](https://github.com/fabiantoth/streamdb/blob/ef21f2bfe016630ddb386289818856a30f164d7c/lib/api/filterArray.js#L12)
+ > See [filterArray helper](https://github.com/fabiantoth/streamdb/blob/ef21f2bfe016630ddb386289818856a30f164d7c/lib/api/filterArray.js#L5)
  
 Params:
 - `whereQuery` **{String|Array\<String\>}**: (required) the whereArray string (or array of strings) req.query.whereArray value
