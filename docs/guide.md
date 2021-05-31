@@ -58,7 +58,7 @@ But for even slightly more advanced projects - ``you need the flexibility of a r
 
 streamDB comes with starter default values for all settings - so you can hit the ground running with a simple ``streamdb create`` command.
 
-> See the full [DB Settings & Options](api.md#-streamdbcreatedbsettings) 
+> See the full [DB Settings & Options](api.md#streamdbcreatedbsettings) 
 	
 **Do you really need to change anything?**
 
@@ -135,7 +135,7 @@ DELETE http://localhost:3000/api/db/:name
 
 Collection settings will be based on your ``defaultModel`` in the db meta file. But you may customize the ``storeMax`` value (in db meta it is plural, ``storesMax``), and id settings per collection.  
 
-> See documentation for [Collection Settings Options](api.md#-dbaddcollectionname-settings)
+> See documentation for [Collection Settings Options](api.md#dbaddcollectioncolname-settings)
 	
 Settings for ``$incr``
 
@@ -284,8 +284,8 @@ They rely on helper methods for turning REST queries into dynamic chainable meth
 
 There are 2 query helpers:
 	
-1. The main [chainQuery()](https://github.com/fabiantoth/streamdb/blob/a3a5179878856edc1ec0005f45db30993e7a227f/lib/api/chainQuery.js#L3) helper
-2. The secondary [filterArray()](https://github.com/fabiantoth/streamdb/blob/a3a5179878856edc1ec0005f45db30993e7a227f/lib/api/filterArray.js#L8) helper
+1. The main [chainQuery()](api.md#streamdbchainquerycolref-query) helper
+2. The secondary [filterArray()](api.md#streamdbfilterarraywherequery) helper
 
 **1. chainQuery:**
 	
@@ -442,11 +442,11 @@ Body:
 
 These are the 5 available update methods for queries:
 	
-- [``setProperty()``](api.md#-setpropertypropertypath-value)
-- [``deleteProperty()``](api.md#-deletepropertypropertypath)
-- [``insertInto()``](api.md#-insertintopropertypath-arrvalues)
-- [``removeFrom()``](api.md#-removefrompropertypath-arrvalues)
-- [``updateArray()``](api.md#-updatearraypropertypath-updatefn)
+- [``setProperty()``](api.md#setpropertypath-value)
+- [``deleteProperty()``](api.md#deletepropertypath)
+- [``insertInto()``](api.md#insertintopath-values)
+- [``removeFrom()``](api.md#removefrompath-values)
+- [``updateArray()``](api.md#updatearraypathexpr-values)
 
 	
 ***\*\*Important:\*\*** There is no validation ensuring correct update methods or data get passed in the JSON body.
@@ -545,7 +545,7 @@ It's quite simple - and only has 2 items in it:
 
 **\# ``model()`` method**
 	
-The [``model()``](api.md#-streamdbmodelmodelname-schemaobj-colmetaoptional) method is *what actually turns your schema into a **Document*** instead of an aimless schema object. It applies the context of your collection.
+The [``model()``](api.md#streamdbmodelmodelname-schemaobj-colmetaoptional) method is *what actually turns your schema into a **Document*** instead of an aimless schema object. It applies the context of your collection.
 
 But the only crucial thing you should remember about #2 above, is that we are exporting a ``Document`` (aka, Model or Document Model) - we will be using it later.
 	
