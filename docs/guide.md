@@ -540,7 +540,7 @@ It's quite simple - and only has 2 items in it:
 
 **\# ``Schema`` class**
 	
-> See API Documentation for [Schema Class](api.md#-schema-class)
+> See API Documentation for [Schema Class](api.md#schema-class)
 	
 
 **\# ``model()`` method**
