@@ -962,7 +962,7 @@ The other supported schema types:
 - ``Date``
 - ``Array``
 
-> See details in **[Schema Guide](guide.md#4-data-types)**
+> See details in **[Schema Guide](guide.md#4-schemas)**
 
 **[▲ back to top](#table-of-contents)**
 	
