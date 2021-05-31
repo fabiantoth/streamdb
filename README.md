@@ -92,7 +92,7 @@
 - <a target="_blank" href="CHANGELOG.md">CHANGELOG</a>
 
 
-## [Usage]((#table-of-contents))
+## [Usage](#table-of-contents)
 
 ### Install:
 
@@ -258,7 +258,7 @@ db.collection('users').deleteMany([2,3])
 
 -------------------------------------------------------------
 
-## [Starter Collection Routes]((#table-of-contents))
+## [Starter Collection Routes](#table-of-contents)
 
 Creating new collections scaffolds a new Router file with the following routes you may edit/add to:
 
@@ -380,7 +380,7 @@ Creating new collections scaffolds a new Router file with the following routes y
 
 -------------------------------------------------------------
 
-## [Using Schema Validation]((#table-of-contents))
+## [Using Schema Validation](#table-of-contents)
 
 ### Starter Schema Model Template:
 
