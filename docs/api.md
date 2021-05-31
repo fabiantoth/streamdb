@@ -62,6 +62,7 @@
 
 ### [Class: Schema](#schema-class)
 - [streamdb.Schema](#schema-class)
+- [streamdb.Types](#streamdbtypes)
 
 <br>
 	
@@ -944,10 +945,24 @@ const User = new Schema({
 })
 
 ```  
+	
+### [streamdb.Types](#table-of-contents)
 
-Refer to the Schema section in the Guid:
+**streamDB** has 3 special schema types:
+	
+1. <code>streamdb.Types.<strong>$incr</strong></code> - for incremented `Number` id's
+2. <code>streamdb.Types.<strong>$uid</strong></code> - for `String` uid's
+3. <code>streamdb.Types.<strong>Any</strong></code> - for accepting any type, or `Object`
 
-> See details in **[Schema Guide](guide.md#4-schemas)**
+The other supported schema types:
+
+- ``String``
+- ``Number``
+- ``Boolean``
+- ``Date``
+- ``Array``
+
+> See details in **[Schema Guide](guide.md#4-data-types)**
 
 **[▲ back to top](#table-of-contents)**
 	
