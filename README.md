@@ -479,5 +479,5 @@ $ npm test
 
 ## Stability Notice 
 
-- streamDB is mainly for prototyping, do not use in production, use sensitive/important. 
+- streamDB is mainly for prototyping, do not use in production, or use sensitive/important data. 
 - Early v0.x.x updates may be breaking, experimental, or temporary (keep track of updates, [CHANGELOG](https://github.com/fabiantoth/streamdb/blob/main/CHANGELOG.md)).
