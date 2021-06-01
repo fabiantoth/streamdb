@@ -117,9 +117,20 @@ test('Queries: throw error when where() arguments are incorrect data types', asy
     done()
 })
 
-test('Queries: throw error when .and()/.or() methods are added before where()', async (done) => {
-    expect(() => db.collection('users').and(`access = member`).find()).toThrow(`and() methods cannot be used before opening where()`)
-    expect(() => db.collection('users').or(`access = member`).find()).toThrow(`or() methods cannot be used before opening where()`)
+test('Queries: throw error when query methods are added before where()', async (done) => {
+    expect(() => db.collection('users').find()).rejects.toMatchObject({error: true, message: "find() must be preceded by where() method"})
+    expect(() => db.collection('users').and(`access = member`).find()).toThrow(`and() must be preceded by where() method`)
+    expect(() => db.collection('users').or(`access = member`).find()).toThrow(`or() must be preceded by where() method`)
+    expect(() => db.collection('users').sort(`access`).find()).toThrow(`sort() must be preceded by where() method`)
+    expect(() => db.collection('users').limit(10).find()).toThrow(`limit() must be preceded by where() method`)
+    expect(() => db.collection('users').offset(10).find()).toThrow(`offset() must be preceded by where() method`)
+    expect(() => db.collection('users').include(['access']).find()).toThrow(`include() must be preceded by where() method`)
+    expect(() => db.collection('users').exclude(['access']).find()).toThrow(`exclude() must be preceded by where() method`)
+    expect(() => db.collection('users').populate(['access']).find()).toThrow(`populate() must be preceded by where() method`)
+    expect(() => db.collection('users').setProperty('access', 5)).rejects.toMatchObject({error: true, message: "setProperty() must be preceded by where() method"})
+    expect(() => db.collection('users').deleteProperty('access', 'member')).rejects.toMatchObject({error: true, message: "deleteProperty() must be preceded by where() method"})
+    expect(() => db.collection('users').removeFrom('access', 'member')).rejects.toMatchObject({error: true, message: "removeFrom() must be preceded by where() method"})
+    expect(() => db.collection('users').updateArray('access', 'member')).rejects.toMatchObject({error: true, message: "updateArray() must be preceded by where() method"})
     done()
 })
 
