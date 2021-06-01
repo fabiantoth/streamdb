@@ -482,7 +482,7 @@ if (apiCall) {
 
 ## [4&nbsp;&nbsp; Schemas](#streamdb-guide)
 
-<details>
+<details open>
 	<summary>Collapse</summary>
 	
 ### Schemas Outline: 
