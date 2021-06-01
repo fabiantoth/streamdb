@@ -10,8 +10,8 @@
 <p align="center">
   <a href="#key-features">Features</a> &nbsp | &nbsp
   <a href="#usage">Usage</a> &nbsp | &nbsp 
-  <a href="docs/guide.md">Guide</a> &nbsp | &nbsp
-  <a href="docs/api.md">API</a>
+  <a href="https://github.com/fabiantoth/streamdb/blob/35adafd797264fc8c21863638bdffe0e7d8f6847/docs/guide.md">Guide</a> &nbsp | &nbsp
+  <a href="https://github.com/fabiantoth/streamdb/blob/35adafd797264fc8c21863638bdffe0e7d8f6847/docs/api.md">API</a>
 </p>
 
 ----------------
@@ -84,9 +84,9 @@
 - [Starter Routes](#starter-collection-routes)
 - [Using Schema Models](#using-schema-validation)
 - [Launching Server](#launchingusing-server)
-- [➥ Guide ](docs/guide.md)
-- [➥ API Reference ](docs/api.md)
-- [➥ Examples](examples)
+- [➥ Guide ](https://github.com/fabiantoth/streamdb/blob/35adafd797264fc8c21863638bdffe0e7d8f6847/docs/guide.md)
+- [➥ API Reference ](https://github.com/fabiantoth/streamdb/blob/35adafd797264fc8c21863638bdffe0e7d8f6847/docs/api.md)
+- [➥ Examples](https://github.com/fabiantoth/streamdb/tree/main/examples)
 - [Tests](#tests)
 - [What's Next](#whats-next)
 - <a target="_blank" href="CHANGELOG.md">CHANGELOG</a>
