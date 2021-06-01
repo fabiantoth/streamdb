@@ -34,8 +34,8 @@ This is a major update release with the entire schema rebuilt and workflow modif
 - [Added] **[Classes]:** StoreMem, BatchTask, UpdatesEmitter, Response, CustomError classes, and basic logger
 - [Added] Collection meta timestamp, version # tracking
 - [Added] Docs directory with a [Guide](docs/guide.md) and [API Reference](docs/api.md) docs
-- [Added] Examples directory with starter examples/recipes
-- [Added] What's next section and items
+- [Added] [Examples](examples) directory with starter examples/recipes
+- [Added] [What's next](README.md#whats-next) section and items
 - [Fixed] Alot
 - [Changed] `defaultModel`: the defaults have been set to 'schema', as 'default' will be removed from the code base
 - [Changed] `updateArray`: has been refactored to be easier to integrate into query helpers.
