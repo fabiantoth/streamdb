@@ -455,10 +455,17 @@ const app = streamdb.server('sampleDB', 'api', 3000)
 ## [Tests](#table-of-contents)
 
 Tests are implemented using the [Jest Framework](https://jestjs.io/), and located in the [\_\_tests\_\_](https://github.com/fabiantoth/streamdb/tree/main/__tests__) directory.  
-To run tests, install dev dependencies and run: 
+
+To run tests, fork/clone a copy of https://github.com/fabiantoth/streamdb.git locally, install all dev/dependencies and run: 
 
 ```sh
 $ npm test
+```
+
+Run coverage report:
+
+```sh
+$ npm run test-coverage
 ```
 
 **[▲ back to top](#table-of-contents)**
@@ -468,7 +475,7 @@ $ npm test
 ## [What's Next](#table-of-contents)
 
 - [ ] remove legacy 'default' workflow from codebase
-- [ ] add populate() to chainQuery helper
+- [ ] add populate() + geoSearch() to chainQuery helper
 - [ ] add 'unique' index schema option
 - [ ] add text-search feature
 - [ ] build demo w/FE Framework
