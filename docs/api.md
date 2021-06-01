@@ -635,6 +635,7 @@ Set criteria, filters/parameters, and run advanced search & update queries. Quer
 
 Set at the end of a query chain to run query
 - Runs query chain
+- Must be preceded by `where()`
 
 Returns: 
 - Promise. Results containing array of documents matching params
@@ -682,6 +683,7 @@ Params:
 
 Returns:
 - Adds to query chain filter
+- Must be preceded by `where()`
 
 	
 ### [or(exp)](#table-of-contents)
@@ -693,6 +695,7 @@ Params:
 
 Returns:
 - Adds to query chain filter
+- Must be preceded by `where()`
 
 	
 ### [limit(num)](#table-of-contents)
@@ -703,7 +706,8 @@ Params:
 - `num` **{Number}**: (required) the number of results to limit return to  
 
 Returns:
-- Adds to query chain, applied when you call .find()
+- Adds to query chain.
+- Must be preceded by `where()`
 
 	
 ### [sort(sortBy, sortOrder)](#table-of-contents)
@@ -715,7 +719,8 @@ Params:
 - `sortOrder` **{String}**: (optional) accepts either 'asc' (default) or 'desc'  
 
 Returns:
-- Adds to query chain, applied when you call .find()
+- Adds to query chain
+- Must be preceded by `where()`
 
 	
 ### [offset(num)](#table-of-contents)
@@ -726,7 +731,8 @@ Params:
 - `num` **{Number}**: (required) the number of results to offset starting results from  
 
 Returns:
-- Adds to query chain, applied when you call .find()
+- Adds to query chain
+- Must be preceded by `where()`
 
 	
 ### [exclude(arr)](#table-of-contents)
@@ -741,6 +747,7 @@ Params:
 
 Returns:
 - Adds to query chain and is applied towards the return data
+- Must be preceded by `where()`
 	
 
 ### [include(arr)](#table-of-contents)
@@ -755,6 +762,7 @@ Params:
 
 Returns:
 - Adds to query chain and is applied towards the return data
+- Must be preceded by `where()`
 
 	
 ### [populate(arr)](#table-of-contents)
@@ -766,30 +774,55 @@ Params:
 
 Returns:
 - Adds to query chain and is applied towards the return data
+- Must be preceded by `where()`
 
 	
 ### [geoSearch(params)](#table-of-contents)  
 
-Returns docs within radius of given coordinates (lat, long)
-- must provide an object with fields below
-- radius is in meters (1000 = 1km)
-- Runs individual query chain (no other methods can be chained)  
+Returns documents within radius of given coordinates (`lat`, `long`, `radius`)
+- Runs a query chain 
+	
+The `geoSearch()` query may be run either on its own, or preceded by `where()..` chains preceding it.
+	
+Example 1:
+
+```js
+placesRef.geoSearch({ lat: 34.052235, long: -118.243683, radius: 2500 })	
+```
+	
+Example 2:
+
+```js
+placesRef.where('isOpen = $true').limit(50).geoSearch({ lat: 34.052235, long: -118.243683, radius: 2500 })	
+```
+	
+Your schema/document object MUST contain a `coordinates` object with latitude/longitude properties in the **first level** to be searchable:
+	
+```js
+{
+  coordinates: {
+    latitude: Number,
+    longitude: Number
+  }	
+}	
+```
 
 Params:
 - `params` **{Object}**: (all fields required):
   - `lat` **{Number}** (latitude)
   - `long` **{Number}** (longitude)
-  - `radius` **{Number}** (radius)
+  - `radius` **{Number}** radius is in meters (1000 = 1km)
 
 Returns:
-- Promise. Results containing array of documents matching params
+- Promise. Results containing array of documents matching query
 
 	
 ### [setProperty(path, value)](#table-of-contents)
 
 Sets the value of a doc property if it exists, otherwise it creates it. 
 	
-- Runs a query chain  
+- Runs a query chain
+- Must be preceded by `where()`
 - See [``setProperty()`` recipes](/examples/recipes/README.md#-setproperty)
 
 Params:
@@ -806,7 +839,8 @@ Returns:
 
 Deletes a document property. 
 	
-- Runs a query chain 
+- Runs a query chain
+- Must be preceded by `where()`
 - See [``deleteProperty()`` recipes](/examples/recipes/README.md#-deleteproperty)	
 
 Params:
@@ -821,6 +855,7 @@ Returns:
 Array method, insert value(s) into an array. 
 	
 - Runs a query chain  
+- Must be preceded by `where()`
 - See [``insertInto()`` recipes](/examples/recipes/README.md#-insertinto)
 
 Params:
@@ -836,6 +871,7 @@ Returns:
 Array method, remove value(s) from an array. 
 	
 - Runs a query chain
+- Must be preceded by `where()`
 - for objects containg keywords id/$ref, may remove items by either providing array of ids or array of objects with id/$ref
 - primitive types, a matching value removes ALL matching values from array
 - See [``removeFrom()`` recipes](/examples/recipes/README.md#-removefrom)
@@ -853,6 +889,7 @@ Returns:
 Update value(s) in an array. 
 	
 - Runs a query chain  
+- Must be preceded by `where()`
 - See [``updateArray()`` recipes](/examples/recipes/README.md#-updatearray)
 
 	

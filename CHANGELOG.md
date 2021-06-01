@@ -17,7 +17,7 @@ All notable changes to this project will be documented in this file.
 </details>
 <br>
 
-## Version 0.1.0  - (May 31, 2021)
+## Version 0.1.0  - (June 1, 2021)
 
 ### Release notes:
 
