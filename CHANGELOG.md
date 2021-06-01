@@ -17,6 +17,30 @@ All notable changes to this project will be documented in this file.
 </details>
 <br>
 
+## Version 0.1.0  - (May 31, 2021)
+
+### Release notes:
+
+This is a major update release with the entire schema rebuilt and workflow modified to utilize an evented cache with queued sub-routines, and task runners. Many previous errors have been fixed, code refactored, and tests have been added to increase **`coverage to 86.31%`** (npm script: `npm run test-coverage`).
+
+- [Added] **[New Feature]:** **[CLI](docs/guide.md#6-cli)**
+- [Added] **[New Feature]:** **[populate()](docs/api.md#populatearr)**
+- [Added] **[New Feature]:** **[addCollections()](docs/api.md#dbaddcollectionscolnames-settings)**
+- [Added] **[New Feature]:** **[generateModel()](docs/api.md#generatemodel)**
+- [Added] **[New Feature]:** **[generateRouter()](docs/api.md#generaterouter)**
+- [Added] **[New Feature]:** **[Automatic sub-document parent $ref](docs/guide.md#7-document-relationships)**
+- [Added] **[New Route]:** **[Run advanced update queries](docs/guide.md#34-update-queries)**
+- [Added] **[dependency]: commander**
+- [Added] **[Classes]:** StoreMem, BatchTask, UpdatesEmitter, Response, CustomError classes, and basic logger
+- [Added] Collection meta timestamp, version # tracking
+- [Added] Docs directory with a [Guide](docs/guide.md) and [API Reference](docs/api.md) docs
+- [Added] Examples directory with starter examples/recipes
+- [Added] What's next section and items
+- [Fixed] Alot
+- [Changed] `defaultModel`: the defaults have been set to 'schema', as 'default' will be removed from the code base
+- [Changed] `updateArray`: has been refactored to be easier to integrate into query helpers.
+- [Changed] `$refs`: have been changed to be embedded as id values only
+
 ## Version 0.0.9  - (Feb. 23, 2021)
 
 - [Added] **[New Feature]:** **Set Custom Model Name**: set custom model name in create collection settings, see <a href="README.md#customizing-the-validation-model">customizing model examples</a> (under Schema Validation)
