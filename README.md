@@ -19,13 +19,13 @@
 <p align="center">Designed for front-end development so you can just focus on building your awesome application.</p>
 
 <p align="center"> 
-  <img src="https://github.com/fabiantoth/streamdb/blob/0ad96855ae3967ece7cb8a1bce6469a58add7c7e/assets/intro.gif" alt="quick start setup" style="max-height: 550px;">
+  <img src="https://github.com/fabiantoth/streamdb/blob/d27c090c08cbf4c7974fe925180b93d71fc53c59/assets/intro.gif" alt="quick start setup" style="max-height: 550px;">
 </p>
 
 
 ## Key Features
 
-<img align="left" alt="db-icon" src="https://github.com/fabiantoth/streamdb/blob/903b1b88cd545f39910c6a01684af2809f533adb/assets/db-gear.svg" width="30px" />
+<img align="left" alt="db-icon" src="https://github.com/fabiantoth/streamdb/blob/d27c090c08cbf4c7974fe925180b93d71fc53c59/assets/db-gear.svg" width="30px" />
 
 <details>
 <summary><strong>A Full Featured Database</strong></summary>
@@ -42,7 +42,7 @@
 
 </details>
 
-<img align="left" alt="model-icon" src="https://github.com/fabiantoth/streamdb/blob/903b1b88cd545f39910c6a01684af2809f533adb/assets/model-icon.svg" width="30px" />
+<img align="left" alt="model-icon" src="https://github.com/fabiantoth/streamdb/blob/d27c090c08cbf4c7974fe925180b93d71fc53c59/assets/model-icon.svg" width="30px" />
 
 <details>
 <summary><strong>Data Model + Validation</strong></summary>
@@ -57,7 +57,7 @@
 
 </details>
 
-<img align="left" alt="server-icon" src="https://github.com/fabiantoth/streamdb/blob/903b1b88cd545f39910c6a01684af2809f533adb/assets/server-icon.svg" width="30px" />
+<img align="left" alt="server-icon" src="https://github.com/fabiantoth/streamdb/blob/d27c090c08cbf4c7974fe925180b93d71fc53c59/assets/server-icon.svg" width="30px" />
 
 <details>
 <summary><strong>Server + API Routes</strong></summary>
@@ -373,7 +373,7 @@ Creating new collections scaffolds a new Router file with the following routes y
 
 **Sample Route From Router Template:**
 <p align="left"> 
-  <img src="https://github.com/fabiantoth/streamdb/blob/cdc80830e6fe97d50bd785c68aa9f79ea88ebbe5/assets/get-route.svg" alt="route template" style="max-height: 420px;">
+  <img src="https://github.com/fabiantoth/streamdb/blob/d27c090c08cbf4c7974fe925180b93d71fc53c59/assets/get-route.svg" alt="route template" style="max-height: 420px;">
 </p>
 
 **[▲ back to top](#table-of-contents)**
@@ -385,7 +385,7 @@ Creating new collections scaffolds a new Router file with the following routes y
 ### Starter Schema Model Template:
 
 <p align="left"> 
-  <img src="https://github.com/fabiantoth/streamdb/blob/cdc80830e6fe97d50bd785c68aa9f79ea88ebbe5/assets/model-template.svg" alt="model template" style="max-height: 440px;">
+  <img src="https://github.com/fabiantoth/streamdb/blob/d27c090c08cbf4c7974fe925180b93d71fc53c59/assets/model-template.svg" alt="model template" style="max-height: 440px;">
 </p>
 
 Edit template if you wish to add validation and document settings:
