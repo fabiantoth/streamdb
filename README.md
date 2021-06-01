@@ -8,9 +8,9 @@
 ----------------
 
 <p align="center">
-  <a href="#key-features">Features</a> &nbsp | &nbsp
-  <a href="#usage">Usage</a> &nbsp | &nbsp 
-  <a href="https://github.com/fabiantoth/streamdb/blob/main/docs/guide.md">Guide</a> &nbsp | &nbsp
+  <a href="#key-features">Features</a>  | 
+  <a href="#usage">Usage</a>  |   
+  <a href="https://github.com/fabiantoth/streamdb/blob/main/docs/guide.md">Guide</a>  | 
   <a href="https://github.com/fabiantoth/streamdb/blob/main/docs/api.md">API</a>
 </p>
 
@@ -25,13 +25,9 @@
 
 ## Key Features
 
-<img align="left" alt="db-icon" src="https://github.com/fabiantoth/streamdb/blob/d27c090c08cbf4c7974fe925180b93d71fc53c59/assets/db-gear.svg" width="30px" />
-
 <details>
-<summary><strong>A Full Featured Database</strong></summary>
+<summary><img align="left" alt="db-icon" src="https://github.com/fabiantoth/streamdb/blob/d27c090c08cbf4c7974fe925180b93d71fc53c59/assets/db-gear.svg" width="25px" height="24px" /> <strong>A Full Featured Database</strong></summary>
 
-<br>
-	
 - Generated ids (``incr``, ``uid``)
 - Timestamps (``created_at``, ``updated-at``)
 - Queries (includes ``geo-search``)
@@ -42,12 +38,8 @@
 
 </details>
 
-<img align="left" alt="model-icon" src="https://github.com/fabiantoth/streamdb/blob/d27c090c08cbf4c7974fe925180b93d71fc53c59/assets/model-icon.svg" width="30px" />
-
 <details>
-<summary><strong>Data Model + Validation</strong></summary>
-	
-<br>
+<summary><img align="left" alt="model-icon" src="https://github.com/fabiantoth/streamdb/blob/d27c090c08cbf4c7974fe925180b93d71fc53c59/assets/model-icon.svg" width="25px" height="24px" /> <strong> Data Model + Validation</strong></summary>
 
 - Schema validation & settings
 - Parent/subdocument refs
@@ -57,12 +49,8 @@
 
 </details>
 
-<img align="left" alt="server-icon" src="https://github.com/fabiantoth/streamdb/blob/d27c090c08cbf4c7974fe925180b93d71fc53c59/assets/server-icon.svg" width="30px" />
-
 <details>
-<summary><strong>Server + API Routes</strong></summary>
-
-<br>
+<summary><img align="left" alt="server-icon" src="https://github.com/fabiantoth/streamdb/blob/d27c090c08cbf4c7974fe925180b93d71fc53c59/assets/server-icon.svg" width="25px" height="24px" /> <strong> Server + API Routes</strong></summary>
 
 - Built with **[Express Framework](https://expressjs.com/)**
 - Simple CRUD starter routes
@@ -254,8 +242,6 @@ db.collection('users').deleteMany([2,3])
 //}
 ```
 
-**[▲ back to top](#table-of-contents)**
-
 -------------------------------------------------------------
 
 ## [Starter Collection Routes](#table-of-contents)
@@ -267,7 +253,7 @@ Creating new collections scaffolds a new Router file with the following routes y
 		<th>Request</th>
 		<th>Route</th>
 		<th>Description</th>
-		<th>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp-&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+		<th> - </th>
 		<th>Method</th>
 	</tr>
 	  <tr>
@@ -376,8 +362,6 @@ Creating new collections scaffolds a new Router file with the following routes y
   <img src="https://github.com/fabiantoth/streamdb/blob/d27c090c08cbf4c7974fe925180b93d71fc53c59/assets/get-route.svg" alt="route template" style="max-height: 420px;">
 </p>
 
-**[▲ back to top](#table-of-contents)**
-
 -------------------------------------------------------------
 
 ## [Using Schema Validation](#table-of-contents)
@@ -415,9 +399,6 @@ const User = new Schema({
 
 module.exports = streamdb.model('User', User)
 ```
-
-
-**[▲ back to top](#table-of-contents)**
 
 -------------------------------------------------------------
 
@@ -467,8 +448,6 @@ Run coverage report:
 ```sh
 $ npm run test-coverage
 ```
-
-**[▲ back to top](#table-of-contents)**
 
 -------------------------------------------------------------
 
