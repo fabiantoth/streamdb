@@ -1,15 +1,24 @@
 {
   "name": "streamdb",
+  "description": "A Node.js document-oriented JSON DB & API development toolkit",
   "version": "0.1.0",
-  "description": "A Node streams-based JSON document-model DB",
-  "main": "lib/index.js",
-  "bin": "bin/index.js",
-  "scripts": {
-    "test": "jest --runInBand --watchAll"
-  },
+  "author": "Fabian Toth",
+  "license": "ISC",
+  "homepage": "https://github.com/fabiantoth/streamdb#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fabiantoth/streamdb.git"
+  },
+  "main": "lib/index.js",
+  "bin": "bin/index.js",
+  "files": [
+    "/lib",
+    "/bin"
+  ],
+  "scripts": {
+    "test": "jest --runInBand --watchAll",
+    "test-coverage": "jest --coverage",
+    "clear-cache": "jest --clearCache"
   },
   "keywords": [
     "db",
@@ -19,14 +28,14 @@
     "stream-db",
     "json",
     "jsondb",
-    "mockapi"
+    "mockapi",
+    "api",
+    "prototype"
   ],
-  "author": "Fabian Toth",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/fabiantoth/streamdb/issues"
   },
-  "homepage": "https://github.com/fabiantoth/streamdb#readme",
+  
   "devDependencies": {
     "jest": "26.6.3",
     "rewire": "5.0.0",
@@ -43,6 +52,7 @@
     "filenamify": "^4.2.0",
     "globby": "11.0.1",
     "make-dir": "3.1.0",
+    "package-lock.json": "^1.0.0",
     "pluralize": "8.0.0",
     "uid": "2.0.0"
   }
