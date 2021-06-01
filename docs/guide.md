@@ -1266,10 +1266,10 @@ streamdb delete [-d/--db] sampleDB
 # add collections
 # ---to add multiple collections, separate collection
 # ---names by a single space after the [-a/--add] flag
-streamdb [-d/--db] sampleDB [-a/--add] users details groups
+streamdb sampleDB [-a/--add] users details groups
 	
 #remove collection
-streamdb [-r/--remove] sampleDB
+streamdb sampleDB [-r/--remove] groups
 ```
 
 ***\*\*Note\*\*:*** There is no CLI option for customizing collection settings, only adding/removing. 	
