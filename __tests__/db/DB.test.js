@@ -1,14 +1,19 @@
 const streamDb = require('../../lib/index')
 const DB = streamDb.DB
+const Schema = streamDb.Schema
 
 const dbSettings = {
     dbName: 'testUserDB',
     storesMax: 131072,  
     initRoutes: true, 
-    initSchemas: true,
+    initSchemas: false,
     routesAutoDelete: true, 
-    modelsAutoDelete: true, 
-    routesDir: 'api' 
+    modelsAutoDelete: false, 
+    routesDir: 'api',
+    defaultModel: {
+        type: 'default',
+        id: '$incr'
+    } 
 }
 
 let db
@@ -24,9 +29,7 @@ afterAll(async (done) => {
     done()
 })
 
-
-
-test('DB: (addCollection) Should return new collection meta file', async (done) => {
+test('1 -> db.addCollection(): Should return new collection meta file', async (done) => {
 
     const usersColSettings = {
         storeMax: 131072,
@@ -38,35 +41,36 @@ test('DB: (addCollection) Should return new collection meta file', async (done) 
         }
     }
 
-    const expectedMeta = {
-        colName: 'users',
-        metaPath: './testUserDB/collections/users/users.meta.json',
-        colPath: './testUserDB/collections/users',
-        storeMax: 131072,
-        target: './testUserDB/collections/users/users.0.json',
-        store: [
-          {
-            '$id': 0,
-            size: 2,
-            path: './testUserDB/collections/users/users.0.json',
-            documents: []
-          }
-        ],
-        model: { 
+    const response = await db.addCollection('users', usersColSettings)
+    const usersMeta = response.data
+
+    expect.objectContaining({
+        colName: expect(usersMeta.colName).toBe('users'),
+        metaPath: expect(usersMeta.metaPath).toBe('./testUserDB/collections/users/users.meta.json'),
+        colPath: expect(usersMeta.colPath).toBe('./testUserDB/collections/users'),
+        storeMax: expect(usersMeta.storeMax).toBe(131072),
+        target: expect(usersMeta.target).toBe('./testUserDB/collections/users/users.0.json'),
+        stores: expect(usersMeta.stores).toMatchObject({
+            '0': {
+                '$id': 0,
+                size: 2,
+                path: './testUserDB/collections/users/users.0.json',
+                documents: []
+              }
+        }),
+        model: expect(usersMeta.model).toMatchObject({ 
             type: 'default', 
             id: '$incr', 
             idCount: 0, 
             idMaxCount: 10000 
-        }
-    }
-
-    const usersMeta = await db.addCollection('users', usersColSettings)
-
-    expect(usersMeta).toMatchObject(expectedMeta)
+        }),
+        version: expect(usersMeta.version).toBe(0),
+        timestamp: expect.any(Date),
+    })
     done()
 })
 
-test('DB: (addCollection) should override out of range min/max values when default model $incr to colSettings $uid', async (done) => {
+test('2 -> db.addCollection(): should override out of range min/max values when default model $incr to colSettings $uid', async (done) => {
 
     const groupsColSettings = {
         model: {
@@ -81,15 +85,40 @@ test('DB: (addCollection) should override out of range min/max values when defau
         uidLength: 11
     }
 
-    const groupsMeta = await db.addCollection('groups', groupsColSettings)
-
+    const response = await db.addCollection('groups', groupsColSettings)
+    const groupsMeta = response.data
     expect(groupsMeta.model).toMatchObject(expectedModel)
     done()
 })
 
-test('DB: (dropCollection) Should delete users collection and return success message', async (done) => {
-    const deleted = await db.dropCollection('users')
+test('3 -> db.addSchema(): Should add a new schema to db schemas', async (done) => {
+    const DetailSchema = new Schema({
+        age: Number,
+        email: String
+    })
 
-    expect(deleted).toBe('Collection "users" has been deleted')
+    const updatedDb = db.addSchema('Detail', DetailSchema)
+    expect(Object.keys(updatedDb.schemas).length).toBe(1)
+    done()
+})
+
+test('4 -> db.dropCollection(): Should delete users collection and return success message', async (done) => {
+    const deleted = await db.dropCollection('users')
+    expect(deleted.message).toBe('Collection "users" has been deleted')
+    done()
+})
+
+
+//
+// ======= negative tests ========== //
+//
+
+test('(-1) -> db.addSchema(): #error Should throw error trying to add model name that already exists', async (done) => {
+    const DetailSchema = new Schema({
+        age: Number,
+        email: String
+    })
+    expect(() => db.addSchema('Detail', DetailSchema))
+        .toThrow(`Model 'Detail' already exists`)
     done()
 })

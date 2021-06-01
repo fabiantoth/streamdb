@@ -34,7 +34,7 @@ beforeAll(async (done) => {
 
     db.addCollection('users', defaultSettings)
         .then(res => {
-            colMeta = res
+            colMeta = res.data
             done()
         })
 })
@@ -72,7 +72,7 @@ test('default: (createOneDocument) Should return one new document', async (done)
         })
 })
 
-test('default: (createManyDocuments) Should add 3 new documents', async (done) => {
+test('default: (createManyDocuments) Should add 5 new documents', async (done) => {
     const users = [
         {
             firstname: 'Bugs',
@@ -104,31 +104,31 @@ test('default: (createManyDocuments) Should add 3 new documents', async (done) =
 
     const expectedDocs = [
         {
-            id: 1,
+            id: 2,
             firstname: 'Bugs',
             lastname: 'Bunny',
             email: 'bbunny@email.com'
         },
         {
-            id: 2,
+            id: 3,
             firstname: 'Scooby',
             lastname: 'Doo',
             email: 'sdoo@email.com'
         },
         {
-            id: 3,
+            id: 4,
             firstname: 'Tom',
             lastname: 'Cat',
             email: 'tcat@email.com'
         },
         {
-            id: 4,
+            id: 5,
             firstname: 'SpongeBob',
             lastname: 'SquarePants',
             email: 'sbsp@email.com'
         },
         {
-            id: 5,
+            id: 6,
             firstname: 'Daffy',
             lastname: 'Duck',
             email: 'dduck@email.com',

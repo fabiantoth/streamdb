@@ -78,7 +78,13 @@ test('createCollection: validateModel() - Should return model object with schema
     const modelOptions = { type: 'schema', id: '$uid'}
 
     const model = validateModelObject({ modelsPath, defaultModel, models: [] }, colName, modelOptions)
-    const expectedModel = { type: 'schema', id: '$uid', name: 'User', path: './test-db/models/User.js', uidLength: 11, minLength: 6 }
+    const expectedModel = { 
+        type: 'schema', 
+        id: '$uid', 
+        name: null, 
+        path: null, 
+        uidLength: 11, 
+        minLength: 6 }
 
     expect(model).toMatchObject(expectedModel)
 })

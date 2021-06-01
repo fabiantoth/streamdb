@@ -1,13 +1,14 @@
 const getCollectionResources = require('../../../lib/db/helpers/get-col-resources')
 
 const streamDb = require('../../../lib/index')
+const Schema = streamDb.Schema
 const DB = streamDb.DB
 
 const dbSettings = {
     dbName: 'resourcesDB',
     storesMax: 200,  
-    initRoutes: true, 
-    initSchemas: true,
+    initRoutes: false, 
+    initSchemas: false,
     routesAutoDelete: true, 
     modelsAutoDelete: true, 
     routesDir: 'api' 
@@ -16,6 +17,7 @@ const dbSettings = {
 const colSettings = {
     storeMax: 200,
     model: {
+        // type: 'schema',
         type: 'schema',
         id: '$incr',
         idCount: 0,
@@ -87,10 +89,24 @@ beforeAll(async (done) => {
     const resourcesDB = await streamDb.createDb(dbSettings)
     db = new DB('resourcesDB')
 
-    db.addCollection('users', colSettings)
-        .then(res => {
-            done()
-        })
+    let users = await db.addCollection('users', colSettings)
+    
+    const UserSchema = new Schema({
+        firstname: String,
+        lastname: String,
+        age: Number
+    }, 
+    {
+        strict: false,
+        timestamps: {
+            created_at: true,
+            updated_at: true
+        }
+    })
+
+    db.addSchema('User', UserSchema)
+    
+    done()
 })
 
 afterAll(async (done) => {
@@ -107,15 +123,13 @@ beforeEach(async () => {
 })
 
 test('getCollectionResources: Should insert 11 test records', async (done) => {
-    let usersRef = db.collection('users')
-    usersRef.insertMany(documents)
-        .then(data => {
-            expect(data.model.idCount).toBe(11)
-            done()
-        })
+    let usersRef = db.collection('users').useModel('User')
+    let result = await usersRef.insertMany(documents)
+    expect(result.data.model.idCount).toBe(11)
+    done()
 })
 
-test('getCollectionResources: Should return array with collection resources', async (done) => {
+test('getCollectionResources: Should return array with collection resources for 10 new stores', async (done) => {
     const resourceDb = new DB('resourcesDB')
     let usersRef = resourceDb.collection('users')
     let colPath = usersRef.colPath

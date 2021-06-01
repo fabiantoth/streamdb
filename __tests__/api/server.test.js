@@ -9,7 +9,12 @@ const dbSettings = {
     initSchemas: false,
     routesAutoDelete: true,
     modelsAutoDelete: false,
-    routesDir: 'api'
+    routesDir: 'api',
+    defaultModel: {
+        type: 'default',
+        id: '$incr',
+        maxValue: 10000
+    }
 }
 
 const dbFullMeta = {
@@ -130,7 +135,7 @@ test('Server: POST /api/db/:name - Should create a new collection', async () => 
 test('Server: POST /api/collection - Should add 4 new documents', async (done) => {
     setTimeout(async () => {
         let res = await request(appServer('testDBFull', 'api')).post('/api/users').send(documents).expect(201)
-        expect(res.body.length).toBe(4)
+        expect(res.body.data.length).toBe(4)
         done()
       }, 50)
 })
@@ -138,7 +143,7 @@ test('Server: POST /api/collection - Should add 4 new documents', async (done) =
 test('Server: GET /api/collection/:id - Should get 1 document', async (done) => {
     setTimeout(async () => {
         let response = await request(appServer('testDBFull', 'api')).get('/api/users/3').send().expect(200)
-        let res = response.body
+        let res = response.body.data
 
         expect.objectContaining({
             id: expect(res.id).toBe(3),
@@ -160,7 +165,7 @@ test('Server: GET /api/collection/:id - Should get 1 document', async (done) => 
 test('Server: GET /api/collection - Should get all 4 documents', async (done) => {
     setTimeout(async () => {
         let res = await request(appServer('testDBFull', 'api')).get('/api/users').send().expect(200)
-        expect(res.body.length).toBe(4)
+        expect(res.body.data.length).toBe(4)
         done()
       }, 50)
 })
@@ -181,10 +186,10 @@ test('Server: PUT /api/collection - Should update 2 documents', async (done) => 
 
     setTimeout(async () => {
         let response = await request(appServer('testDBFull', 'api')).put('/api/users').send(updates).expect(200)
-        let res = response.body[0]
-        let res2 = response.body[1]
+        let res = response.body.data[0]
+        let res2 = response.body.data[1]
 
-        expect(response.body.length).toBe(2)
+        expect(response.body.data.length).toBe(2)
         
         expect.objectContaining({
             id: expect(res.id).toBe(3),
@@ -220,11 +225,11 @@ test('Server: GET /api/collection/_q/? - where() queries', async (done) => {
         let res4 = await request(appServer('testDBFull', 'api')).get('/api/users/_q/?where=id,>=,1').expect(200)
         let res5 = await request(appServer('testDBFull', 'api')).get('/api/users/_q/?where=id,<,2').expect(200)
 
-        expect(res1.body.length).toBe(1)
-        expect(res2.body.length).toBe(3)
-        expect(res3.body.length).toBe(3)
-        expect(res4.body.length).toBe(4)
-        expect(res5.body.length).toBe(1)
+        expect(res1.body.data.length).toBe(1)
+        expect(res2.body.data.length).toBe(3)
+        expect(res3.body.data.length).toBe(3)
+        expect(res4.body.data.length).toBe(4)
+        expect(res5.body.data.length).toBe(1)
         done()
       }, 50)
 })
@@ -242,12 +247,12 @@ test('Server: GET /api/collection/_q/? - where().and() queries', async (done) =>
         let res2 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query2}`).expect(200)
         let res3 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query3}`).expect(200)
         let res4 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query4}`).expect(200)
-
-        expect(res.body.length).toBe(1)
-        expect(res1.body.length).toBe(2)
-        expect(res2.body.length).toBe(1)
-        expect(res3.body.length).toBe(3)
-        expect(res4.body.length).toBe(1)
+        
+        expect(res.body.data.length).toBe(1)
+        expect(res1.body.data.length).toBe(3)
+        expect(res2.body.data.length).toBe(3)
+        expect(res3.body.data.length).toBe(4)
+        expect(res4.body.data.length).toBe(1)
         done()
       }, 50)
 })
@@ -257,8 +262,7 @@ test('Server: GET /api/collection/_q/? - where().or() queries', async (done) => 
 
     setTimeout(async () => {
         let res = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query}`).expect(200)
-
-        expect(res.body.length).toBe(3)
+        expect(res.body.data.length).toBe(4)
         done()
       }, 50)
 })
@@ -268,8 +272,7 @@ test('Server: GET /api/collection/_q/? - where().and().or() queries', async (don
 
     setTimeout(async () => {
         let res = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query}`).expect(200)
-
-        expect(res.body.length).toBe(2)
+        expect(res.body.data.length).toBe(3)
         done()
       }, 50)
 })
@@ -288,11 +291,11 @@ test('Server: GET /api/collection/_q/? - where(exp, filterFn) queries', async (d
         let res3 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query3}`).expect(200)
         let res4 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query4}`).expect(200)
 
-        expect(res.body.length).toBe(2)
-        expect(res1.body.length).toBe(2)
-        expect(res2.body.length).toBe(1)
-        expect(res3.body.length).toBe(1)
-        expect(res4.body.length).toBe(2)
+        expect(res.body.data.length).toBe(2)
+        expect(res1.body.data.length).toBe(3)
+        expect(res2.body.data.length).toBe(2)
+        expect(res3.body.data.length).toBe(1)
+        expect(res4.body.data.length).toBe(2)
 
         done()
       }, 50)
@@ -308,9 +311,9 @@ test('Server: GET /api/collection/_q/? - where(exp, filterFn).where() queries', 
         let res1 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query1}`).expect(200)
         let res2 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query2}`).expect(200)
 
-        expect(res.body.length).toBe(1)
-        expect(res1.body.length).toBe(1)
-        expect(res2.body.length).toBe(1)
+        expect(res.body.data.length).toBe(1)
+        expect(res1.body.data.length).toBe(1)
+        expect(res2.body.data.length).toBe(1)
 
         done()
       }, 50)
@@ -341,15 +344,15 @@ test('Server: GET /api/collection/_q/? - where()/.include()/.exclude() queries',
         let res2 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query2}`).expect(200)
         let res3 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query3}`).expect(200)
 
-        expect(res.body.length).toBe(1)
-        expect(res1.body.length).toBe(1)
-        expect(res2.body.length).toBe(1)
-        expect(res3.body.length).toBe(1)
+        expect(res.body.data.length).toBe(1)
+        expect(res1.body.data.length).toBe(1)
+        expect(res2.body.data.length).toBe(1)
+        expect(res3.body.data.length).toBe(1)
         
-        expect(res.body).toMatchObject(expected)
-        expect(res1.body).toMatchObject(expected)
-        expect(res2.body).toMatchObject(expected)
-        expect(res3.body).toMatchObject(expected2)
+        expect(res.body.data).toMatchObject(expected)
+        expect(res1.body.data).toMatchObject(expected)
+        expect(res2.body.data).toMatchObject(expected)
+        expect(res3.body.data).toMatchObject(expected2)
 
         done()
       }, 50)
@@ -365,9 +368,9 @@ test('Server: GET /api/collection/_q/? - where()/.limit()/.offset() queries', as
         let res1 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query1}`).expect(200)
         let res2 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query2}`).expect(200)
 
-        expect(res.body.length).toBe(2)
-        expect(res1.body.length).toBe(1)
-        expect(res2.body.length).toBe(1)
+        expect(res.body.data.length).toBe(2)
+        expect(res1.body.data.length).toBe(1)
+        expect(res2.body.data.length).toBe(1)
 
         done()
       }, 50)
@@ -387,11 +390,11 @@ test('Server: GET /api/collection/_q/? - where()/sort() queries', async (done) =
         let res3 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query3}`).expect(200)
         let res4 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query4}`).expect(200)
 
-        expect(res.body[0].id).toBe(1)
-        expect(res1.body[0].id).toBe(4)
-        expect(res2.body[0].id).toBe(1)
-        expect(res3.body[0].id).toBe(4)
-        expect(res4.body[0].id).toBe(4)
+        expect(res.body.data[0].id).toBe(1)
+        expect(res1.body.data[0].id).toBe(4)
+        expect(res2.body.data[0].id).toBe(1)
+        expect(res3.body.data[0].id).toBe(4)
+        expect(res4.body.data[0].id).toBe(4)
 
         done()
       }, 50)

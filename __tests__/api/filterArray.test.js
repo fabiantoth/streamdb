@@ -34,7 +34,7 @@ test('filterArray: Invalid operator symbol', () => {
     // const options = ['=', '!=', '<', '>', '<=', ">="]
     const oper = '=='
 
-    expect(() => validateOper(oper)).toThrow(`[validationError]: invalid operator found in arr 2nd position: ${oper}`)
+    expect(() => validateOper(oper)).toThrow(`Invalid operator found in arr 2nd position: ${oper}`)
 })
 
 test('filterArray: return filtered array with object matching title value', () => {
