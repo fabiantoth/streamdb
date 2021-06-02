@@ -84,17 +84,22 @@
 
 ### Install:
 
-Install globally to use CLI:
+```sh
+$ npm i streamdb
+```
+
+To use CLI without global install, prefix commands with `npx`:
+
+```sh
+$ npx streamdb create --db sampleDB
+```
+
+Or, install a global copy as welll:
 
 ```sh
 $ npm i -g streamdb
 ```
 
-Then, locally into your project directory:
-
-```sh
-$ npm i streamdb
-```
  
 ### Create DB:
 
