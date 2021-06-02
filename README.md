@@ -84,6 +84,14 @@
 
 ### Install:
 
+Install globally to use CLI:
+
+```sh
+$ npm i -g streamdb
+```
+
+Or locally if you prefer file setup:
+
 ```sh
 $ npm i streamdb
 ```

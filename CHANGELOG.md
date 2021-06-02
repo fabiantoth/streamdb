@@ -17,6 +17,10 @@ All notable changes to this project will be documented in this file.
 </details>
 <br>
 
+## Version 0.1.2  - (June 2, 2021)
+
+- [Added]: description for global install to use CLI: `npm i -g streamdb`
+
 ## Version 0.1.0  - (June 1, 2021)
 
 ### Release notes:
