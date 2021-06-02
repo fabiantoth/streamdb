@@ -90,7 +90,7 @@ Install globally to use CLI:
 $ npm i -g streamdb
 ```
 
-Or locally if you prefer file setup:
+Then, locally into your project directory:
 
 ```sh
 $ npm i streamdb
