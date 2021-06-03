@@ -1,7 +1,7 @@
 {
   "name": "streamdb",
   "description": "A Node.js document-oriented JSON DB & API development toolkit",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "author": "Fabian Toth",
   "license": "ISC",
   "homepage": "https://github.com/fabiantoth/streamdb#readme",
