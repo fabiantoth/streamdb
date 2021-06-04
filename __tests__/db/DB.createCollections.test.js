@@ -1,40 +1,15 @@
 const streamDb = require('../../lib/index')
-const DB = streamDb.DB
-
-const dbSettings1 = {
-    dbName: 'schema-create-collections'
-}
-
-const dbSettings2 = {
-    dbName: 'default-create-collections',
-    storesMax: 131072,  
-    initRoutes: true, 
-    initSchemas: false,
-    routesAutoDelete: true, 
-    modelsAutoDelete: false, 
-    routesDir: 'api2',
-    defaultModel: {
-        type: 'default',
-        id: '$incr'
-    } 
-}
-
 
 let db
-let db2
 
 beforeAll(async (done) => {
-    const schemDB = await streamDb.createDb(dbSettings1)
-    const schemDB2 = await streamDb.createDb(dbSettings2)
-    db = new DB('schema-create-collections')
-    db2 = new DB('default-create-collections')
-    
+    const schemDB = await streamDb.createDb({ dbName: 'schema-create-collections' })
+    db = new streamDb.DB('schema-create-collections')
     done()
 })
 
 afterAll(async (done) => {
     const deleted1 = await streamDb.deleteDb('schema-create-collections')
-    const deleted2 = await streamDb.deleteDb('default-create-collections')
     done()
 })
 
@@ -43,18 +18,6 @@ test('[schema] ->  db.addCollections(): Should create 10 new collections', async
     const results = await db.addCollections(collections)
     const colMetas = results.data
     
-    colMetas.forEach(colMeta => {
-        expect(collections.includes(colMeta.colName))
-    })
-    done()
-})
-
-
-test('[default] ->  db.addCollections(): Should create 10 new collections', async (done) => {
-    const collections = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten']
-    const results = await db2.addCollections(collections)
-    const colMetas = results.data
-
     colMetas.forEach(colMeta => {
         expect(collections.includes(colMeta.colName))
     })

@@ -5,7 +5,7 @@ const createCol = rewire('../../lib/db/createCollection.js')
 const validateModelObject = createCol.__get__('validateModelObject')
 const createModelName = createCol.__get__('createModelName')
 
-test('createModelName(): Should return the capitalized and singular version of collection names', () => {
+test('1 -> createModelName(): Should return the capitalized and singular version of collection names', () => {
     const users = 'users'
     const groups = 'groups'
     const members = 'members'
@@ -22,7 +22,7 @@ test('createModelName(): Should return the capitalized and singular version of c
     expect(res4).toEqual('Account')
 })
 
-test('createModelName(): Should capitalize collection name that isn`t plural', () => {
+test('2 -> createModelName(): Should capitalize collection name that isn`t plural', () => {
     const users = 'user'
     const groups = 'group'
     const members = 'member'
@@ -39,7 +39,7 @@ test('createModelName(): Should capitalize collection name that isn`t plural', (
     expect(res4).toEqual('Account')
 })
 
-test('createModelName(): Should capitalize collection name that is camelCased', () => {
+test('3 -> createModelName(): Should capitalize collection name that is camelCased', () => {
     const users = 'userTable'
     const groups = 'groupOne'
     const members = 'membership'
@@ -59,45 +59,42 @@ test('createModelName(): Should capitalize collection name that is camelCased', 
     expect(res5).toEqual('Collection123')
 })
 
-test('createCollection: validateModel() - Should return model object populated with default db settings', () => {
+test('4 -> validateModel() - Should return model object populated with default db settings', () => {
     const modelsPath = './test-db/models'
-    const defaultModel = { type: 'default', id: '$incr', maxValue: 10000 }
+    const defaultModel = { id: '$incr', maxValue: 10000 }
     const colName = 'users'
     let modelOptions
 
     const model = validateModelObject({ modelsPath, defaultModel, models: [] }, colName, modelOptions)
-    const expectedModel = { type: 'default', id: '$incr', idCount: 0, idMaxCount: 10000 }
+    const expectedModel = { id: '$incr', idCount: 0, idMaxCount: 10000 }
 
     expect(model).toMatchObject(expectedModel)
 })
 
-test('createCollection: validateModel() - Should return model object with schema settings + generated Model name + model path', () => {
+test('5 -> validateModel() - Should return model object with schema settings + generated Model name + model path', () => {
     const modelsPath = './test-db/models'
-    const defaultModel = { type: 'default', id: '$incr', maxValue: 10000 }
+    const defaultModel = { id: '$incr', maxValue: 10000 }
     const colName = 'users'
-    const modelOptions = { type: 'schema', id: '$uid'}
+    const modelOptions = { id: '$uid'}
 
     const model = validateModelObject({ modelsPath, defaultModel, models: [] }, colName, modelOptions)
     const expectedModel = { 
-        type: 'schema', 
         id: '$uid', 
-        name: null, 
-        path: null, 
         uidLength: 11, 
         minLength: 6 }
 
     expect(model).toMatchObject(expectedModel)
 })
 
-test('createCollection: validateModel() - Should return model object with user provided Model name + model path', () => {
+test('6 -> validateModel() - Should return model object with user provided Model name + model path', () => {
     const modelsPath = './test-db/models'
-    const defaultModel = { type: 'default', id: '$incr', maxValue: 10000 }
+    const defaultModel = { type: 'schema', id: '$incr', maxValue: 10000 }
     const colName = 'users'
-    const modelOptions1 = { type: 'schema', name: 'my-custom-model'}
-    const modelOptions2 = { type: 'schema', name: 'my model'}
-    const modelOptions3 = { type: 'schema', name: 'My_model'}
-    const modelOptions4 = { type: 'schema', name: 'my/custom/model'}
-    const modelOptions5 = { type: 'schema', name: 'User'}
+    const modelOptions1 = { name: 'my-custom-model'}
+    const modelOptions2 = { name: 'my model'}
+    const modelOptions3 = { name: 'My_model'}
+    const modelOptions4 = { name: 'my/custom/model'}
+    const modelOptions5 = { name: 'User'}
 
     const model1 = validateModelObject({ modelsPath, defaultModel, models: [] }, colName, modelOptions1)
     const model2 = validateModelObject({ modelsPath, defaultModel, models: [] }, colName, modelOptions2)

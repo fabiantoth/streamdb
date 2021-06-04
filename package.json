@@ -19,8 +19,7 @@
     "test": "jest --runInBand --watchAll",
     "test-coverage": "jest --coverage",
     "clear-cache": "jest --clearCache",
-    "streamdb": "node bin/index.js",
-    "tests": "jest DB.test.js"
+    "streamdb": "node bin/index.js"
   },
   "keywords": [
     "db",

@@ -4,17 +4,7 @@ const streamDb = require('../../lib/index')
 
 const dbSettings = {
     dbName: 'defaultschema',
-    storesMax: 10000,
-    initRoutes: true,
-    initSchemas: true,
-    routesAutoDelete: true,
-    modelsAutoDelete: true,
-    routesDir: 'api',
-    defaultModel: {
-        type: 'schema',
-        id: '$incr',
-        maxValue: 10000
-    }
+    storesMax: 10000
 }
 
 const dbFullMeta = {
