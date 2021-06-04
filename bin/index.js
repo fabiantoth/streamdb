@@ -57,8 +57,8 @@ program
             routesAutoDelete: options.routesAutoDelete,
             modelsAutoDelete: options.modelsAutoDelete,
             defaultModel: {
-                type: 'schema',
-                id: options.uid ? '$uid' : '$incr'
+                id: options.uid ? '$uid' : '$incr',
+                maxValue: options.maxValue
             }
         }
 
