@@ -4,11 +4,7 @@ const Schema = streamDb.Schema
 const dbSettings = {
     dbName: 'array-doc-embeds',
     initRoutes: false,
-    initSchemas: false,
-    defaultModel: {
-        type: 'schema',
-        id: '$incr'
-    } 
+    initSchemas: false
 }
 
 let db

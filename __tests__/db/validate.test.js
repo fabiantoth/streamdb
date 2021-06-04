@@ -98,13 +98,11 @@ test('7 -> validate: (validateDirName) Should only allow string lengths between 
 
 test('8 -> validate: (defaultModel) return valid defaultModel object', () => {
     let defaultIncr = { 
-        type: 'schema',
         id: '$incr', 
         maxValue: 10000
     }
 
     let defaultUid = { 
-        type: 'schema', 
         id: '$uid', 
         maxValue: 11
     }
@@ -118,12 +116,10 @@ test('8 -> validate: (defaultModel) return valid defaultModel object', () => {
     expect(expectedDefault).toMatchObject(defaultIncr)
     expect(expectedDefaultUid).toMatchObject(defaultUid)
     expect(model1).toMatchObject({ 
-        type: 'schema',
         id: '$incr', 
         maxValue: 1000
     })
     expect(model2).toMatchObject({ 
-        type: 'schema', 
         id: '$uid', 
         maxValue: 24
     })

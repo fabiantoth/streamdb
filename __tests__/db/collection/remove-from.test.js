@@ -9,12 +9,7 @@ const dbSettings = {
     initRoutes: false,
     routesAutoDelete: false,
     initSchemas: false,
-    modelsAutoDelete: false, 
-    routesDir: 'api',
-    defaultModel: {
-        type: 'schema',
-        id: '$incr'
-    } 
+    modelsAutoDelete: false
 }
 
 let db

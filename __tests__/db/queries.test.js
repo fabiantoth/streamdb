@@ -9,8 +9,6 @@ beforeAll(async (done) => {
     const usersColSettings = {
         storeMax: 60000,
         model: {
-            id: '$incr',
-            idCount: 0,
             idMaxCount: 1000
         }
     }

@@ -8,29 +8,17 @@ const dbSettings = {
     initRoutes: false, 
     initSchemas: false,
     routesAutoDelete: true, 
-    modelsAutoDelete: false, 
-    routesDir: 'api' 
-}
-
-const colSettings = {
-    storeMax: 131072,
-    model: {
-        type: 'schema',
-        id: '$incr',
-        idCount: 0,
-        idMaxCount: 10000
-    }
+    modelsAutoDelete: false
 }
 
 let db
-let groupsRef
 let usersRef
 
 beforeAll(async (done) => {
     const schemaDB = await streamDb.createDb(dbSettings)
     db = new DB('schemaDB')
 
-    const usersMeta = await db.addCollection('users', colSettings)
+    const usersMeta = await db.addCollection('users')
   
     const User = new Schema({
         id: streamDb.Types.$incr,

@@ -1,33 +1,28 @@
 const request = require('supertest')
 const appServer = require('../../lib/api/server') // (dbName, routesDir, corsOptions)
-const streamDb = require('../../lib/index')
+const streamdb = require('../../lib/index')
+const Schema = streamdb.Schema
 
 const dbSettings = {
-    dbName: 'testDBFull',
+    dbName: 'testServer',
     storesMax: 10000,
     initRoutes: true,
-    initSchemas: false,
+    initSchemas: true,
     routesAutoDelete: true,
-    modelsAutoDelete: false,
-    routesDir: 'api',
-    defaultModel: {
-        type: 'default',
-        id: '$incr',
-        maxValue: 10000
-    }
+    modelsAutoDelete: true
 }
 
 const dbFullMeta = {
-    dbName: 'testDBFull',
-    dbPath: './testDBFull',
-    metaPath: './testDBFull/testDBFull.meta.json',
-    storePath: './testDBFull/collections',
-    routesPath: './testDBFull/api',
-    modelsPath: './testDBFull/models',
+    dbName: 'testServer',
+    dbPath: './testServer',
+    metaPath: './testServer/testServer.meta.json',
+    storePath: './testServer/collections',
+    routesPath: './testServer/api',
+    modelsPath: './testServer/models',
     initRoutes: true,
-    initSchemas: false,
+    initSchemas: true,
     routesAutoDelete: true,
-    modelsAutoDelete: false,
+    modelsAutoDelete: true,
     storesMax: 10000,
     total: 0,
     routes: [ 'db.js' ],
@@ -106,13 +101,13 @@ const documents = [
 ]
 
 beforeAll(async (done) => {
-    const testDBFull = await streamDb.createDb(dbSettings)
-    expect(testDBFull).toMatchObject(dbFullMeta)
+    const testServer = await streamdb.createDb(dbSettings)
+    expect(testServer).toMatchObject(dbFullMeta)
     done()
 })
 
 afterAll(async (done) => {
-    const deleted = await streamDb.deleteDb('testDBFull')
+    const deleted = await streamdb.deleteDb('testServer')
         .then(res => {
             console.log(res)
             done()
@@ -120,29 +115,29 @@ afterAll(async (done) => {
         .catch(e => console.log(e))  
 })
 
-test('Server: POST /api/db/:name - Should create a new collection', async () => {
-    await request(appServer('testDBFull', 'api')).post('/api/db/users').send({
+test('1 -> Server: POST /api/db/:name - Should create a new collection', async (done) => {
+    await request(appServer('testServer', 'api')).post('/api/db/users').send({
         storeMax: 10000,
         model: {
-            type: 'default',
             id: '$incr',
             idCount: 0,
             idMaxCount: 10000
         }
     }).expect(201)
+    done()
 })
 
-test('Server: POST /api/collection - Should add 4 new documents', async (done) => {
+test('2 -> Server: POST /api/collection - Should add 4 new documents', async (done) => {
     setTimeout(async () => {
-        let res = await request(appServer('testDBFull', 'api')).post('/api/users').send(documents).expect(201)
+        let res = await request(appServer('testServer', 'api')).post('/api/users').send(documents).expect(201)
         expect(res.body.data.length).toBe(4)
         done()
       }, 50)
 })
 
-test('Server: GET /api/collection/:id - Should get 1 document', async (done) => {
+test('3 -> Server: GET /api/collection/:id - Should get 1 document', async (done) => {
     setTimeout(async () => {
-        let response = await request(appServer('testDBFull', 'api')).get('/api/users/3').send().expect(200)
+        let response = await request(appServer('testServer', 'api')).get('/api/users/3').send().expect(200)
         let res = response.body.data
 
         expect.objectContaining({
@@ -164,7 +159,7 @@ test('Server: GET /api/collection/:id - Should get 1 document', async (done) => 
 
 test('Server: GET /api/collection - Should get all 4 documents', async (done) => {
     setTimeout(async () => {
-        let res = await request(appServer('testDBFull', 'api')).get('/api/users').send().expect(200)
+        let res = await request(appServer('testServer', 'api')).get('/api/users').send().expect(200)
         expect(res.body.data.length).toBe(4)
         done()
       }, 50)
@@ -185,7 +180,7 @@ test('Server: PUT /api/collection - Should update 2 documents', async (done) => 
     ]
 
     setTimeout(async () => {
-        let response = await request(appServer('testDBFull', 'api')).put('/api/users').send(updates).expect(200)
+        let response = await request(appServer('testServer', 'api')).put('/api/users').send(updates).expect(200)
         let res = response.body.data[0]
         let res2 = response.body.data[1]
 
@@ -219,11 +214,11 @@ test('Server: GET /api/collection/_q/? - where() queries', async (done) => {
     const query = `Document with id "2" has been removed`
 
     setTimeout(async () => {
-        let res1 = await request(appServer('testDBFull', 'api')).get('/api/users/_q/?where=id,=,1').expect(200)
-        let res2 = await request(appServer('testDBFull', 'api')).get('/api/users/_q/?where=id,!=,1').expect(200)
-        let res3 = await request(appServer('testDBFull', 'api')).get('/api/users/_q/?where=id,>,1').expect(200)
-        let res4 = await request(appServer('testDBFull', 'api')).get('/api/users/_q/?where=id,>=,1').expect(200)
-        let res5 = await request(appServer('testDBFull', 'api')).get('/api/users/_q/?where=id,<,2').expect(200)
+        let res1 = await request(appServer('testServer', 'api')).get('/api/users/_q/?where=id,=,1').expect(200)
+        let res2 = await request(appServer('testServer', 'api')).get('/api/users/_q/?where=id,!=,1').expect(200)
+        let res3 = await request(appServer('testServer', 'api')).get('/api/users/_q/?where=id,>,1').expect(200)
+        let res4 = await request(appServer('testServer', 'api')).get('/api/users/_q/?where=id,>=,1').expect(200)
+        let res5 = await request(appServer('testServer', 'api')).get('/api/users/_q/?where=id,<,2').expect(200)
 
         expect(res1.body.data.length).toBe(1)
         expect(res2.body.data.length).toBe(3)
@@ -242,11 +237,11 @@ test('Server: GET /api/collection/_q/? - where().and() queries', async (done) =>
     const query4 = '?where=info.name,=,"Jerry Mouse"'
 
     setTimeout(async () => {
-        let res = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query}`).expect(200)
-        let res1 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query1}`).expect(200)
-        let res2 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query2}`).expect(200)
-        let res3 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query3}`).expect(200)
-        let res4 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query4}`).expect(200)
+        let res = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query}`).expect(200)
+        let res1 = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query1}`).expect(200)
+        let res2 = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query2}`).expect(200)
+        let res3 = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query3}`).expect(200)
+        let res4 = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query4}`).expect(200)
         
         expect(res.body.data.length).toBe(1)
         expect(res1.body.data.length).toBe(3)
@@ -261,7 +256,7 @@ test('Server: GET /api/collection/_q/? - where().or() queries', async (done) => 
     const query = '?where=nullValue,=,$null&where=or&where=active,=,$false'
 
     setTimeout(async () => {
-        let res = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query}`).expect(200)
+        let res = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query}`).expect(200)
         expect(res.body.data.length).toBe(4)
         done()
       }, 50)
@@ -271,7 +266,7 @@ test('Server: GET /api/collection/_q/? - where().and().or() queries', async (don
     const query = '?where=active,=,$true&where=and&where=emptyArray.length,>,2&where=or&where=age,=,18'
 
     setTimeout(async () => {
-        let res = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query}`).expect(200)
+        let res = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query}`).expect(200)
         expect(res.body.data.length).toBe(3)
         done()
       }, 50)
@@ -285,11 +280,11 @@ test('Server: GET /api/collection/_q/? - where(exp, filterFn) queries', async (d
     const query4 = '?whereArray=strArr,[$item,=,one]'
 
     setTimeout(async () => {
-        let res = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query}`).expect(200)
-        let res1 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query1}`).expect(200)
-        let res2 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query2}`).expect(200)
-        let res3 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query3}`).expect(200)
-        let res4 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query4}`).expect(200)
+        let res = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query}`).expect(200)
+        let res1 = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query1}`).expect(200)
+        let res2 = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query2}`).expect(200)
+        let res3 = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query3}`).expect(200)
+        let res4 = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query4}`).expect(200)
 
         expect(res.body.data.length).toBe(2)
         expect(res1.body.data.length).toBe(3)
@@ -307,9 +302,9 @@ test('Server: GET /api/collection/_q/? - where(exp, filterFn).where() queries', 
     const query2 = '?where=age,>,16&where=and,&where=id,>=,1&whereArray=objArr,[title,=,"title 1"]'
 
     setTimeout(async () => {
-        let res = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query}`).expect(200)
-        let res1 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query1}`).expect(200)
-        let res2 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query2}`).expect(200)
+        let res = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query}`).expect(200)
+        let res1 = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query1}`).expect(200)
+        let res2 = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query2}`).expect(200)
 
         expect(res.body.data.length).toBe(1)
         expect(res1.body.data.length).toBe(1)
@@ -339,10 +334,10 @@ test('Server: GET /api/collection/_q/? - where()/.include()/.exclude() queries',
     }]
 
     setTimeout(async () => {
-        let res = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query}`).expect(200)
-        let res1 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query1}`).expect(200)
-        let res2 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query2}`).expect(200)
-        let res3 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query3}`).expect(200)
+        let res = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query}`).expect(200)
+        let res1 = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query1}`).expect(200)
+        let res2 = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query2}`).expect(200)
+        let res3 = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query3}`).expect(200)
 
         expect(res.body.data.length).toBe(1)
         expect(res1.body.data.length).toBe(1)
@@ -364,9 +359,9 @@ test('Server: GET /api/collection/_q/? - where()/.limit()/.offset() queries', as
     const query2 = '?where=id,>,0&offset=2&limit=1'
 
     setTimeout(async () => {
-        let res = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query}`).expect(200)
-        let res1 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query1}`).expect(200)
-        let res2 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query2}`).expect(200)
+        let res = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query}`).expect(200)
+        let res1 = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query1}`).expect(200)
+        let res2 = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query2}`).expect(200)
 
         expect(res.body.data.length).toBe(2)
         expect(res1.body.data.length).toBe(1)
@@ -384,11 +379,11 @@ test('Server: GET /api/collection/_q/? - where()/sort() queries', async (done) =
     const query4 = '?where=id,>,0&sortBy=lastname&sortOrder=desc'
 
     setTimeout(async () => {
-        let res = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query}`).expect(200)
-        let res1 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query1}`).expect(200)
-        let res2 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query2}`).expect(200)
-        let res3 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query3}`).expect(200)
-        let res4 = await request(appServer('testDBFull', 'api')).get(`/api/users/_q/${query4}`).expect(200)
+        let res = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query}`).expect(200)
+        let res1 = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query1}`).expect(200)
+        let res2 = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query2}`).expect(200)
+        let res3 = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query3}`).expect(200)
+        let res4 = await request(appServer('testServer', 'api')).get(`/api/users/_q/${query4}`).expect(200)
 
         expect(res.body.data[0].id).toBe(1)
         expect(res1.body.data[0].id).toBe(4)
@@ -404,14 +399,14 @@ test('Server: DELETE /api/collection/:id - Should delete 1 document', async (don
     const expected = `Document with id "2" has been removed`
 
     setTimeout(async () => {
-        await request(appServer('testDBFull', 'api')).delete('/api/users/2').expect(200)
+        await request(appServer('testServer', 'api')).delete('/api/users/2').expect(200)
         done()
       }, 50)
 })
 
 test('Server: DELETE /api/db/collection - Should delete collection', async (done) => {
     setTimeout(async () => {
-        await request(appServer('testDBFull', 'api')).delete('/api/db/users').expect(200)
+        await request(appServer('testServer', 'api')).delete('/api/db/users').expect(200)
         done()
       }, 50)
 })

@@ -6,11 +6,7 @@ const dbSettings = {
     dbName: 'maxSize-schema',
     storesMax: 200,  
     initSchemas: false,
-    modelsAutoDelete: false, 
-    defaultModel: {
-        type: 'schema',
-        id: '$incr'
-    } 
+    modelsAutoDelete: false
 }
 
 let db

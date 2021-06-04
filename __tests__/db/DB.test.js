@@ -19,7 +19,6 @@ test('1 -> db.addCollection(): Should return new collection meta file', async (d
     const usersColSettings = {
         storeMax: 50000,
         model: {
-            id: '$incr',
             idCount: 5,
             idMaxCount: 1000
         }
@@ -43,7 +42,6 @@ test('1 -> db.addCollection(): Should return new collection meta file', async (d
               }
         }),
         model: expect(usersMeta.model).toMatchObject({ 
-            type: 'schema', 
             id: '$incr', 
             idCount: 5, 
             idMaxCount: 1000
@@ -64,7 +62,6 @@ test('2 -> db.addCollection(): should override out of range min/max values when 
     }
 
     const expectedModel = {
-        type: 'schema', 
         id: '$uid', 
         minLength: 6, 
         uidLength: 20
