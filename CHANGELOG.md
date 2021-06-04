@@ -17,6 +17,12 @@ All notable changes to this project will be documented in this file.
 </details>
 <br>
 
+## Version 0.1.4  - (June 4, 2021)
+
+- [Fixed]: [updating properties not defined in schema issue](https://github.com/fabiantoth/streamdb/issues/14#issue-911237140) - can update properties that have no schema definitions
+- [Added]: test suite for CRUD queries with default schema template & no definitions added
+
+
 ## Version 0.1.3  - (June 2, 2021)
 
 - [Added]: executable script for using `npx` prefix as alternative to global install: `npx streamdb [command]/<argument>..`
