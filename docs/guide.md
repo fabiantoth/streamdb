@@ -56,7 +56,7 @@ But for even slightly more advanced projects - ``you need the flexibility of a r
 	
 ### [2.1&nbsp;&nbsp; DB Settings](#streamdb-guide)
 
-streamDB comes with starter default values for all settings - so you can hit the ground running with a simple ``streamdb create`` command.
+**streamDB** comes with starter default values for all settings - so you can hit the ground running with a simple ``streamdb create`` command.
 
 > See the full [DB Settings & Options](api.md#streamdbcreatedbsettings) 
 	
@@ -68,7 +68,7 @@ Consider the following 3 key questions:
 
 The main reason for supporting ``string`` id types is for cases you wish to insert data containing specific id values. 
 	
-If the id field is included when you insert new data - streamDB will validate and use it instead of generating one for you.
+If the id field is included when you insert new data - **streamDB** will validate and use it instead of generating one for you.
 	
 The `maxValue` db setting has a different meaning for using a string (``$uid``) vs. a number (``$incr``) id:
 	
@@ -610,7 +610,7 @@ Using the **``'type'``** keyword to open a settings object:
 
 ### [4. Data Types](#schemas-outline)
 	
-Global types supported by streamDB:
+Global types supported by **streamDB**:
 
 - ``String``
 - ``Number``
@@ -763,11 +763,11 @@ In case you wish to provide the actual id's when inserting data you can require 
 
 ***Notice*** that the length parameters are unique to ``$incr``/``$uid``. Each type has its own specifically available parameters.
 	
-For an incremented numberic id they are ``idCount`` and ``idMaxCount``. See below for details.
+For an incremented numeric id they are ``idCount`` and ``idMaxCount``. See below for details.
 	
 **\# streamdb.Types.``Any``:**
 	
-``Any`` is streamDB's version of ``Mixed``, and has slightly different features. See details in next section.
+``Any`` is **streamDB**'s version of ``Mixed``, and has slightly different features. See details in next section.
 
 ```js
 {
@@ -812,8 +812,8 @@ Available options for each type:
 **\# Documents**
 	
 Schema documents can be imported and embedded into a schema:
-  - The sub-document will be created and inserted in its own collection
-  - The a copy of the sub-document will be embedded in the parent doc
+  - On Parent create/insert, the sub-document will be created and inserted in its own collection
+  - A `copy` of the sub-document will be embedded in the parent doc
 
 **\# Document Embeds:** 
 	
@@ -844,7 +844,6 @@ Group model:
 ```js
 // Group Model
 {
-  id: streamdb.Types.$incr,
   title: String,
   description: String,
   isActive: Boolean
@@ -854,9 +853,9 @@ Group model:
 User model:
 	
 ```js
+// User Model
 const Group = require('./Group')
 	
-// User Model
 {
   groups: [Group]
 }
@@ -892,7 +891,7 @@ When a new document is created, the document id will be the embedded value:
 ]	
 ```
 	
-**\# Using ``populate()`` method to populate sub-doc references:
+**\# Using ``populate()`` method to populate sub-doc references:**
 
 Example query:
 	
@@ -940,8 +939,8 @@ Example:
 // Detail Model
 {
   userId: {
-	collection: 'users',
-	$ref: Number
+    collection: 'users',
+    $ref: Number
   },
   username: String,
   age: Number
@@ -962,15 +961,15 @@ Create a new user:
 	
 ```js
 const doc = {
-	  name: 'John Smith',
-	  details: {
-		username: 'jsmith123',
-		age: 21
-	  }
-	}
+   name: 'John Smith',
+   details: {
+   username: 'jsmith123',
+   age: 21
+  }
+}
 ```
 
-The new user document will be:
+The new **User** document will be:
 	
 ```js
 [
@@ -986,7 +985,7 @@ The new user document will be:
 ]	
 ```
 
-And the new document in details will be:
+And the new **Detail** document will be:
 	
 ```js
 [
@@ -998,9 +997,10 @@ And the new document in details will be:
 ]	
 ```
 
-**NOTE:** 
-Be careful with creating parent-child relationships to avoid creating [circular references](https://en.wikipedia.org/wiki/Circular_reference). Aside from being a good practice in general, the library has no validation for such cases and hasn't been tested so results are unpredictable in such events.
-	
+**\*\*NOTE:\*\*** 
+Be careful with creating parent-child relationships to avoid creating [circular references](https://softwareengineering.stackexchange.com/questions/11856/whats-wrong-with-circular-references). 
+
+**streamDB**, currently (as of V0.1.4) has neither validation for such cases yet, nor has it reached being at least tested, so results will be unpredictable (there is 0% correlation to any avoidance-behvaior, I just don't want to do it) 
 - Updating the child documents separately will not update the parent document data, you will need to run a separate call
 - Updating the parent document update WILL also update child documents, but not embedded copies in other parent documents
 
@@ -1286,7 +1286,7 @@ streamdb -h/--help
 	
 ### Note From Creator
 
-*The current use of Express server and implementation of routes, helper methods were meant to serve more as an out-of-the box example that I quickly put together, so that people could just dive into prototyping faster. But streamDB's goal is to be as agnostic as possible here, not to inject opinion.*
+*The current use of Express server and implementation of routes, helper methods were meant to serve more as an out-of-the box example that I quickly put together, so that people could just dive into prototyping faster. But **streamDB**'s goal is to be as agnostic as possible here, not to inject opinion.*
 	
 *I could potentially see deployment options being split into separate plugins in the future, particularly if it gets to adding features such as auth, and integration into other services.* 
 	

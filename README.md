@@ -94,7 +94,7 @@ To use CLI without global install, prefix commands with `npx`:
 $ npx streamdb create --db sampleDB
 ```
 
-Or, install a global copy as welll:
+Or, install a global copy as well:
 
 ```sh
 $ npm i -g streamdb
