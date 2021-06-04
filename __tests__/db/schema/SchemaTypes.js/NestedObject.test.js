@@ -1,5 +1,5 @@
-const NestedObject = require('../../../../../lib/db/models/schema/SchemaTypes/NestedObject')
-const Schema = require('../../../../../lib/db/Schema')
+const NestedObject = require('../../../../lib/db/models/schema/SchemaTypes/NestedObject')
+const Schema = require('../../../../lib/db/Schema')
 
 test('NestedObject: #instance should return a new NestedObject instance direct typing regular types', () => {
     const obj = {

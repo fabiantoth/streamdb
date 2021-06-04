@@ -1,6 +1,6 @@
-const SchemaArray = require('../../../../../lib/db/models/schema/SchemaTypes/SchemaArray')
-const Schema = require('../../../../../lib/db/Schema')
-const { $incr, $uid, Any } = require('../../../../../lib/db/types')
+const SchemaArray = require('../../../../lib/db/models/schema/SchemaTypes/SchemaArray')
+const Schema = require('../../../../lib/db/Schema')
+const { $incr, $uid, Any } = require('../../../../lib/db/types')
 
 test('SchemaArray: #instance should return a new SchemaArray instance with field "array"', () => {
     const array = new SchemaArray('array', Array)

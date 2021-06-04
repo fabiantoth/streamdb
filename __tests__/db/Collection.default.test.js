@@ -1,35 +1,21 @@
 const streamDb = require('../../lib/index')
-const DB = streamDb.DB
-
-const dbSettings = {
-    dbName: 'testCollectionDB',
-    storesMax: 131072,  
-    initRoutes: true, 
-    initSchemas: false,
-    routesAutoDelete: true, 
-    modelsAutoDelete: false, 
-    routesDir: 'api' 
-}
+const Schema = streamDb.Schema
 
 let db
 let usersRef
 
 beforeAll(async (done) => {
-    const testDbMeta = await streamDb.createDb(dbSettings)
-    db = new DB('testCollectionDB')
+    const testDbMeta = await streamDb.createDb({ dbName: 'testCollectionDB', initSchemas: false })
+    db = new streamDb.DB('testCollectionDB')
     
-    const usersColSettings = {
-        storeMax: 131072,
-        model: {
-            type: 'default',
-            id: '$incr',
-            idCount: 0,
-            idMaxCount: 1000
-        }
-    }
+    await db.addCollection('users')
 
-    const users = await db.addCollection('users', usersColSettings)
-    usersRef = db.collection('users')
+    const UserSchema = new Schema({
+        id: streamDb.Types.$incr
+    })
+    
+    db.addSchema('User', UserSchema)
+    usersRef = db.collection('users').useModel('User')
     done()
 })
 
@@ -210,13 +196,11 @@ test(`7 -> Collection.updateOne(): Should update one document with id 2`, async 
 })
 
 test(`8 -> Collection.deleteOne(): Should delete document with id 2`, async (done) => {
-    db.collection('users').deleteOne(2)
-        .then(res => {
-            expect(res.success).toBe(true)
-            expect(res.message).toBe(`Document with id "2" has been removed`)
-            expect(res.data).toBe(2)
-            done()
-        })
+    let res = await usersRef.deleteOne(2)
+    expect(res.success).toBe(true)
+    expect(res.message).toBe(`Document with id "2" has been removed`)
+    expect(res.data).toBe(2)
+    done()
 })
 
 test(`9 -> Collection.updateMany(): Should update 2 documents`, async (done) => {
@@ -305,7 +289,7 @@ test(`13 -> Collection.where().setProperty(): Should return value of update`, as
 
     let res = await usersRef.where('id = 6')
                             .setProperty('email', 'daf-duck@email.com')
-    expect(res.data).toMatchObject(update)
+    expect(res.data[0].email).toBe('daf-duck@email.com')
     done()
 })
 
@@ -405,7 +389,7 @@ test(`19 -> Collection.where().exclude(): Should return matching obj`, async (do
 //
 test(`(-1) -> Collection.getById(): #error should return reject error object when id does not exist`, async (done) => {
     expect.assertions(1)
-    await expect(db.collection('users').getById(2)).rejects.toEqual({
+    await expect(usersRef.getById(2)).rejects.toEqual({
         error: true,
         message: `Document with id "2" does not exist`
     })
@@ -415,7 +399,7 @@ test(`(-1) -> Collection.getById(): #error should return reject error object whe
 
 test(`(-2) -> Collection.deleteOne(): #error should return reject error object when id does not exist`, async (done) => {
     expect.assertions(1)
-    await expect(db.collection('users').deleteOne(2)).rejects.toEqual({
+    await expect(usersRef.deleteOne(2)).rejects.toEqual({
         error: true,
         message: `Document with id "2" does not exist`
     })
@@ -424,19 +408,19 @@ test(`(-2) -> Collection.deleteOne(): #error should return reject error object w
 })
 
 test(`(-3) -> Collection.getDocs(): #error Should throw error if passed value is not an array`, async (done) => {
-    expect(db.collection('users').getDocs()).rejects.toMatch(`Value must be an array, received: ${typeof undefined}`)
+    expect(usersRef.getDocs()).rejects.toMatch(`Value must be an array, received: ${typeof undefined}`)
     done()
 })
 
 test(`(-4) -> Collection.getDocs(): #error Should throw error if array is empty`, async (done) => {
-    expect(db.collection('users').getDocs([])).rejects.toMatch(`Array cannot be empty`)
+    expect(usersRef.getDocs([])).rejects.toMatch(`Array cannot be empty`)
     done()
 })
 
 test(`(-5) -> Collection.updateOne(): #error should return reject error object when document id does not exist`, async (done) => {
     const update = { id: 1 }
     expect.assertions(1)
-    await expect(db.collection('users').updateOne(update)).rejects.toEqual({
+    await expect(usersRef.updateOne(update)).rejects.toEqual({
         error: true,
         message: `Document with id "1" does not exist`
     })
@@ -451,7 +435,7 @@ test(`(-6) -> Collection.updateOne(): #error should return reject error object w
         { id: 3 }
     ]
     expect.assertions(1)
-    await expect(db.collection('users').updateMany(updates)).rejects.toEqual({
+    await expect(usersRef.updateMany(updates)).rejects.toEqual({
         error: true,
         message: `Document with id "1" does not exist`
     })

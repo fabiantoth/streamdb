@@ -1,4 +1,4 @@
-const SchemaString = require('../../../../../lib/db/models/schema/SchemaTypes/SchemaString')
+const SchemaString = require('../../../../lib/db/models/schema/SchemaTypes/SchemaString')
 
 test('SchemaString: #instance should return a new SchemaString instance with field "name"', () => {
     const name = new SchemaString('name', String)

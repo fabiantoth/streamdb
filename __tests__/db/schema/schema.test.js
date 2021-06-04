@@ -1,5 +1,5 @@
-const { Schema } = require('../../../../lib/index')
-const { Any } = require('../../../../lib/db/Types')
+const { Schema } = require('../../../lib/index')
+const { Any } = require('../../../lib/db/Types')
 
 test('Schema: #instance #SchemaType should return a Schema instance with regular SchemaType', () => {
     const schema = new Schema({ name: String })

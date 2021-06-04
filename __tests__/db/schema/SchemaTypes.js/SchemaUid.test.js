@@ -1,5 +1,5 @@
-const SchemaUid = require('../../../../../lib/db/models/schema/SchemaTypes/SchemaUid')
-const { $uid } = require('../../../../../lib/db/types')
+const SchemaUid = require('../../../../lib/db/models/schema/SchemaTypes/SchemaUid')
+const { $uid } = require('../../../../lib/db/types')
 
 test('SchemaUid: #instance should return a new SchemaUid instance with field "uid"', () => {
     const uid = new SchemaUid('uid', $uid)

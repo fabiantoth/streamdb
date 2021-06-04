@@ -1,4 +1,4 @@
-const SchemaRef = require('../../../../../lib/db/models/schema/SchemaTypes/SchemaRef')
+const SchemaRef = require('../../../../lib/db/models/schema/SchemaTypes/SchemaRef')
 
 test('1 -> SchemaRef: #instance should return a new SchemaRef instance with Number $ref types', () => {
     const ref = new SchemaRef('ref', { collection: 'col', model: 'Col', $ref: Number })

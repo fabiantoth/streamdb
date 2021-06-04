@@ -1,5 +1,5 @@
-const SchemaIncr = require('../../../../../lib/db/models/schema/SchemaTypes/SchemaIncr')
-const { $incr } = require('../../../../../lib/db/types')
+const SchemaIncr = require('../../../../lib/db/models/schema/SchemaTypes/SchemaIncr')
+const { $incr } = require('../../../../lib/db/types')
 
 test('SchemaIncr: #instance should return a new SchemaIncr instance with field "incr"', () => {
     const incr = new SchemaIncr('incr', $incr)

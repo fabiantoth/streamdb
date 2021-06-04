@@ -1,4 +1,4 @@
-const SchemaNumber = require('../../../../../lib/db/models/schema/SchemaTypes/SchemaNumber')
+const SchemaNumber = require('../../../../lib/db/models/schema/SchemaTypes/SchemaNumber')
 
 const numb = new SchemaNumber('numb', Number)
 test('SchemaNumber: #instance should return a new SchemaNumber instance with field "numb"', () => {

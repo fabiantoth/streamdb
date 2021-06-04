@@ -1,5 +1,5 @@
-const SchemaAny = require('../../../../../lib/db/models/schema/SchemaTypes/SchemaAny')
-const { Any } = require('../../../../../lib/db/Types')
+const SchemaAny = require('../../../../lib/db/models/schema/SchemaTypes/SchemaAny')
+const { Any } = require('../../../../lib/db/Types')
 
 const any = new SchemaAny('any', Any)
 test('SchemaAny: #instance should return a new SchemaAny instance with field "any"', () => {

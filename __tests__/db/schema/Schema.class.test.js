@@ -1,4 +1,4 @@
-const streamDb = require('../../../../lib/index')
+const streamDb = require('../../../lib/index')
 const Schema = streamDb.Schema
 
 const dbSettings = {
