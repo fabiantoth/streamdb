@@ -1000,7 +1000,8 @@ And the new **Detail** document will be:
 **\*\*NOTE:\*\*** 
 Be careful with creating parent-child relationships to avoid creating [circular references](https://softwareengineering.stackexchange.com/questions/11856/whats-wrong-with-circular-references). 
 
-**streamDB**, currently (as of V0.1.4) has neither validation for such cases yet, nor has it reached being at least tested, so results will be unpredictable (there is 0% correlation to any avoidance-behvaior, I just don't want to do it) 
+**streamDB** (as of v0.1.5) doesn't have tests or validation setup for these use-cases yet; results will be unpredictable (it's not due to avoidance-behavior, I just don't want to do it).
+
 - Updating the child documents separately will not update the parent document data, you will need to run a separate call
 - Updating the parent document update WILL also update child documents, but not embedded copies in other parent documents
 
