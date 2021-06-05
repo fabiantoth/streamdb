@@ -1,5 +1,4 @@
 const streamDb = require('../../lib/index')
-const DB = streamDb.DB
 const Schema = streamDb.Schema
 
 const dbSettings = {
@@ -16,7 +15,7 @@ let usersRef
 
 beforeAll(async (done) => {
     const schemaDB = await streamDb.createDb(dbSettings)
-    db = new DB('schemaDB')
+    db = new streamDb.DB('schemaDB')
 
     const usersMeta = await db.addCollection('users')
   

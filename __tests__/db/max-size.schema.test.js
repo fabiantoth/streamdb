@@ -1,6 +1,5 @@
 const streamDb = require('../../lib/index')
 const Schema = streamDb.Schema
-const DB = streamDb.DB
 
 const dbSettings = {
     dbName: 'maxSize-schema',

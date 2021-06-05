@@ -1,4 +1,4 @@
-const SchemaDate = require('../../../../lib/db/models/schema/SchemaTypes/SchemaDate')
+const SchemaDate = require('../../../../lib/db/schema/SchemaTypes/SchemaDate')
 
 const date = new SchemaDate('date', Date)
 test('SchemaDate: #instance should return a new SchemaDate instance with field "date"', () => {

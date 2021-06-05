@@ -1,4 +1,4 @@
-const SchemaBoolean = require('../../../../lib/db/models/schema/SchemaTypes/SchemaBoolean')
+const SchemaBoolean = require('../../../../lib/db/schema/SchemaTypes/SchemaBoolean')
 
 const bool = new SchemaBoolean('bool', Boolean)
 test('SchemaBoolean: #instance should return a new SchemaBoolean instance with field "bool"', () => {

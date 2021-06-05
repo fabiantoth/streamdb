@@ -1,4 +1,4 @@
-const SchemaAny = require('../../../../lib/db/models/schema/SchemaTypes/SchemaAny')
+const SchemaAny = require('../../../../lib/db/schema/SchemaTypes/SchemaAny')
 const { Any } = require('../../../../lib/db/Types')
 
 const any = new SchemaAny('any', Any)

@@ -1,4 +1,4 @@
-const SchemaArray = require('../../../../lib/db/models/schema/SchemaTypes/SchemaArray')
+const SchemaArray = require('../../../../lib/db/schema/SchemaTypes/SchemaArray')
 const Schema = require('../../../../lib/db/Schema')
 const { $incr, $uid, Any } = require('../../../../lib/db/types')
 
