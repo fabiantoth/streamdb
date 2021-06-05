@@ -1,172 +1,175 @@
 const streamDb = require('../../../lib/index')
 const Schema = streamDb.Schema
 
+// test('placeholder', () => {
+//     expect(1).toBe(1)
+// })
 
-test('placeholder', () => {
-    expect(1).toBe(1)
+let db
+let usersRef
+let detailsRef
+
+beforeAll(async (done) => {
+    const User = new Schema({
+        id: streamDb.Types.$incr,
+        name: String,
+        details: {
+            collection: 'details',
+            $ref: Number
+        }
+    }, 
+        {
+            strict: true,
+            timestamps: {
+                created_at: false,
+                updated_at: true
+            }
+    })
+    
+    const Detail = new Schema({
+        id: streamDb.Types.$incr,
+        title: String,
+        owner: {
+            collection: 'users',
+            $ref: Number
+        }
+    }, 
+        {
+            strict: true,
+            timestamps: {
+                created_at: false,
+                updated_at: true
+            }
+    })
+    
+    let newDb = await streamDb.createDb({ dbName: 'schema-refs' })
+    db = new streamDb.DB('schema-refs')
+
+    let cols = await db.addCollections(['users', 'details'])
+    db.addSchema('UserModel', User).addSchema('DetailModel', Detail)
+    // db.addSchema('DetailModel', Detail)
+    // usersRef = db.collection('users').useModel('UserModel')
+    // detailsRef = db.collection('details').useModel('DetailModel')
+
+    done()
 })
 
-// const dbSettings = {
-//     dbName: 'schema-refs',
-//     initSchemas: true,
-//     modelsAutoDelete: true, 
-//     defaultModel: {
-//         type: 'schema',
-//         id: '$incr'
-//     } 
-// }
+afterAll(async (done) => {
+    await streamDb.deleteDb('schema-refs')
+    done()
+})
 
-// let db
+beforeEach(async () => {
+    await new Promise(async (resolve) => {
+        setTimeout(() => {
+            resolve()
+        }, 15)
+    })
+})
 
-// const User = new Schema({
-//     id: streamDb.Types.$incr,
-//     name: String,
-//     details: {
-//         collection: 'details',
-//         $ref: Number
-//     }
-// }, 
-//     {
-//         strict: true,
-//         timestamps: {
-//             created_at: false,
-//             updated_at: true
-//         }
-// })
+test('1 -> SchemaRef: (insertOne) Should create 4 docs, populate parent $ref to subdoc', async (done) => {
+    const users = [
+        {
+        name: 'Name A',
+        details: {
+            title: 'Title 1'
+            }
+        },
+        {
+        name: 'Name B',
+        details: {
+            title: 'Title 2'
+            }
+        }
+    ]
 
-// const Detail = new Schema({
-//     id: streamDb.Types.$incr,
-//     title: String,
-//     owner: {
-//         collection: 'users',
-//         $ref: Number
-//     }
-// }, 
-//     {
-//         strict: true,
-//         timestamps: {
-//             created_at: false,
-//             updated_at: true
-//         }
-// })
+    usersRef = db.collection('users').useModel('UserModel')
 
-// beforeAll(async (done) => {
-//     await streamDb.createDb(dbSettings)
-//     db = new streamDb.DB('schema-refs')
+    let response = await usersRef.insertMany(users)
+    let result = response.data[0]
+    let result2 = response.data[1]
 
-//     let res1 = await db.addCollection('users')
-//     let res2 = await db.addCollection('details')
+    expect.objectContaining({
+        id: expect(result.id).toBe(1),
+        name: expect(result.name).toBe('Name A'),
+        details: expect(result.details).toBe(1),
+        updated_at: expect.any(Date)
+    })
 
-//     done()
-// })
+    expect.objectContaining({
+        id: expect(result2.id).toBe(2),
+        name: expect(result2.name).toBe('Name B'),
+        details: expect(result2.details).toBe(2),
+        updated_at: expect.any(Date)
+    })
 
-// afterAll(async (done) => {
-//     await streamDb.deleteDb('schema-refs')
-//     done()
-// })
+    let response2 = await db.collection('details').getById(1)
+    let subResult = response2.data
 
-// beforeEach(async () => {
-//     await new Promise(async (resolve) => {
-//         setTimeout(() => {
-//             resolve()
-//         }, 15)
-//     })
-// })
+    expect.objectContaining({
+        id: expect(subResult.id).toBe(1),
+        title: expect(subResult.title).toBe('Title 1'),
+        updated_at: expect.any(Date)
+    })
 
-// test('SchemaRef: (insertOne) Should create 2 docs, populate parent $ref to subdoc', async (done) => {
-//     const user = {
-//         name: 'Name A',
-//         details: {
-//             title: 'Title 1'
-//         }
-//     }
+    done()
+})
 
-//     let usersRef = db.collection('users').setModel('User', User)
+test('2 -> SchemaRef: (updateOne) Should update ref object', async (done) => {
+    const update = {
+        id: 1,
+        details: 2
+    }
 
-//     let response = await usersRef.insertOne(user)
-//     let result = response.data
+    let response = await usersRef.updateOne(update)
+    let result = response.data
 
-//     expect.objectContaining({
-//         id: expect(result.id).toBe(1),
-//         name: expect(result.name).toBe('Name A'),
-//         details: expect(result.details).toMatchObject({ collection: 'details', $ref: 1 }),
-//         updated_at: expect.any(Date)
-//     })
+    expect.objectContaining({
+        id: expect(result.id).toBe(1),
+        name: expect(result.name).toBe('Name A'),
+        details: expect(result.details).toBe(2),
+        updated_at: expect.any(Date)
+    })
 
-//     let response2 = await db.collection('details').getById(1)
-//     let subResult = response2.data
+    done()
+})
 
-//     expect.objectContaining({
-//         id: expect(subResult.id).toBe(1),
-//         title: expect(subResult.title).toBe('Title 1'),
-//         updated_at: expect.any(Date)
-//     })
+test('3 -> SchemaRef: (updateOne) Should set ref object field to null', async (done) => {
+    const update = {
+        id: 1,
+        details: null
+    }
 
-//     done()
-// })
+    let response = await usersRef.updateOne(update)
+    let result = response.data
 
-// test('SchemaRef: (updateOne) Should update ref object', async (done) => {
-//     const update = {
-//         id: 1,
-//         details: {
-//             collection: 'details',
-//             $ref: 2
-//         }
-//     }
+    expect.objectContaining({
+        id: expect(result.id).toBe(1),
+        name: expect(result.name).toBe('Name A'),
+        details: expect(result.details).toBe(null),
+        updated_at: expect.any(Date)
+    })
 
-//     let usersRef = db.collection('users').setModel('User', User)
+    done()
+})
 
-//     let response = await usersRef.updateOne(update)
-//     let result = response.data
+test('4 -> SchemaRef: (updateOne) Should throw error trying to add non $ref fields', async (done) => {
+    const update = {
+        id: 1,
+        details: {
+            title: 'Title 1'
+        }
+    }
 
-//     expect.objectContaining({
-//         id: expect(result.id).toBe(1),
-//         name: expect(result.name).toBe('Name A'),
-//         details: expect(result.details).toMatchObject({ collection: 'details', $ref: 2 }),
-//         updated_at: expect.any(Date)
-//     })
-
-//     done()
-// })
-
-// test('SchemaRef: (updateOne) Should set ref object field to null', async (done) => {
-//     const update = {
-//         id: 1,
-//         details: null
-//     }
-
-//     let usersRef = db.collection('users').setModel('User', User)
-
-//     let response = await usersRef.updateOne(update)
-//     let result = response.data
-
-//     expect.objectContaining({
-//         id: expect(result.id).toBe(1),
-//         name: expect(result.name).toBe('Name A'),
-//         details: expect(result.details).toBe(null),
-//         updated_at: expect.any(Date)
-//     })
-
-//     done()
-// })
-
-// test('SchemaRef: (updateOne) Should throw error trying to add non $ref fields', async (done) => {
-//     const update = {
-//         id: 1,
-//         details: {
-//             title: 'Title 1'
-//         }
-//     }
-
-//     let usersRef = db.collection('users').setModel('User', User)
-//     // expect(() => usersRef.updateOne(update)).toThrow()
-//     expect.assertions(1);
+    expect.assertions(1);
     
-//     try {
-//       await usersRef.updateOne(update)
-//     } catch (e) {
-//       expect(e).toEqual({
-//         error: '[Validation Error]: "title" is not a valid option for $ref objects',
-//       });
-//     }
-// })
+    try {
+      await usersRef.updateOne(update)
+    } catch (e) {
+      expect(e).toEqual({
+        error: true,
+        message: `Expected 'details' to have id of type: number, recieved: object`
+      });
+      done()
+    }
+})
