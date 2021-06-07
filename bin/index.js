@@ -22,13 +22,13 @@ create [options]:
     routesAutoDelete = false:   --no-routesAutoDelete
     modelsAutoDelete = false:   --no-modelsAutoDelete
     defaultModel:
-                maxValue:       [-m, --maxValue] <value>
+                idMaxValue:      [-m, --idMaxValue] <value>
                 id = $uid:       --uid`)
 
 // create                       Create a new db
 // [-d, --db]                   Set the name of the db
 // [-s, --fileSize]             Set the default fileSize max value
-// [-m, --maxValue <value>]     Set the default id maxValue
+// [-m, --idMaxValue <value>]   Set the default idMaxValue
 // [-R, --routesDir <value>]    Set the name of the routes directory
 // [--uid]                      Set the id type to $uid
 // [--no-initRoutes]            Set initRoutes to false
@@ -40,7 +40,7 @@ program
     .description('$ streamdb create [options]')
     .option('-d, --db <value>', 'Set the name of new db', 'streamDB')
     .option('-s, --fileSize <number>', 'Set the default fileSize value', 131072)
-    .option('-m, --maxValue <value>', 'Set the default id maxValue')
+    .option('-m, --idMaxValue <value>', 'Set the default idMaxValue')
     .option('-R, --routesDir <value>', 'Set the name of the routes directory', 'api')
     .option('--uid', 'Set the id type to $uid')
     .option('--no-initRoutes', 'Set initRoutes to false')
@@ -58,12 +58,12 @@ program
             modelsAutoDelete: options.modelsAutoDelete,
             defaultModel: {
                 id: options.uid ? '$uid' : '$incr',
-                maxValue: options.maxValue
+                idMaxValue: options.idMaxValue
             }
         }
 
-        if (options.maxValue) {
-            settings.defaultModel.maxValue = options.maxValue
+        if (options.idMaxValue) {
+            settings.defaultModel.idMaxValue = options.idMaxValue
         }
 
         createDb(settings)

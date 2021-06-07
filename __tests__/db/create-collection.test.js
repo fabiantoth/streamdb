@@ -61,7 +61,7 @@ test('3 -> createModelName(): Should capitalize collection name that is camelCas
 
 test('4 -> validateModel() - Should return model object populated with default db settings', () => {
     const modelsPath = './test-db/models'
-    const defaultModel = { id: '$incr', maxValue: 10000 }
+    const defaultModel = { id: '$incr', idMaxValue: 10000 }
     const colName = 'users'
     let modelOptions
 
@@ -73,7 +73,7 @@ test('4 -> validateModel() - Should return model object populated with default d
 
 test('5 -> validateModel() - Should return model object with schema settings + generated Model name + model path', () => {
     const modelsPath = './test-db/models'
-    const defaultModel = { id: '$incr', maxValue: 10000 }
+    const defaultModel = { id: '$incr', idMaxValue: 10000 }
     const colName = 'users'
     const modelOptions = { id: '$uid'}
 
@@ -88,7 +88,7 @@ test('5 -> validateModel() - Should return model object with schema settings + g
 
 test('6 -> validateModel() - Should return model object with user provided Model name + model path', () => {
     const modelsPath = './test-db/models'
-    const defaultModel = { id: '$incr', maxValue: 10000 }
+    const defaultModel = { id: '$incr', idMaxValue: 10000 }
     const colName = 'users'
     const modelOptions1 = { name: 'my-custom-model'}
     const modelOptions2 = { name: 'my model'}

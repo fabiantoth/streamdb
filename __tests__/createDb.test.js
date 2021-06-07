@@ -19,7 +19,7 @@ const defaultMeta = {
     collections: [],
     defaultModel: { 
         id: '$incr', 
-        maxValue: 10000
+        idMaxValue: 10000
     }
 }
 
@@ -54,7 +54,7 @@ const customMeta = {
     collections: [],
     defaultModel: { 
         id: '$uid', 
-        maxValue: 11
+        idMaxValue: 11
     }
 }
 

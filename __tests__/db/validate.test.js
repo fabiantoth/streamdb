@@ -99,29 +99,29 @@ test('7 -> validate: (validateDirName) Should only allow string lengths between 
 test('8 -> validate: (defaultModel) return valid defaultModel object', () => {
     let defaultIncr = { 
         id: '$incr', 
-        maxValue: 10000
+        idMaxValue: 10000
     }
 
     let defaultUid = { 
         id: '$uid', 
-        maxValue: 11
+        idMaxValue: 11
     }
    
     let expectedDefault = defaultModel(undefined)
     let expectedDefaultUid = defaultModel({ id: '$uid' })
-    let model1 = defaultModel({ id: '$incr', maxValue: 1000 })
-    let model2 = defaultModel({ id: '$uid', maxValue: 24 })
+    let model1 = defaultModel({ id: '$incr', idMaxValue: 1000 })
+    let model2 = defaultModel({ id: '$uid', idMaxValue: 24 })
 
     expect(defaultModel(undefined)).toMatchObject(defaultIncr)
     expect(expectedDefault).toMatchObject(defaultIncr)
     expect(expectedDefaultUid).toMatchObject(defaultUid)
     expect(model1).toMatchObject({ 
         id: '$incr', 
-        maxValue: 1000
+        idMaxValue: 1000
     })
     expect(model2).toMatchObject({ 
         id: '$uid', 
-        maxValue: 24
+        idMaxValue: 24
     })
 })
 
@@ -142,9 +142,9 @@ test('(-1) -> validate: #error #dirAvailable Should throw error if dir name alre
 
 test('(-2) -> validate: #error #defaultModel Should throw errors with invalid options', async (done) => {
     expect(() => defaultModel({})).toThrow(`"defaultModel" object cannot be empty`)
-    expect(() => defaultModel({ maxValue: -1 })).toThrow(`"defaultModel.maxValue" must be a number type, with value greater than 6`)
-    expect(() => defaultModel({ maxValue: 5 })).toThrow(`"defaultModel.maxValue" must be a number type, with value greater than 6`)
-    expect(() => defaultModel({ maxValue: '15' })).toThrow(`"defaultModel.maxValue" must be a number type, with value greater than 6`)
-    expect(() => defaultModel({ id: '$uid' , maxValue: 40})).toThrow(`"defaultModel.maxValue" for '$uid' type must be must between 6-36. Received: 40`)
+    expect(() => defaultModel({ idMaxValue: -1 })).toThrow(`"defaultModel.idMaxValue" must be a number type, with value greater than 6`)
+    expect(() => defaultModel({ idMaxValue: 5 })).toThrow(`"defaultModel.idMaxValue" must be a number type, with value greater than 6`)
+    expect(() => defaultModel({ idMaxValue: '15' })).toThrow(`"defaultModel.idMaxValue" must be a number type, with value greater than 6`)
+    expect(() => defaultModel({ id: '$uid' , idMaxValue: 40})).toThrow(`"defaultModel.idMaxValue" for '$uid' type must be must between 6-36. Received: 40`)
     done()
 })
