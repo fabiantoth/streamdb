@@ -19,7 +19,6 @@ const dbFullMeta = {
     routesAutoDelete: true,
     modelsAutoDelete: true,
     storesMax: 10000,
-    total: 0,
     routes: [ 'db.js' ],
     collections: [],
     models: []

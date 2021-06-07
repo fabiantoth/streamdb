@@ -13,7 +13,6 @@ const defaultMeta = {
     routesAutoDelete: true,
     modelsAutoDelete: true,
     storesMax: 131072,
-    total: 0,
     routes: [
         'db.js'
     ],
@@ -49,7 +48,6 @@ const customMeta = {
     routesAutoDelete: true,
     modelsAutoDelete: true,
     storesMax: 10000,
-    total: 0,
     routes: [
         'db.js'
     ],
