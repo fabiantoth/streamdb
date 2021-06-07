@@ -79,8 +79,6 @@
 
 ### [streamdb.createDb(settings)](#table-of-contents)
 
-**\*\*Deprecation warning:\*\*** the defaultModel ``type: 'default'`` used for selecting no validation will be deperecated. It is still available with this release, however it has not been included in the new documentation.<strong>**</strong>
-	
 Creates a new db. Generates new db resource files/directories
 
 Params:
@@ -95,13 +93,12 @@ All settings are optional and have the following [default] values:
 
 * ``dbName`` **{String}:** [default=``'streamDB'``] name your db directory
 * ``storesMax`` **{Number}:** [``131072``] the maximum file size in bytes before store will split and start writing to a new file
+* ``routesDir`` **{String}:** [``api``] name of your base routers directory `localhost:3000/{api}/collection` 
 * ``initRoutes`` **{Boolean}:** [``true``] automatically scaffold routes for each collection 
 * ``initSchemas`` **{Boolean}:** [``true``] automatically scaffold models for each collection
 * ``routesAutoDelete`` **{Boolean}:** [``true``] automatically deletes router file when you delete collection
 * ``modelsAutoDelete`` **{Boolean}:** [``true``] automatically deletes model file when you delete collection
-* ``routesDir`` **{String}:** [``api``] name of your base routers directory `localhost:3000/{api}/collection` 
-* **``defaultModel``:** 
-	* ``type`` **{String}:** [``'schema'``] set to schema to validate your docs **('default' option will be deprecated)**
+* ``defaultModel``**{Object}:** 
 	* ``id`` **{String}:** [``'$incr'``] choose auto-increment number id type, or set to $uid to generate/validate id field as a string
 	* ``maxValue`` **{Number}:** [``10000``] set the max string length ($uid), or maximum id count ($incr)
 
@@ -123,7 +120,6 @@ streamdb.createDb({
   modelsAutoDelete: true, 
   routesDir: 'api',
   defaultModel: {
-  	type: 'schema',
 	id: '$incr',
 	maxValue: 10000
   }
@@ -337,7 +333,6 @@ The settings are optional and have the following (default) values:
 
 * `storeMax` **{Number}:** [default=`131072`] max file size before split, based on db settings and may be changed per collection 
 * **`model`:**
-	* `type` **{String}:** [`'schema'`] use 'schema' validation
 	* `id` **{String}:** [`'$incr'`] choose id type of '$incr' or '$uid'
 	* `idCount` **{Number}:** [`0`] (if $incr) where to start id count
 	* `idMaxCount` **{Number}:** [`10000`] (if $incr) set upper range limit on max id count
@@ -355,7 +350,6 @@ const db = new streamdb.DB('streamDB')
 db.addCollection('users', {
   storeMax: 131072,  
   model: {
-  	type: 'schema',
 	id: '$incr',
 	idCount: 0,
 	idMaxCount: 10000,
