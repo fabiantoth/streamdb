@@ -15,7 +15,7 @@ program
     .addHelpText('after', `
 create [options]:
     dbName:                     [-d, --db] <value>
-    storesMax:                  [-s, --storesMax] <value>
+    fileSize:                   [-s, --fileSize] <value>
     routesDir:                  [-R, --routesDir] <value>
     initRoutes = false:         --no-initRoutes
     initSchemas = false:        --no-initSchemas
@@ -27,7 +27,7 @@ create [options]:
 
 // create                       Create a new db
 // [-d, --db]                   Set the name of the db
-// [-s, --storesMax]            Set the default storesMax value
+// [-s, --fileSize]             Set the default fileSize max value
 // [-m, --maxValue <value>]     Set the default id maxValue
 // [-R, --routesDir <value>]    Set the name of the routes directory
 // [--uid]                      Set the id type to $uid
@@ -39,7 +39,7 @@ program
     .command('create')
     .description('$ streamdb create [options]')
     .option('-d, --db <value>', 'Set the name of new db', 'streamDB')
-    .option('-s, --storesMax <number>', 'Set the default storesMax value', 131072)
+    .option('-s, --fileSize <number>', 'Set the default fileSize value', 131072)
     .option('-m, --maxValue <value>', 'Set the default id maxValue')
     .option('-R, --routesDir <value>', 'Set the name of the routes directory', 'api')
     .option('--uid', 'Set the id type to $uid')
@@ -50,7 +50,7 @@ program
     .action((options) => {
         let settings = {
             dbName: options.db,
-            storesMax: options.storesMax,
+            fileSize: options.fileSize,
             routesDir: options.routesDir,
             initRoutes: options.initRoutes,
             initSchemas: options.initSchemas,

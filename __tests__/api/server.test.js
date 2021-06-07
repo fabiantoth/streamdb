@@ -113,7 +113,7 @@ afterAll(async (done) => {
 
 test('1 -> Server: POST /api/db/:name - Should create a new collection', async (done) => {
     await request(appServer('testServer', 'api')).post('/api/db/users').send({
-        storeMax: 10000,
+        fileSize: 10000,
         model: {
             id: '$incr',
             idCount: 0,

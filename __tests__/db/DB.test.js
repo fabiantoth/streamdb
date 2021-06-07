@@ -17,7 +17,7 @@ afterAll(async (done) => {
 test('1 -> db.addCollection(): Should return new collection meta file', async (done) => {
 
     const usersColSettings = {
-        storeMax: 50000,
+        fileSize: 50000,
         model: {
             idCount: 5,
             idMaxCount: 1000
@@ -31,7 +31,7 @@ test('1 -> db.addCollection(): Should return new collection meta file', async (d
         colName: expect(usersMeta.colName).toBe('users'),
         metaPath: expect(usersMeta.metaPath).toBe('./testUserDB/collections/users/users.meta.json'),
         colPath: expect(usersMeta.colPath).toBe('./testUserDB/collections/users'),
-        storeMax: expect(usersMeta.storeMax).toBe(50000),
+        fileSize: expect(usersMeta.fileSize).toBe(50000),
         target: expect(usersMeta.target).toBe('./testUserDB/collections/users/users.0.json'),
         stores: expect(usersMeta.stores).toMatchObject({
             '0': {

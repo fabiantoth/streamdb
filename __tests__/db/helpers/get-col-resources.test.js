@@ -15,7 +15,7 @@ const dbSettings = {
 }
 
 const colSettings = {
-    storeMax: 200,
+    fileSize: 200,
     model: {
         // type: 'schema',
         type: 'schema',

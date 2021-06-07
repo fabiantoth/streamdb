@@ -7,7 +7,7 @@ beforeAll(async (done) => {
     db = new streamDb.DB('testQueriesDB')
     
     const usersColSettings = {
-        storeMax: 60000,
+        fileSize: 60000,
         model: {
             idMaxCount: 1000
         }
