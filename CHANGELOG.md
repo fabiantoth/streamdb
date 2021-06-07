@@ -17,6 +17,13 @@ All notable changes to this project will be documented in this file.
 </details>
 <br>
 
+## Version 0.1.5  - (June 7, 2021)
+
+- **[Deprecated]**: legacy validation `type: default` and related modules have been fully removed
+- **[Deprecated]**: db/collection settings option `type` has been removed
+- [Removed]: `total` collections db meta property has been removed
+
+
 ## Version 0.1.4  - (June 4, 2021)
 
 - [Fixed]: [updating properties not defined in schema issue](https://github.com/fabiantoth/streamdb/issues/14#issue-911237140) - can update properties that have no schema definitions
