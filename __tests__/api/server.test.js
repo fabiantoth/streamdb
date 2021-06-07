@@ -1,11 +1,9 @@
 const request = require('supertest')
 const appServer = require('../../lib/api/server') // (dbName, routesDir, corsOptions)
 const streamdb = require('../../lib/index')
-const Schema = streamdb.Schema
 
 const dbSettings = {
     dbName: 'testServer',
-    storesMax: 10000,
     initRoutes: true,
     initSchemas: true,
     routesAutoDelete: true,
@@ -23,7 +21,6 @@ const dbFullMeta = {
     initSchemas: true,
     routesAutoDelete: true,
     modelsAutoDelete: true,
-    storesMax: 10000,
     routes: [ 'db.js' ],
     collections: [],
     models: []

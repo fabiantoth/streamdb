@@ -12,7 +12,7 @@ const defaultMeta = {
     initSchemas: true,
     routesAutoDelete: true,
     modelsAutoDelete: true,
-    storesMax: 131072,
+    fileSize: 131072,
     routes: [
         'db.js'
     ],
@@ -25,7 +25,7 @@ const defaultMeta = {
 
 const customSettings = {
     dbName: 'customDB',
-    storesMax: 10000,  
+    fileSize: 10000,  
     initRoutes: true, 
     initSchemas: true,
     routesAutoDelete: true, 
@@ -47,7 +47,7 @@ const customMeta = {
     initSchemas: true,
     routesAutoDelete: true,
     modelsAutoDelete: true,
-    storesMax: 10000,
+    fileSize: 10000,
     routes: [
         'db.js'
     ],

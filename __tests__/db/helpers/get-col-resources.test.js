@@ -6,7 +6,7 @@ const DB = streamDb.DB
 
 const dbSettings = {
     dbName: 'resourcesDB',
-    storesMax: 200,  
+    fileSize: 200,  
     initRoutes: false, 
     initSchemas: false,
     routesAutoDelete: true, 

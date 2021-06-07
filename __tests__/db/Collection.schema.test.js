@@ -3,7 +3,7 @@ const Schema = streamDb.Schema
 
 const dbSettings = {
     dbName: 'schemaDB',
-    storesMax: 131072,  
+    fileSize: 131072,  
     initRoutes: false, 
     initSchemas: false,
     routesAutoDelete: true, 

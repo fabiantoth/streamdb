@@ -3,7 +3,7 @@ const Schema = streamDb.Schema
 
 const dbSettings = {
     dbName: 'maxSize-schema',
-    storesMax: 200,  
+    fileSize: 200,  
     initSchemas: false,
     modelsAutoDelete: false
 }

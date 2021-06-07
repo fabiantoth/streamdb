@@ -3,8 +3,7 @@ const appServer = require('../../lib/api/server') // (dbName, routesDir, corsOpt
 const streamDb = require('../../lib/index')
 
 const dbSettings = {
-    dbName: 'defaultschema',
-    storesMax: 10000
+    dbName: 'defaultschema'
 }
 
 const dbFullMeta = {
@@ -18,7 +17,6 @@ const dbFullMeta = {
     initSchemas: true,
     routesAutoDelete: true,
     modelsAutoDelete: true,
-    storesMax: 10000,
     routes: [ 'db.js' ],
     collections: [],
     models: []
