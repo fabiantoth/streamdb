@@ -19,6 +19,13 @@ All notable changes to this project will be documented in this file.
 
 ## Version 0.1.5  - (June 8, 2021)
 
+### Release notes:
+
+This release has 2 important changes: 
+
+1. Declaring ``type`` in db/collection settings is no longer necessary as ``default`` has been officially removed.
+2. Both db & collection settings objects have been simplified, and properties ``store(s)Max``, ``id``, ``maxValue`` have been changed to **``fileSize``**, **``idType``**, and **``idMaxValue``** for clarity.
+
 - **[Deprecated]**: legacy validation **`type: default`** and related modules have been fully removed
 - [Removed]: db/collection settings option **`type`** has been removed
 - [Removed]: db meta property **`total`** has been removed
