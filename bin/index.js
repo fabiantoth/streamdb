@@ -21,9 +21,8 @@ create [options]:
     initSchemas = false:        --no-initSchemas
     routesAutoDelete = false:   --no-routesAutoDelete
     modelsAutoDelete = false:   --no-modelsAutoDelete
-    defaultModel:
-                idMaxValue:      [-m, --idMaxValue] <value>
-                idType = $uid:   --uid`)
+    idMaxValue:                 [-m, --idMaxValue] <value>
+    idType = $uid:              --uid`)
 
 // create                       Create a new db
 // [-d, --db]                   Set the name of the db
@@ -56,14 +55,8 @@ program
             initSchemas: options.initSchemas,
             routesAutoDelete: options.routesAutoDelete,
             modelsAutoDelete: options.modelsAutoDelete,
-            defaultModel: {
-                idType: options.uid ? '$uid' : '$incr',
-                idMaxValue: options.idMaxValue
-            }
-        }
-
-        if (options.idMaxValue) {
-            settings.defaultModel.idMaxValue = options.idMaxValue
+            idType: options.uid ? '$uid' : '$incr',
+            idMaxValue: options.idMaxValue
         }
 
         createDb(settings)
