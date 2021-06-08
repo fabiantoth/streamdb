@@ -17,11 +17,15 @@ All notable changes to this project will be documented in this file.
 </details>
 <br>
 
-## Version 0.1.5  - (June 7, 2021)
+## Version 0.1.5  - (June 8, 2021)
 
-- **[Deprecated]**: legacy validation `type: default` and related modules have been fully removed
-- **[Deprecated]**: db/collection settings option `type` has been removed
-- [Removed]: `total` collections db meta property has been removed
+- **[Deprecated]**: legacy validation **`type: default`** and related modules have been fully removed
+- [Removed]: db/collection settings option **`type`** has been removed
+- [Removed]: db meta property **`total`** has been removed
+- **[Changed]**: **[db settings](api.md#db-settings-options)** object has been flattened and simplified
+- **[Changed]**: **[collection settings](api.md#collection-settings-options)** object has been flattened and simplified
+- **[Changed]**: db/collection settings properties `storesMax` and `storeMax` -> are now **`fileSize`**
+- **[Changed]**: db/collection settings property `id` -> is now **`idType`**
 
 
 ## Version 0.1.4  - (June 4, 2021)
