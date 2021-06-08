@@ -18,10 +18,8 @@ test('1 -> db.addCollection(): Should return new collection meta file', async (d
 
     const usersColSettings = {
         fileSize: 50000,
-        model: {
-            idCount: 5,
-            idMaxCount: 1000
-        }
+        idCount: 5,
+        idMaxCount: 1000
     }
 
     const response = await db.addCollection('users', usersColSettings)
@@ -55,10 +53,8 @@ test('1 -> db.addCollection(): Should return new collection meta file', async (d
 test('2 -> db.addCollection(): should override out of range min/max values when default model $incr to colSettings $uid', async (done) => {
 
     const groupsColSettings = {
-        model: {
-            idType: '$uid',
-            uidLength: 20
-        }
+        idType: '$uid',
+        uidLength: 20
     }
 
     const expectedModel = {

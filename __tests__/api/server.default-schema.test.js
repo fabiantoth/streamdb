@@ -13,6 +13,7 @@ const dbFullMeta = {
     storePath: './defaultschema/collections',
     routesPath: './defaultschema/api',
     modelsPath: './defaultschema/models',
+    fileSize: 131072,
     initRoutes: true,
     initSchemas: true,
     routesAutoDelete: true,
@@ -110,11 +111,9 @@ afterAll(async (done) => {
 test('1 -> Server: POST /api/db/:name - Should create a new collection', async () => {
     await request(appServer('defaultschema', 'api')).post('/api/db/users').send({
         fileSize: 10000,
-        model: {
-            idType: '$incr',
-            idCount: 0,
-            idMaxCount: 10000
-        }
+        idType: '$incr',
+        idCount: 0,
+        idMaxCount: 10000
     }).expect(201)
 })
 

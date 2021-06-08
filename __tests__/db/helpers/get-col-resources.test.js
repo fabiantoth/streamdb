@@ -16,11 +16,9 @@ const dbSettings = {
 
 const colSettings = {
     fileSize: 200,
-    model: {
-        idType: '$incr',
-        idCount: 0,
-        idMaxCount: 10000
-    }
+    idType: '$incr',
+    idCount: 0,
+    idMaxCount: 10000
 }
 
 let db

@@ -1,10 +1,6 @@
 const streamDb = require('../../../lib/index')
 const Schema = streamDb.Schema
 
-// test('placeholder', () => {
-//     expect(1).toBe(1)
-// })
-
 let db
 let usersRef
 let detailsRef

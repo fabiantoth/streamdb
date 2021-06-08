@@ -8,9 +8,7 @@ beforeAll(async (done) => {
     
     const usersColSettings = {
         fileSize: 60000,
-        model: {
-            idMaxCount: 1000
-        }
+        idMaxCount: 1000
     }
 
     const users = await db.addCollection('users', usersColSettings)
