@@ -29,8 +29,8 @@ This release has 2 important changes:
 - **[Deprecated]**: legacy validation **`type: default`** and related modules have been fully removed
 - [Removed]: db/collection settings option **`type`** has been removed
 - [Removed]: db meta property **`total`** has been removed
-- **[Changed]**: **[db settings](api.md#db-settings-options)** object has been flattened and simplified
-- **[Changed]**: **[collection settings](api.md#collection-settings-options)** object has been flattened and simplified
+- **[Changed]**: **[db settings](docs/api.md#db-settings-options)** object has been flattened and simplified
+- **[Changed]**: **[collection settings](docs/api.md#collection-settings-options)** object has been flattened and simplified
 - **[Changed]**: db/collection settings properties `storesMax` and `storeMax` -> are now **`fileSize`**
 - **[Changed]**: db/collection settings property `id` -> is now **`idType`**
 
