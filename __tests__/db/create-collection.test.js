@@ -61,25 +61,25 @@ test('3 -> createModelName(): Should capitalize collection name that is camelCas
 
 test('4 -> validateModel() - Should return model object populated with default db settings', () => {
     const modelsPath = './test-db/models'
-    const defaultModel = { id: '$incr', idMaxValue: 10000 }
+    const defaultModel = { idType: '$incr', idMaxValue: 10000 }
     const colName = 'users'
     let modelOptions
 
     const model = validateModelObject({ modelsPath, defaultModel, models: [] }, colName, modelOptions)
-    const expectedModel = { id: '$incr', idCount: 0, idMaxCount: 10000 }
+    const expectedModel = { idType: '$incr', idCount: 0, idMaxCount: 10000 }
 
     expect(model).toMatchObject(expectedModel)
 })
 
 test('5 -> validateModel() - Should return model object with schema settings + generated Model name + model path', () => {
     const modelsPath = './test-db/models'
-    const defaultModel = { id: '$incr', idMaxValue: 10000 }
+    const defaultModel = { idType: '$incr', idMaxValue: 10000 }
     const colName = 'users'
-    const modelOptions = { id: '$uid'}
+    const modelOptions = { idType: '$uid'}
 
     const model = validateModelObject({ modelsPath, defaultModel, models: [] }, colName, modelOptions)
     const expectedModel = { 
-        id: '$uid', 
+        idType: '$uid', 
         uidLength: 11, 
         minLength: 6 }
 
@@ -88,7 +88,7 @@ test('5 -> validateModel() - Should return model object with schema settings + g
 
 test('6 -> validateModel() - Should return model object with user provided Model name + model path', () => {
     const modelsPath = './test-db/models'
-    const defaultModel = { id: '$incr', idMaxValue: 10000 }
+    const defaultModel = { idType: '$incr', idMaxValue: 10000 }
     const colName = 'users'
     const modelOptions1 = { name: 'my-custom-model'}
     const modelOptions2 = { name: 'my model'}
@@ -102,11 +102,11 @@ test('6 -> validateModel() - Should return model object with user provided Model
     const model4 = validateModelObject({ modelsPath, defaultModel, models: [] }, colName, modelOptions4)
     const model5 = validateModelObject({ modelsPath, defaultModel, models: [] }, colName, modelOptions5)
 
-    const expectedModel1 = { id: '$incr', name: 'MyCustomModel', path: './test-db/models/MyCustomModel.js', idCount: 0, idMaxCount: 10000 }
-    const expectedModel2 = { id: '$incr', name: 'MyModel', path: './test-db/models/MyModel.js', idCount: 0, idMaxCount: 10000 }
-    const expectedModel3 = { id: '$incr', name: 'MyModel', path: './test-db/models/MyModel.js', idCount: 0, idMaxCount: 10000 }
-    const expectedModel4 = { id: '$incr', name: 'MyCustomModel', path: './test-db/models/MyCustomModel.js', idCount: 0, idMaxCount: 10000 }
-    const expectedModel5 = { id: '$incr', name: 'User', path: './test-db/models/User.js', idCount: 0, idMaxCount: 10000 }
+    const expectedModel1 = { idType: '$incr', name: 'MyCustomModel', path: './test-db/models/MyCustomModel.js', idCount: 0, idMaxCount: 10000 }
+    const expectedModel2 = { idType: '$incr', name: 'MyModel', path: './test-db/models/MyModel.js', idCount: 0, idMaxCount: 10000 }
+    const expectedModel3 = { idType: '$incr', name: 'MyModel', path: './test-db/models/MyModel.js', idCount: 0, idMaxCount: 10000 }
+    const expectedModel4 = { idType: '$incr', name: 'MyCustomModel', path: './test-db/models/MyCustomModel.js', idCount: 0, idMaxCount: 10000 }
+    const expectedModel5 = { idType: '$incr', name: 'User', path: './test-db/models/User.js', idCount: 0, idMaxCount: 10000 }
 
     expect(model1).toMatchObject(expectedModel1)
     expect(model2).toMatchObject(expectedModel2)

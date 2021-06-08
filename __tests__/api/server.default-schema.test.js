@@ -111,8 +111,7 @@ test('1 -> Server: POST /api/db/:name - Should create a new collection', async (
     await request(appServer('defaultschema', 'api')).post('/api/db/users').send({
         fileSize: 10000,
         model: {
-            type: 'schema',
-            id: '$incr',
+            idType: '$incr',
             idCount: 0,
             idMaxCount: 10000
         }

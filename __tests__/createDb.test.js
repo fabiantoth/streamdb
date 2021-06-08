@@ -18,7 +18,7 @@ const defaultMeta = {
     ],
     collections: [],
     defaultModel: { 
-        id: '$incr', 
+        idType: '$incr', 
         idMaxValue: 10000
     }
 }
@@ -32,7 +32,7 @@ const customSettings = {
     modelsAutoDelete: true, 
     routesDir: 'api' ,
     defaultModel: { 
-        id: '$uid'
+        idType: '$uid'
     }
 }
 
@@ -53,7 +53,7 @@ const customMeta = {
     ],
     collections: [],
     defaultModel: { 
-        id: '$uid', 
+        idType: '$uid', 
         idMaxValue: 11
     }
 }

@@ -23,7 +23,7 @@ create [options]:
     modelsAutoDelete = false:   --no-modelsAutoDelete
     defaultModel:
                 idMaxValue:      [-m, --idMaxValue] <value>
-                id = $uid:       --uid`)
+                idType = $uid:   --uid`)
 
 // create                       Create a new db
 // [-d, --db]                   Set the name of the db
@@ -57,7 +57,7 @@ program
             routesAutoDelete: options.routesAutoDelete,
             modelsAutoDelete: options.modelsAutoDelete,
             defaultModel: {
-                id: options.uid ? '$uid' : '$incr',
+                idType: options.uid ? '$uid' : '$incr',
                 idMaxValue: options.idMaxValue
             }
         }

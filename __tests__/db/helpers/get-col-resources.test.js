@@ -17,9 +17,7 @@ const dbSettings = {
 const colSettings = {
     fileSize: 200,
     model: {
-        // type: 'schema',
-        type: 'schema',
-        id: '$incr',
+        idType: '$incr',
         idCount: 0,
         idMaxCount: 10000
     }

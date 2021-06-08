@@ -42,7 +42,7 @@ test('1 -> db.addCollection(): Should return new collection meta file', async (d
               }
         }),
         model: expect(usersMeta.model).toMatchObject({ 
-            id: '$incr', 
+            idType: '$incr', 
             idCount: 5, 
             idMaxCount: 1000
         }),
@@ -56,13 +56,13 @@ test('2 -> db.addCollection(): should override out of range min/max values when 
 
     const groupsColSettings = {
         model: {
-            id: '$uid',
+            idType: '$uid',
             uidLength: 20
         }
     }
 
     const expectedModel = {
-        id: '$uid', 
+        idType: '$uid', 
         minLength: 6, 
         uidLength: 20
     }

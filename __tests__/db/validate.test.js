@@ -98,29 +98,29 @@ test('7 -> validate: (validateDirName) Should only allow string lengths between 
 
 test('8 -> validate: (defaultModel) return valid defaultModel object', () => {
     let defaultIncr = { 
-        id: '$incr', 
+        idType: '$incr', 
         idMaxValue: 10000
     }
 
     let defaultUid = { 
-        id: '$uid', 
+        idType: '$uid', 
         idMaxValue: 11
     }
    
     let expectedDefault = defaultModel(undefined)
-    let expectedDefaultUid = defaultModel({ id: '$uid' })
-    let model1 = defaultModel({ id: '$incr', idMaxValue: 1000 })
-    let model2 = defaultModel({ id: '$uid', idMaxValue: 24 })
+    let expectedDefaultUid = defaultModel({ idType: '$uid' })
+    let model1 = defaultModel({ idType: '$incr', idMaxValue: 1000 })
+    let model2 = defaultModel({ idType: '$uid', idMaxValue: 24 })
 
     expect(defaultModel(undefined)).toMatchObject(defaultIncr)
     expect(expectedDefault).toMatchObject(defaultIncr)
     expect(expectedDefaultUid).toMatchObject(defaultUid)
     expect(model1).toMatchObject({ 
-        id: '$incr', 
+        idType: '$incr', 
         idMaxValue: 1000
     })
     expect(model2).toMatchObject({ 
-        id: '$uid', 
+        idType: '$uid', 
         idMaxValue: 24
     })
 })
@@ -145,6 +145,6 @@ test('(-2) -> validate: #error #defaultModel Should throw errors with invalid op
     expect(() => defaultModel({ idMaxValue: -1 })).toThrow(`"defaultModel.idMaxValue" must be a number type, with value greater than 6`)
     expect(() => defaultModel({ idMaxValue: 5 })).toThrow(`"defaultModel.idMaxValue" must be a number type, with value greater than 6`)
     expect(() => defaultModel({ idMaxValue: '15' })).toThrow(`"defaultModel.idMaxValue" must be a number type, with value greater than 6`)
-    expect(() => defaultModel({ id: '$uid' , idMaxValue: 40})).toThrow(`"defaultModel.idMaxValue" for '$uid' type must be must between 6-36. Received: 40`)
+    expect(() => defaultModel({ idType: '$uid' , idMaxValue: 40})).toThrow(`"defaultModel.idMaxValue" for '$uid' type must be must between 6-36. Received: 40`)
     done()
 })
