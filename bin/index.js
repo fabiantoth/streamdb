@@ -55,8 +55,11 @@ program
             initSchemas: options.initSchemas,
             routesAutoDelete: options.routesAutoDelete,
             modelsAutoDelete: options.modelsAutoDelete,
-            idType: options.uid ? '$uid' : '$incr',
-            idMaxValue: options.idMaxValue
+            idType: options.uid ? '$uid' : '$incr'
+        }
+
+        if (options.idMaxValue) {
+            settings.idMaxValue = options.idMaxValue
         }
 
         createDb(settings)
