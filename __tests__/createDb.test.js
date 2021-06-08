@@ -31,9 +31,7 @@ const customSettings = {
     routesAutoDelete: true, 
     modelsAutoDelete: true, 
     routesDir: 'api' ,
-    defaultModel: { 
-        idType: '$uid'
-    }
+    idType: '$uid'
 }
 
 const customMeta = {
