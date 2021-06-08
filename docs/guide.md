@@ -70,24 +70,22 @@ The main reason for supporting ``string`` id types is for cases you wish to inse
 	
 If the id field is included when you insert new data - **streamDB** will validate and use it instead of generating one for you.
 	
-The `maxValue` db setting has a different meaning for using a string (``$uid``) vs. a number (``$incr``) id:
+The `idMaxValue` db setting has a different meaning for using a string (``$uid``) vs. a number (``$incr``) id:
 	
-- **`$incr`** - *maxValue* corresponds to `idMaxCount` (default=10000)
-- **`$uid`** - *maxValue* corresponds to `uidLength` (default=11)   
+- **`$incr`** - *idMaxValue* corresponds to `idMaxCount` (default=10000)
+- **`$uid`** - *idMaxValue* corresponds to `uidLength` (default=11)   
 	
 Change default id setting:
 
 ```js
 streamdb.createDb({ 
-	dbName: 'sampleDB',
-	defaultModel: { 
-		id: '$uid',
-		maxValue: 16
-		}
-	})
+  dbName: 'sampleDB',
+  idType: '$uid',
+  idMaxValue: 16
+})
 
 // OR in CLI
-// streamdb create --db sampleDB --uid --maxValue 16
+// streamdb create --db sampleDB --uid --idMaxValue 16
 ```
 
 The id settings will be used with every new collection unless you override them with custom collection settings.
@@ -133,7 +131,7 @@ DELETE http://localhost:3000/api/db/:name
 
 ### [2.2&nbsp;&nbsp; Collection Settings](#streamdb-guide)
 
-Collection settings will be based on your ``defaultModel`` in the db meta file. But you may customize the ``storeMax`` value (in db meta it is plural, ``storesMax``), and id settings per collection.  
+Collection settings will be based on db meta file. But you may customize the ``fileSize``, and id settings per collection.  
 
 > See documentation for [Collection Settings Options](api.md#dbaddcollectioncolname-settings)
 	
@@ -141,12 +139,10 @@ Settings for ``$incr``
 
 ```js
 const settings = {
-    storeMax: 131072,       // may override default db store max per collection here
-    model: {
-        id: '$incr',
-        idCount: 0,         // the starting point for the id count (default = 0)
-        idMaxCount: 10000   // the max count per collection (default = 10000)
-    }
+    fileSize: 131072,   // may override default db fileSize max here
+    idType: '$incr',
+    idCount: 0,         // the starting point for the id count (default = 0)
+    idMaxCount: 10000   // the max id count per collection (default = 10000)
 }
 
 db.addCollection('users', settings) 
@@ -159,12 +155,10 @@ Settings for ``$uid``
 
 ```js
 const settings = {
-    storeMax: 131072,
-    model: {
-        id: '$uid',
-        uidLength: 11,      // default uidLength passed to uid generator
-        minLength: 6        // the min length
-    }
+    fileSize: 131072,
+    idType: '$uid',
+    uidLength: 11,      // default uidLength passed to uid generator
+    minLength: 6        // the min length
 }
 
 db.addCollection('users', settings)
@@ -179,10 +173,8 @@ You may set the model name by simply passing it in the settings object:
 	
 
 ```js
-const settings = {,
-    model: {
-        name: 'MyModel'
-    }
+const settings = {
+    name: 'MyModel'
 }
 ```
 
@@ -1070,7 +1062,7 @@ You may add/edit the template routes for each file or just leave it as is.
 
 This is where your data is stored and collection directories are created. 
 
-Whenever the data in a single store file reaches your set ``storeMax`` value, a new store file split occurs and is incremented starting at 0. The data reads from all store files as if it was just 1 single collection file.
+Whenever the data in a single store file reaches your set ``fileSize`` value, a new store file split occurs and is incremented starting at 0. The data reads from all store files as if it was just 1 single collection file.
 	
 <pre>
 ├── <b>collections</b>
@@ -1089,7 +1081,7 @@ Each collection has a meta file - it contains the collection data, size, and col
 	
 You can paste-in/edit data directly in the files if you wish - just keep in mind, however, that the file is just 1 big JSON array, and make sure pasted data adheres to your meta settings (such as ``idCount``, ``uidLength``, etc.)
 	
-*Beware of your ``storeMax`` limits* - store files are split only through collection method inserts.
+*Beware of your ``fileSize`` limits* - store files are split only through collection method inserts.
 
 ### 4. The Models Directory:   
 
@@ -1169,11 +1161,11 @@ streamdb delete [-d/--db] sampleDB
   	</tr>
 	<tr>
 		<td align="center">
-			<code>-s</code>/<code>--storesMax</code> 
+			<code>-s</code>/<code>--fileSize</code> 
 		</td>
 		<td colspan="2">
 		  <code>
-		  	 -s/-storesMax &#60value>
+		  	 -s/-fileSize &#60value>
 		  </code>
 		</td>
 		<td>max store file size</td>
@@ -1235,14 +1227,14 @@ streamdb delete [-d/--db] sampleDB
 	</tr>
 	<tr>
 		<td align="center">
-			<code>-m</code>/<code>--maxValue</code>
+			<code>-m</code>/<code>--idMaxValue</code>
 		</td>
 		<td colspan="2">
 		  <code>
-		  	-m/--maxValue &#60value>
+		  	-m/--idMaxValue &#60value>
 		  </code>
 		</td>
-		<td>id maxValue</td>
+		<td>id max value</td>
   	</tr>
 	<tr>
 		<td align="center">
