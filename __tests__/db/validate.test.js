@@ -132,7 +132,6 @@ test('(-3) -> validate: #error #idMaxValue Should throw error with invalid optio
     expect(() => idMaxValue('$incr', undefined)).toThrow(`idMaxValue must be a positive whole number`)
     expect(() => idMaxValue('$incr', 'hello')).toThrow(`idMaxValue must be a positive whole number`)
     expect(() => idMaxValue('$incr', -5)).toThrow(`idMaxValue must be a positive whole number`)
-    expect(() => idMaxValue('$uid', 1.6)).toThrow(`idMaxValue must be a positive whole number`)
     expect(() => idMaxValue('$uid', 5)).toThrow(`idMaxValue for $uid type must be between 6-36`)
     expect(() => idMaxValue('$uid', 37)).toThrow(`idMaxValue for $uid type must be between 6-36`)
     done()
