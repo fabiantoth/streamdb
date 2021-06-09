@@ -2,18 +2,12 @@ const validate = require('../../lib/db/validate')
 const streamDb = require('../../lib/index')
 
 beforeAll(async (done) => {
-    const existsMeta = await streamDb.createDb({ 
-        dbName: 'thisExists', 
-        defaultModel: {
-            type: 'default',
-            id: '$incr'
-           }  
-        })
+    const existsMeta = await streamDb.createDb({ dbName: 'validate-db' })
     done()
 })
 
 afterAll(async (done) => {
-    const deleted = await streamDb.deleteDb('thisExists')
+    const deleted = await streamDb.deleteDb('validate-db')
     done()
 })
 
@@ -21,19 +15,20 @@ const idTypeMatch = validate.idTypeMatch
 const checkUidRange = validate.checkUidRange
 const validateDirName = validate.validateDirName
 const dirAvailable = validate.dirAvailable
-const defaultModel = validate.defaultModel
+const isIdType = validate.isIdType
+const idMaxValue = validate.idMaxValue
 
 // uncovered from validate:
 // isObject, isArray, isString, isNumber, isBoolean, hasId, docSizeOk, validateStoresMax, idCountLimit
 
-test('validate: (idTypeMatch) Should fail idType not $incr or $uid', () => {
+test('1 -> validate: (idTypeMatch) Should fail idType not $incr or $uid', () => {
     expect(() => idTypeMatch('uid', 'string')).toThrow()
     expect(() => idTypeMatch(55, 1)).toThrow()
     expect(() => idTypeMatch(null, 1)).toThrow()
     expect(() => idTypeMatch(undefined, 1)).toThrow()
 })
 
-test('validate: (idTypeMatch) Should fail if id is not a string', () => {
+test('2 -> validate: (idTypeMatch) Should fail if id is not a string', () => {
     const idType = '$uid'
 
     expect(() => idTypeMatch(idType, undefined)).toThrow()
@@ -43,7 +38,7 @@ test('validate: (idTypeMatch) Should fail if id is not a string', () => {
     expect(() => idTypeMatch(idType, { object: 'test'})).toThrow()
 })
 
-test('validate: (idTypeMatch) Should fail if id is not a number', () => {
+test('3 -> validate: (idTypeMatch) Should fail if id is not a number', () => {
     const idType = '$incr'
 
     expect(() => idTypeMatch(idType, undefined)).toThrow()
@@ -53,7 +48,7 @@ test('validate: (idTypeMatch) Should fail if id is not a number', () => {
     expect(() => idTypeMatch(idType, { object: 'test'})).toThrow()
 })
 
-test('validate: (checkUidRange) Should fail if id is not a string', () => {
+test('4 -> validate: (checkUidRange) Should fail if id is not a string', () => {
     // min, max, id
     expect(() => checkUidRange(6, 11, undefined)).toThrow()
     expect(() => checkUidRange(6, 11, null)).toThrow()
@@ -62,7 +57,7 @@ test('validate: (checkUidRange) Should fail if id is not a string', () => {
     expect(() => checkUidRange(6, 11, { object: 'test'})).toThrow()
 })
 
-test('validate: (checkUidRange) Should fail if id is not between min/max values', () => {
+test('5 -> validate: (checkUidRange) Should fail if id is not between min/max values', () => {
     // min, max, id
     let min = 6
     let max = 11
@@ -70,7 +65,7 @@ test('validate: (checkUidRange) Should fail if id is not between min/max values'
     expect(() => checkUidRange(min, max, 'abcdefghijkl')).toThrow()
 })
 
-test('validate: (validateDirName) Should only allow alphanumeric and hyphen chars', () => {
+test('6 -> validate: (validateDirName) Should only allow alphanumeric and hyphen chars', () => {
     let dirName = "isn't allowed"
     let dirName2 = "not allowed"
     let dirName3 = "not_allowed"
@@ -90,7 +85,7 @@ test('validate: (validateDirName) Should only allow alphanumeric and hyphen char
     expect(allowed3).toBe("allowed123")
 })
 
-test('validate: (validateDirName) Should only allow string lengths between 2-26', () => {
+test('7 -> validate: (validateDirName) Should only allow string lengths between 2-26', () => {
     let dirName = "a"
     let dirName2 = "a12345678901234567890123456"
     let allowed = validateDirName("db")
@@ -102,8 +97,23 @@ test('validate: (validateDirName) Should only allow string lengths between 2-26'
     expect(allowed2).toBe("db-under-26-characters")
 })
 
-test('validate: (dirAvailable) Should throw error if dir name already exists', async (done) => {
-    let dirName = 'thisExists'
+test('8 -> validate: (isIdType) return valid id type string', () => {
+    expect(isIdType('$incr')).toBe('$incr')
+    expect(isIdType('$uid')).toBe('$uid')
+})
+
+test('9 -> validate: (idMaxValue) return idMaxValue', () => {
+    expect(idMaxValue('$incr', 500)).toBe(500)
+    expect(idMaxValue('$uid', 20)).toBe(20)
+})
+
+
+//
+// ======= negative tests ========== //
+//
+
+test('(-1) -> validate: #error #dirAvailable Should throw error if dir name already exists', async (done) => {
+    let dirName = 'validate-db'
 
     try {
         await dirAvailable(dirName)
@@ -112,53 +122,17 @@ test('validate: (dirAvailable) Should throw error if dir name already exists', a
     }
 })
 
-test('validate: (defaultModel) return valid defaultModel object', () => {
-    let defaultSchema = { 
-        type: 'schema', 
-        id: '$incr', 
-        maxValue: 10000
-    }
+test('(-2) -> validate: #error #isIdType Should throw error with invalid options', async (done) => {
+    expect(() => isIdType(undefined)).toThrow(`idType can only be '$incr' or '$uid'`)
+    expect(() => isIdType(15)).toThrow(`idType can only be '$incr' or '$uid'`)
+    done()
+})
 
-    let defaultModel1 = { 
-        type: 'default', 
-        id: '$incr', 
-        maxValue: 10000
-    }
-
-    let defaultUid = { 
-        type: 'default', 
-        id: '$uid', 
-        maxValue: 11
-    }
-
-    let defaultModel2 = { 
-        type: 'schema', 
-        id: '$uid', 
-        maxValue: 24
-    }
-
-    let defaultModel3 = { 
-        type: 'schema', 
-        id: '$uid', 
-        maxValue: 11
-    }
-   
-    let expectedDefault = defaultModel(undefined)
-    let expectedDefault1 = defaultModel({})
-    let model = defaultModel({ type: 'default', id: '$uid' })
-    let model1 = defaultModel({ type: 'default' })
-    let model2 = defaultModel({ type: 'schema', id: '$uid', maxValue: 24 })
-    let model3 = defaultModel({ id: '$uid' })
-
-    expect(expectedDefault).toMatchObject(defaultSchema)
-    expect(expectedDefault1).toMatchObject(defaultSchema)
-    expect(model).toMatchObject(defaultUid)
-    expect(model1).toMatchObject(defaultModel1)
-    expect(model2).toMatchObject(defaultModel2)
-    expect(model3).toMatchObject(defaultModel3)
-
-    expect(() => defaultModel({ maxValue: -1 })).toThrow()
-    expect(() => defaultModel({ maxValue: 5 })).toThrow()
-    expect(() => defaultModel({ maxValue: '15' })).toThrow()
-    expect(() => defaultModel({ id: '$uid' , maxValue: 40})).toThrow()
+test('(-3) -> validate: #error #idMaxValue Should throw error with invalid options', async (done) => {
+    expect(() => idMaxValue('$incr', undefined)).toThrow(`idMaxValue must be a positive whole number`)
+    expect(() => idMaxValue('$incr', 'hello')).toThrow(`idMaxValue must be a positive whole number`)
+    expect(() => idMaxValue('$incr', -5)).toThrow(`idMaxValue must be a positive whole number`)
+    expect(() => idMaxValue('$uid', 5)).toThrow(`idMaxValue for $uid type must be between 6-36`)
+    expect(() => idMaxValue('$uid', 37)).toThrow(`idMaxValue for $uid type must be between 6-36`)
+    done()
 })

@@ -17,6 +17,24 @@ All notable changes to this project will be documented in this file.
 </details>
 <br>
 
+## Version 0.1.5  - (June 8, 2021)
+
+### Release notes:
+
+This release has 2 important changes: 
+
+1. Declaring ``type`` in db/collection settings is no longer necessary as ``default`` has been officially removed.
+2. Both db & collection settings objects have been simplified, and properties ``store(s)Max``, ``id``, ``maxValue`` have been changed to **``fileSize``**, **``idType``**, and **``idMaxValue``** for clarity.
+
+- **[Deprecated]**: legacy validation **`type: default`** and related modules have been fully removed
+- [Removed]: db/collection settings option **`type`** has been removed
+- [Removed]: db meta property **`total`** has been removed
+- **[Changed]**: **[db settings](docs/api.md#db-settings-options)** object has been flattened and simplified
+- **[Changed]**: **[collection settings](docs/api.md#collection-settings-options)** object has been flattened and simplified
+- **[Changed]**: db/collection settings properties `storesMax` and `storeMax` -> are now **`fileSize`**
+- **[Changed]**: db/collection settings property `id` -> is now **`idType`**
+
+
 ## Version 0.1.4  - (June 4, 2021)
 
 - [Fixed]: [updating properties not defined in schema issue](https://github.com/fabiantoth/streamdb/issues/14#issue-911237140) - can update properties that have no schema definitions

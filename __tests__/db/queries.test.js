@@ -1,32 +1,34 @@
 const streamDb = require('../../lib/index')
-const DB = streamDb.DB
-
-const dbSettings = {
-    dbName: 'testQueriesDB',
-    storesMax: 131072,  
-    initRoutes: true, 
-    initSchemas: false,
-    routesAutoDelete: true, 
-    modelsAutoDelete: false, 
-    routesDir: 'api' 
-}
 
 let db
 
 beforeAll(async (done) => {
-    const testDbMeta = await streamDb.createDb(dbSettings)
-    db = new DB('testQueriesDB')
+    const testDbMeta = await streamDb.createDb({ dbName: 'testQueriesDB'})
+    db = new streamDb.DB('testQueriesDB')
     
     const usersColSettings = {
-        storeMax: 131072,
-        model: {
-            type: 'default',
-            id: '$incr',
-            idCount: 0,
-            idMaxCount: 1000
-        }
+        fileSize: 60000,
+        idMaxCount: 1000
     }
 
+    const users = await db.addCollection('users', usersColSettings)
+    done()
+})
+
+afterAll(async (done) => {
+    const deleted = await streamDb.deleteDb('testQueriesDB')
+    done()
+})
+
+beforeEach(async () => {
+    await new Promise(async (resolve) => {
+        setTimeout(() => {
+            resolve()
+        }, 30)
+    })
+})
+
+test('setup -> should create 4 new documents', async (done) => {
     let date1 = new Date(2020, 11, 20)
     let date2 = new Date(2020, 11, 21)
     let date3 = new Date(2020, 11, 22)
@@ -93,48 +95,15 @@ beforeAll(async (done) => {
         }
     ]
 
-    const users = await db.addCollection('users', usersColSettings)
-    const docs = await db.collection('users').insertMany(documents)
+    const response = await db.collection('users').insertMany(documents)
+    let res = response.data
+
+    expect(res.length).toBe(4)
     done()
 })
 
-afterAll(async (done) => {
-    const deleted = await streamDb.deleteDb('testQueriesDB')
-    done()
-})
 
-beforeEach(async () => {
-    await new Promise(async (resolve) => {
-        setTimeout(() => {
-            resolve()
-        }, 10)
-    })
-})
-
-test('Queries: throw error when where() arguments are incorrect data types', async (done) => {
-    expect(() => db.collection('users').where(1).find()).toThrow(`where() exp argument must be a string, received: ${typeof 1}`)
-    expect(() => db.collection('users').where(`access = member`, `access = member`).find()).toThrow('where() filterFn argument must be a function')
-    done()
-})
-
-test('Queries: throw error when query methods are added before where()', async (done) => {
-    expect(() => db.collection('users').find()).rejects.toMatchObject({error: true, message: "find() must be preceded by where() method"})
-    expect(() => db.collection('users').and(`access = member`).find()).toThrow(`and() must be preceded by where() method`)
-    expect(() => db.collection('users').or(`access = member`).find()).toThrow(`or() must be preceded by where() method`)
-    expect(() => db.collection('users').sort(`access`).find()).toThrow(`sort() must be preceded by where() method`)
-    expect(() => db.collection('users').limit(10).find()).toThrow(`limit() must be preceded by where() method`)
-    expect(() => db.collection('users').offset(10).find()).toThrow(`offset() must be preceded by where() method`)
-    expect(() => db.collection('users').include(['access']).find()).toThrow(`include() must be preceded by where() method`)
-    expect(() => db.collection('users').exclude(['access']).find()).toThrow(`exclude() must be preceded by where() method`)
-    expect(() => db.collection('users').populate(['access']).find()).toThrow(`populate() must be preceded by where() method`)
-    expect(() => db.collection('users').setProperty('access', 5)).rejects.toMatchObject({error: true, message: "setProperty() must be preceded by where() method"})
-    expect(() => db.collection('users').deleteProperty('access', 'member')).rejects.toMatchObject({error: true, message: "deleteProperty() must be preceded by where() method"})
-    expect(() => db.collection('users').removeFrom('access', 'member')).rejects.toMatchObject({error: true, message: "removeFrom() must be preceded by where() method"})
-    expect(() => db.collection('users').updateArray('access', 'member')).rejects.toMatchObject({error: true, message: "updateArray() must be preceded by where() method"})
-    done()
-})
-
-test('Queries: where() string and number data types', async (done) => {
+test('3 -> Queries: where() string and number data types', async (done) => {
     let date1 = new Date(2020, 11, 23)
     let date2 = new Date(2020, 11, 21)
 
@@ -208,7 +177,7 @@ test('Queries: where() string and number data types', async (done) => {
     done()
 })
 
-test('Queries: where() boolean, null, and undefined data types', async (done) => {
+test('4 -> Queries: where() boolean, null, and undefined data types', async (done) => {
     let date1 = new Date(2020, 11, 23)
 
     const expectedRes1 = [
@@ -290,7 +259,7 @@ test('Queries: where() date data types', async (done) => {
     done()
 })
 
-test('Queries: where() array data types with filterFn', async (done) => {
+test('5 -> Queries: where() array data types with filterFn', async (done) => {
     const filterFn1 = (arr) => {
         return arr.filter(item => item === 2)
     }
@@ -315,7 +284,7 @@ test('Queries: where() array data types with filterFn', async (done) => {
     done()
 })
 
-test('Queries: where() array data types with filterFn and chained and()/or() methods', async (done) => {
+test('6 -> Queries: where() array data types with filterFn and chained and()/or() methods', async (done) => {
     const filterFn1 = (arr) => {
         return arr.filter(item => item === 2)
     }
@@ -343,7 +312,7 @@ test('Queries: where() array data types with filterFn and chained and()/or() met
     done()
 })
 
-test('Queries: .and() query chains', async (done) => {
+test('7 -> Queries: .and() query chains', async (done) => {
     let date = new Date(2020, 11, 21)
     let date2 = new Date(2020, 11, 22)
 
@@ -380,7 +349,7 @@ test('Queries: .and() query chains', async (done) => {
     done()
 })
 
-test('Queries: .or() query chains', async (done) => {
+test('8 -> Queries: .or() query chains', async (done) => {
     let date1 = new Date(2020, 11, 20)
     let date2 = new Date(2020, 11, 21)
 
@@ -405,7 +374,7 @@ test('Queries: .or() query chains', async (done) => {
     done()
 })
 
-test('Queries: .and()/.or() combo query chains', async (done) => {
+test('9 -> Queries: .and()/.or() combo query chains', async (done) => {
     let date1 = new Date(2020, 11, 20)
 
     let res1 = await db.collection('users').where(`joined > ${date1.toJSON()}`).or('active = $true').and(`access = member`).find()
@@ -414,7 +383,7 @@ test('Queries: .and()/.or() combo query chains', async (done) => {
     done()
 })
 
-test('Queries: multiple where() combo query chains', async (done) => {
+test('10 -> Queries: multiple where() combo query chains', async (done) => {
     let date1 = new Date(2020, 11, 21)
 
     let res1 = await db.collection('users').where(`joined > ${date1.toJSON()}`).where('active = $true').find()
@@ -423,5 +392,34 @@ test('Queries: multiple where() combo query chains', async (done) => {
     let res2 = await db.collection('users').where(`access = member`).where('active = $true').find()
     expect(res2.data.length).toBe(2)
 
+    done()
+})
+
+
+
+//
+// ======= negative tests ========== //
+//
+
+test('(-1) -> Queries: #error where() passing incorrect argument data types', async (done) => {
+    expect(() => db.collection('users').where(1).find()).toThrow(`where() exp argument must be a string, received: ${typeof 1}`)
+    expect(() => db.collection('users').where(`access = member`, `access = member`).find()).toThrow('where() filterFn argument must be a function')
+    done()
+})
+
+test('(-2) -> Queries: #error query methods are added before where()', async (done) => {
+    expect(() => db.collection('users').find()).rejects.toMatchObject({error: true, message: "find() must be preceded by where() method"})
+    expect(() => db.collection('users').and(`access = member`).find()).toThrow(`and() must be preceded by where() method`)
+    expect(() => db.collection('users').or(`access = member`).find()).toThrow(`or() must be preceded by where() method`)
+    expect(() => db.collection('users').sort(`access`).find()).toThrow(`sort() must be preceded by where() method`)
+    expect(() => db.collection('users').limit(10).find()).toThrow(`limit() must be preceded by where() method`)
+    expect(() => db.collection('users').offset(10).find()).toThrow(`offset() must be preceded by where() method`)
+    expect(() => db.collection('users').include(['access']).find()).toThrow(`include() must be preceded by where() method`)
+    expect(() => db.collection('users').exclude(['access']).find()).toThrow(`exclude() must be preceded by where() method`)
+    expect(() => db.collection('users').populate(['access']).find()).toThrow(`populate() must be preceded by where() method`)
+    expect(() => db.collection('users').setProperty('access', 5)).rejects.toMatchObject({error: true, message: "setProperty() must be preceded by where() method"})
+    expect(() => db.collection('users').deleteProperty('access', 'member')).rejects.toMatchObject({error: true, message: "deleteProperty() must be preceded by where() method"})
+    expect(() => db.collection('users').removeFrom('access', 'member')).rejects.toMatchObject({error: true, message: "removeFrom() must be preceded by where() method"})
+    expect(() => db.collection('users').updateArray('access', 'member')).rejects.toMatchObject({error: true, message: "updateArray() must be preceded by where() method"})
     done()
 })

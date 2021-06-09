@@ -466,7 +466,7 @@ $ npm run test-coverage
 
 ## [What's Next](#table-of-contents)
 
-- [ ] remove legacy 'default' workflow from codebase
+- [x] ~~remove legacy 'default' workflow from codebase~~
 - [ ] add populate() + geoSearch() to chainQuery helper
 - [ ] add 'unique' index schema option
 - [ ] add text-search feature

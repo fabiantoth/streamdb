@@ -2,19 +2,12 @@ const streamDb = require('../../../../lib/index')
 const DB = streamDb.DB
 const Schema = streamDb.Schema
 
-// ==> these use case tests are for 'schema' validation models only
-
 const dbSettings = {
     dbName: 'ia-primitives',
     initRoutes: false,
     routesAutoDelete: false,
     initSchemas: false,
-    modelsAutoDelete: false, 
-    routesDir: 'api',
-    defaultModel: {
-        type: 'schema',
-        id: '$incr'
-    } 
+    modelsAutoDelete: false
 }
 
 let db

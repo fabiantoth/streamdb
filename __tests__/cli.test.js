@@ -3,9 +3,13 @@ const exec = util.promisify(require('child_process').exec)
 
 let dbName = 'cliTest'
 let streamdb = 'node bin/index'
+let fileSize = 65000
+let idMaxValue = 5000
+let routesDir = 'api2'
+
 
 test('streamdb create --db cliTest', async (done) => {
-    const { stdout } = await exec(`${streamdb} create --db ${dbName}`)
+    const { stdout } = await exec(`${streamdb} create --db ${dbName} --fileSize ${fileSize} --idMaxValue ${idMaxValue} --routesDir ${routesDir}`)
     let res = stdout.split('\n')
     expect(res[5].trim()).toBe(`New database '${dbName}' created.`)
     done()

@@ -6,7 +6,7 @@ const DB = streamDb.DB
 
 const dbSettings = {
     dbName: 'resourcesDB',
-    storesMax: 200,  
+    fileSize: 200,  
     initRoutes: false, 
     initSchemas: false,
     routesAutoDelete: true, 
@@ -15,14 +15,10 @@ const dbSettings = {
 }
 
 const colSettings = {
-    storeMax: 200,
-    model: {
-        // type: 'schema',
-        type: 'schema',
-        id: '$incr',
-        idCount: 0,
-        idMaxCount: 10000
-    }
+    fileSize: 200,
+    idType: '$incr',
+    idCount: 0,
+    idMaxCount: 10000
 }
 
 let db

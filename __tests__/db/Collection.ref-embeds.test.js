@@ -4,11 +4,7 @@ const Schema = streamDb.Schema
 const dbSettings = {
     dbName: 'ref-embeds',
     initRoutes: false,
-    initSchemas: false,
-    defaultModel: {
-        type: 'schema',
-        id: '$incr'
-    } 
+    initSchemas: false
 }
 
 let db

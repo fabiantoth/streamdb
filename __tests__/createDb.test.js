@@ -12,31 +12,26 @@ const defaultMeta = {
     initSchemas: true,
     routesAutoDelete: true,
     modelsAutoDelete: true,
-    storesMax: 131072,
-    total: 0,
+    fileSize: 131072,
     routes: [
         'db.js'
     ],
     collections: [],
     defaultModel: { 
-        type: 'schema', 
-        id: '$incr', 
-        maxValue: 10000
+        idType: '$incr', 
+        idMaxValue: 10000
     }
 }
 
 const customSettings = {
     dbName: 'customDB',
-    storesMax: 10000,  
+    fileSize: 10000,  
     initRoutes: true, 
     initSchemas: true,
     routesAutoDelete: true, 
     modelsAutoDelete: true, 
     routesDir: 'api' ,
-    defaultModel: { 
-        type: 'schema', 
-        id: '$uid'
-    }
+    idType: '$uid'
 }
 
 const customMeta = {
@@ -50,16 +45,14 @@ const customMeta = {
     initSchemas: true,
     routesAutoDelete: true,
     modelsAutoDelete: true,
-    storesMax: 10000,
-    total: 0,
+    fileSize: 10000,
     routes: [
         'db.js'
     ],
     collections: [],
     defaultModel: { 
-        type: 'schema', 
-        id: '$uid', 
-        maxValue: 11
+        idType: '$uid', 
+        idMaxValue: 11
     }
 }
 

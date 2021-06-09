@@ -1,16 +1,11 @@
 const streamDb = require('../../lib/index')
 const Schema = streamDb.Schema
-const DB = streamDb.DB
 
 const dbSettings = {
     dbName: 'maxSize-schema',
-    storesMax: 200,  
+    fileSize: 200,  
     initSchemas: false,
-    modelsAutoDelete: false, 
-    defaultModel: {
-        type: 'schema',
-        id: '$incr'
-    } 
+    modelsAutoDelete: false
 }
 
 let db

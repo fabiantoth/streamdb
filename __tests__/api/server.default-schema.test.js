@@ -3,18 +3,7 @@ const appServer = require('../../lib/api/server') // (dbName, routesDir, corsOpt
 const streamDb = require('../../lib/index')
 
 const dbSettings = {
-    dbName: 'defaultschema',
-    storesMax: 10000,
-    initRoutes: true,
-    initSchemas: true,
-    routesAutoDelete: true,
-    modelsAutoDelete: true,
-    routesDir: 'api',
-    defaultModel: {
-        type: 'schema',
-        id: '$incr',
-        maxValue: 10000
-    }
+    dbName: 'defaultschema'
 }
 
 const dbFullMeta = {
@@ -24,12 +13,11 @@ const dbFullMeta = {
     storePath: './defaultschema/collections',
     routesPath: './defaultschema/api',
     modelsPath: './defaultschema/models',
+    fileSize: 131072,
     initRoutes: true,
     initSchemas: true,
     routesAutoDelete: true,
     modelsAutoDelete: true,
-    storesMax: 10000,
-    total: 0,
     routes: [ 'db.js' ],
     collections: [],
     models: []
@@ -122,13 +110,10 @@ afterAll(async (done) => {
 
 test('1 -> Server: POST /api/db/:name - Should create a new collection', async () => {
     await request(appServer('defaultschema', 'api')).post('/api/db/users').send({
-        storeMax: 10000,
-        model: {
-            type: 'schema',
-            id: '$incr',
-            idCount: 0,
-            idMaxCount: 10000
-        }
+        fileSize: 10000,
+        idType: '$incr',
+        idCount: 0,
+        idMaxCount: 10000
     }).expect(201)
 })
 

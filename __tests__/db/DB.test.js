@@ -1,26 +1,11 @@
 const streamDb = require('../../lib/index')
-const DB = streamDb.DB
 const Schema = streamDb.Schema
-
-const dbSettings = {
-    dbName: 'testUserDB',
-    storesMax: 131072,  
-    initRoutes: true, 
-    initSchemas: false,
-    routesAutoDelete: true, 
-    modelsAutoDelete: false, 
-    routesDir: 'api',
-    defaultModel: {
-        type: 'default',
-        id: '$incr'
-    } 
-}
 
 let db
 
 beforeAll(async (done) => {
-    const testDbMeta = await streamDb.createDb(dbSettings)
-    db = new DB('testUserDB')
+    const testDbMeta = await streamDb.createDb({ dbName: 'testUserDB'})
+    db = new streamDb.DB('testUserDB')
     done()
 })
 
@@ -32,13 +17,9 @@ afterAll(async (done) => {
 test('1 -> db.addCollection(): Should return new collection meta file', async (done) => {
 
     const usersColSettings = {
-        storeMax: 131072,
-        model: {
-            type: 'default',
-            id: '$incr',
-            idCount: 0,
-            idMaxCount: 10000
-        }
+        fileSize: 50000,
+        idCount: 5,
+        idMaxCount: 1000
     }
 
     const response = await db.addCollection('users', usersColSettings)
@@ -48,7 +29,7 @@ test('1 -> db.addCollection(): Should return new collection meta file', async (d
         colName: expect(usersMeta.colName).toBe('users'),
         metaPath: expect(usersMeta.metaPath).toBe('./testUserDB/collections/users/users.meta.json'),
         colPath: expect(usersMeta.colPath).toBe('./testUserDB/collections/users'),
-        storeMax: expect(usersMeta.storeMax).toBe(131072),
+        fileSize: expect(usersMeta.fileSize).toBe(50000),
         target: expect(usersMeta.target).toBe('./testUserDB/collections/users/users.0.json'),
         stores: expect(usersMeta.stores).toMatchObject({
             '0': {
@@ -59,10 +40,9 @@ test('1 -> db.addCollection(): Should return new collection meta file', async (d
               }
         }),
         model: expect(usersMeta.model).toMatchObject({ 
-            type: 'default', 
-            id: '$incr', 
-            idCount: 0, 
-            idMaxCount: 10000 
+            idType: '$incr', 
+            idCount: 5, 
+            idMaxCount: 1000
         }),
         version: expect(usersMeta.version).toBe(0),
         timestamp: expect.any(Date),
@@ -73,16 +53,14 @@ test('1 -> db.addCollection(): Should return new collection meta file', async (d
 test('2 -> db.addCollection(): should override out of range min/max values when default model $incr to colSettings $uid', async (done) => {
 
     const groupsColSettings = {
-        model: {
-            id: '$uid'
-        }
+        idType: '$uid',
+        uidLength: 20
     }
 
     const expectedModel = {
-        type: 'default', 
-        id: '$uid', 
+        idType: '$uid', 
         minLength: 6, 
-        uidLength: 11
+        uidLength: 20
     }
 
     const response = await db.addCollection('groups', groupsColSettings)

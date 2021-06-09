@@ -15,20 +15,19 @@ program
     .addHelpText('after', `
 create [options]:
     dbName:                     [-d, --db] <value>
-    storesMax:                  [-s, --storesMax] <value>
+    fileSize:                   [-s, --fileSize] <value>
     routesDir:                  [-R, --routesDir] <value>
     initRoutes = false:         --no-initRoutes
     initSchemas = false:        --no-initSchemas
     routesAutoDelete = false:   --no-routesAutoDelete
     modelsAutoDelete = false:   --no-modelsAutoDelete
-    defaultModel:
-                maxValue:       [-m, --maxValue] <value>
-                id = $uid:       --uid`)
+    idMaxValue:                 [-m, --idMaxValue] <value>
+    idType = $uid:              --uid`)
 
 // create                       Create a new db
 // [-d, --db]                   Set the name of the db
-// [-s, --storesMax]            Set the default storesMax value
-// [-m, --maxValue <value>]     Set the default id maxValue
+// [-s, --fileSize]             Set the default fileSize max value
+// [-m, --idMaxValue <value>]   Set the default idMaxValue
 // [-R, --routesDir <value>]    Set the name of the routes directory
 // [--uid]                      Set the id type to $uid
 // [--no-initRoutes]            Set initRoutes to false
@@ -39,8 +38,8 @@ program
     .command('create')
     .description('$ streamdb create [options]')
     .option('-d, --db <value>', 'Set the name of new db', 'streamDB')
-    .option('-s, --storesMax <number>', 'Set the default storesMax value', 131072)
-    .option('-m, --maxValue <value>', 'Set the default id maxValue')
+    .option('-s, --fileSize <number>', 'Set the default fileSize value', 131072)
+    .option('-m, --idMaxValue <value>', 'Set the default idMaxValue')
     .option('-R, --routesDir <value>', 'Set the name of the routes directory', 'api')
     .option('--uid', 'Set the id type to $uid')
     .option('--no-initRoutes', 'Set initRoutes to false')
@@ -50,20 +49,17 @@ program
     .action((options) => {
         let settings = {
             dbName: options.db,
-            storesMax: options.storesMax,
+            fileSize: options.fileSize,
             routesDir: options.routesDir,
             initRoutes: options.initRoutes,
             initSchemas: options.initSchemas,
             routesAutoDelete: options.routesAutoDelete,
             modelsAutoDelete: options.modelsAutoDelete,
-            defaultModel: {
-                type: 'schema',
-                id: options.uid ? '$uid' : '$incr'
-            }
+            idType: options.uid ? '$uid' : '$incr'
         }
 
-        if (options.maxValue) {
-            settings.defaultModel.maxValue = options.maxValue
+        if (options.idMaxValue) {
+            settings.idMaxValue = options.idMaxValue
         }
 
         createDb(settings)
