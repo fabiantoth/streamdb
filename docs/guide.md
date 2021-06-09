@@ -1123,7 +1123,7 @@ streamdb create [-d/--db] sampleDB
 streamdb delete [-d/--db] sampleDB
 ```
 
-<details>
+<details open>
 	<summary><strong>See all db settings cli flags:</strong></summary>
 
 <br>
