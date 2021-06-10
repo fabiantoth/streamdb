@@ -183,6 +183,39 @@ test('2 -> Collection.populate(): #nestedObject #array[$ref] should populate $re
     done()
 })
 
+test('2 -> Collection.chainQuery(): use populate in chainQuery helper', async (done) => {
+    const query = { where: 'nested.refsArr.length,>,0', populate: ['nested.refsArr'] }
+    usersRef = streamdb.chainQuery(usersRef, query)
+    let userRes = await usersRef.find()
+    let res = userRes.data
+    
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(1),
+        nested: expect.objectContaining({
+            record: expect(res[0].nested.record).toBe(1),
+            ref: expect(res[0].nested.ref).toBe(1),
+            refsArr: expect(res[0].nested.refsArr).toEqual(expect.arrayContaining([
+                { id: 1, title: 'Group 1' },
+                { id: 2, title: 'Group 2' },
+                { id: 3, title: 'Group 3' }
+            ])),
+            tags: expect(res[0].nested.tags).toEqual(expect.arrayContaining([1,2,3]))
+        })
+    })
+    expect.objectContaining({
+        id: expect(res[1].id).toBe(2),
+        nested: expect.objectContaining({
+            record: expect(res[1].nested.record).toBe(2),
+            ref: expect(res[1].nested.ref).toBe(2),
+            refsArr: expect(res[1].nested.refsArr).toEqual(expect.arrayContaining([
+                { id: 3, title: 'Group 3' },
+                { id: 4, title: 'Group 4' }
+            ]))
+        })
+    })
+    done()
+})
+
 
 
 //
