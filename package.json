@@ -1,7 +1,7 @@
 {
   "name": "streamdb",
   "description": "A Node.js document-oriented JSON DB & API development toolkit",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "author": "Fabian Toth",
   "license": "ISC",
   "homepage": "https://github.com/fabiantoth/streamdb#readme",
@@ -19,7 +19,8 @@
     "test": "jest --runInBand --watchAll",
     "test-coverage": "jest --coverage",
     "clear-cache": "jest --clearCache",
-    "streamdb": "node bin/index.js"
+    "streamdb": "node bin/index.js",
+    "tests": "jest Collection.timestamps.test.js"
   },
   "keywords": [
     "db",
