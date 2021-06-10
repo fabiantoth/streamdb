@@ -198,6 +198,30 @@ Route equivalent:
 
 ------------------------------------------------------
 
+<details>
+	<summary><strong>chaining populate()</strong></summary>
+<br>
+
+**populate()** 
+	
+Query in JS:
+
+```js
+colRef.where('id = 10')
+      .populate(['articles', 'followers'])
+      .find()
+```
+
+Route equivalent:
+	
+<pre>
+/_q/?where=id,=,10&<strong>populate=</strong>[articles,followers]
+</pre>
+
+</details>
+
+------------------------------------------------------
+
 <br>
 
 ### \# where() - in array filter mode
