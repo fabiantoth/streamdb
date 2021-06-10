@@ -154,7 +154,7 @@ Params:
 - `colRef` **{Object}**: (required) the db collection reference (`let colRef = db.collection('users')`)
 - `query` **{Object}**: (required) the `req.query` object
 
-> See [options and query examples](https://github.com/fabiantoth/streamdb/blob/ef21f2bfe016630ddb386289818856a30f164d7c/lib/api/chainQuery.js#L2)
+> See [options and query examples](/lib/api/chainQuery.js#L3)
 	
 Returns: 
 - Promise. Query results
@@ -219,7 +219,7 @@ Translates to api call
 `where('privilages, (arr) => arr.filter(item => item == 'admin')`  
 
 
- > See [filterArray helper](https://github.com/fabiantoth/streamdb/blob/ef21f2bfe016630ddb386289818856a30f164d7c/lib/api/filterArray.js#L5)
+ > See [filterArray helper](/lib/api/filterArray.js#L6)
  
 Params:
 - `whereQuery` **{String|Array\<String\>}**: (required) the whereArray string (or array of strings) req.query.whereArray value
@@ -227,7 +227,7 @@ Params:
 Returns: 
 - Function. A function that runs an array filter (to be used with chainQuery helper)
 
-> **NOTE:** This method has been separated deliberately, as you may construct your own array lookup methods. [See whereArrayParams](https://github.com/fabiantoth/streamdb/blob/ef21f2bfe016630ddb386289818856a30f164d7c/lib/api/chainQuery.js#L22)
+> **NOTE:** This method has been separated deliberately, as you may construct your own array lookup methods. [See whereArrayParams](/lib/api/chainQuery.js#L24)
 
 	
 ## Creating Models
