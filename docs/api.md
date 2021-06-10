@@ -145,7 +145,7 @@ Returns:
 ### [streamdb.chainQuery(colRef, query)](#table-of-contents)
 
 A helper method added to chain req queries 
-> See [Advanced Queries](#whereexp-filterfnoptional) section of the Guide
+> See [Advanced Queries](/docs/guide.md#33-advanced-queries) section of the Guide
 
  - The default collection query route is `/api/{collection}/_q/`
  - Query arguments can be added after question mark (?) (ex, `/api/{collection}/_q/?where=id,>=,50&limit=20`
