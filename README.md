@@ -467,7 +467,7 @@ $ npm run test-coverage
 ## [What's Next](#table-of-contents)
 
 - [x] ~~remove legacy 'default' workflow from codebase~~
-- [ ] add populate() + geoSearch() to chainQuery helper
+- [x] ~~add populate() to chainQuery helper~~
 - [ ] add 'unique' index schema option
 - [ ] add text-search feature
 - [ ] build demo w/FE Framework
