@@ -1,6 +1,6 @@
-const streamDb = require('../../../lib/index')
-const DB = streamDb.DB
-const Schema = streamDb.Schema
+const streamdb = require('../../../lib/index')
+const DB = streamdb.DB
+const Schema = streamdb.Schema
 
 const dbSettings = {
     dbName: 'delete-prop-test',
@@ -14,7 +14,7 @@ let db
 let usersRef
 
 beforeAll(async (done) => {
-    await streamDb.createDb(dbSettings)
+    await streamdb.createDb(dbSettings)
     db = new DB('delete-prop-test')
 
     await db.addCollection('groups')
@@ -76,7 +76,7 @@ beforeAll(async (done) => {
 })
 
 afterAll(async (done) => {
-    const deleted = await streamDb.deleteDb('delete-prop-test')
+    const deleted = await streamdb.deleteDb('delete-prop-test')
     done()
 })
 

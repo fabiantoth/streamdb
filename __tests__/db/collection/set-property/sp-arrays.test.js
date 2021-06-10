@@ -1,6 +1,6 @@
-const streamDb = require('../../../../lib/index')
-const DB = streamDb.DB
-const Schema = streamDb.Schema
+const streamdb = require('../../../../lib/index')
+const DB = streamdb.DB
+const Schema = streamdb.Schema
 
 const dbSettings = {
     dbName: 'sp-arrays',
@@ -15,7 +15,7 @@ let db
 let usersRef
 
 beforeAll(async (done) => {
-    await streamDb.createDb(dbSettings)
+    await streamdb.createDb(dbSettings)
     db = new DB('sp-arrays')
 
     await db.addCollection('users')
@@ -45,7 +45,7 @@ beforeAll(async (done) => {
 })
 
 afterAll(async (done) => {
-    const deleted = await streamDb.deleteDb('sp-arrays')
+    const deleted = await streamdb.deleteDb('sp-arrays')
     done()
 })
 

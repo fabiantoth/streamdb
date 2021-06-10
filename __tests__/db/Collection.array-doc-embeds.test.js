@@ -1,5 +1,5 @@
-const streamDb = require('../../lib/index')
-const Schema = streamDb.Schema
+const streamdb = require('../../lib/index')
+const Schema = streamdb.Schema
 
 const dbSettings = {
     dbName: 'array-doc-embeds',
@@ -12,8 +12,8 @@ let groupsRef
 let usersRef
 
 beforeAll(async (done) => {
-    await streamDb.createDb(dbSettings)
-    db = new streamDb.DB('array-doc-embeds')
+    await streamdb.createDb(dbSettings)
+    db = new streamdb.DB('array-doc-embeds')
 
     await db.addCollection('groups')
     await db.addCollection('users')
@@ -50,7 +50,7 @@ beforeEach(async () => {
 })
 
 afterAll(async (done) => {
-    await streamDb.deleteDb('array-doc-embeds')
+    await streamdb.deleteDb('array-doc-embeds')
     done()
 })
 

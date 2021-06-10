@@ -1,6 +1,6 @@
-const streamDb = require('../../../../lib/index')
-const DB = streamDb.DB
-const Schema = streamDb.Schema
+const streamdb = require('../../../../lib/index')
+const DB = streamdb.DB
+const Schema = streamdb.Schema
 
 const dbSettings = {
     dbName: 'ia-schemas',
@@ -15,7 +15,7 @@ let db
 let authorsRef
 
 beforeAll(async (done) => {
-    await streamDb.createDb(dbSettings)
+    await streamdb.createDb(dbSettings)
     db = new DB('ia-schemas')
 
     await db.addCollection('authors')
@@ -47,7 +47,7 @@ beforeAll(async (done) => {
 })
 
 afterAll(async (done) => {
-    const deleted = await streamDb.deleteDb('ia-schemas')
+    const deleted = await streamdb.deleteDb('ia-schemas')
     done()
 })
 

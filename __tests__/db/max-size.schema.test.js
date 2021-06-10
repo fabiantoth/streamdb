@@ -1,5 +1,5 @@
-const streamDb = require('../../lib/index')
-const Schema = streamDb.Schema
+const streamdb = require('../../lib/index')
+const Schema = streamdb.Schema
 
 const dbSettings = {
     dbName: 'maxSize-schema',
@@ -12,8 +12,8 @@ let db
 let usersRef
 
 beforeAll(async (done) => {
-    await streamDb.createDb(dbSettings)
-    db = new streamDb.DB('maxSize-schema')
+    await streamdb.createDb(dbSettings)
+    db = new streamdb.DB('maxSize-schema')
 
     userMeta = await db.addCollection('users')
     const UserSchema = new Schema({
@@ -26,7 +26,7 @@ beforeAll(async (done) => {
 })
 
 afterAll(async (done) => {
-    await streamDb.deleteDb('maxSize-schema')
+    await streamdb.deleteDb('maxSize-schema')
     done()
 })
 

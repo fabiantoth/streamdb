@@ -1,6 +1,7 @@
-const streamDb = require('../../../../lib/index')
-const DB = streamDb.DB
-const Schema = streamDb.Schema
+const streamdb = require('../../../../lib/index')
+const DB = streamdb.DB
+const Schema = streamdb.Schema
+let chainQuery = streamdb.chainQuery
 
 const dbSettings = {
     dbName: 'pop-simple',
@@ -17,7 +18,7 @@ let articlesRef
 let usersRef
 
 beforeAll(async (done) => {
-    await streamDb.createDb(dbSettings)
+    await streamdb.createDb(dbSettings)
     db = new DB('pop-simple')
 
     await db.addCollection('groups')
@@ -73,7 +74,7 @@ beforeAll(async (done) => {
 })
 
 afterAll(async (done) => {
-    const deleted = await streamDb.deleteDb('pop-simple')
+    const deleted = await streamdb.deleteDb('pop-simple')
     done()
 })
 

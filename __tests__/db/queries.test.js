@@ -1,10 +1,10 @@
-const streamDb = require('../../lib/index')
+const streamdb = require('../../lib/index')
 
 let db
 
 beforeAll(async (done) => {
-    const testDbMeta = await streamDb.createDb({ dbName: 'testQueriesDB'})
-    db = new streamDb.DB('testQueriesDB')
+    const testDbMeta = await streamdb.createDb({ dbName: 'testQueriesDB'})
+    db = new streamdb.DB('testQueriesDB')
     
     const usersColSettings = {
         fileSize: 60000,
@@ -16,7 +16,7 @@ beforeAll(async (done) => {
 })
 
 afterAll(async (done) => {
-    const deleted = await streamDb.deleteDb('testQueriesDB')
+    const deleted = await streamdb.deleteDb('testQueriesDB')
     done()
 })
 
