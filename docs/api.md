@@ -145,16 +145,17 @@ Returns:
 ### [streamdb.chainQuery(colRef, query)](#table-of-contents)
 
 A helper method added to chain req queries 
-> See chaining [collection queries](#whereexp-filterfnoptional).
+> See [Advanced Queries](#whereexp-filterfnoptional) section of the Guide
 
- - The default collection query route is `/api/colName/_q/
- - Query chains can be added after question mark (?) (ex, `/api/colName/_q/?where=id,>=,50&limit=20`
-> See [options and query examples](https://github.com/fabiantoth/streamdb/blob/ef21f2bfe016630ddb386289818856a30f164d7c/lib/api/chainQuery.js#L2)
+ - The default collection query route is `/api/{collection}/_q/`
+ - Query arguments can be added after question mark (?) (ex, `/api/{collection}/_q/?where=id,>=,50&limit=20`
  
 Params:
-- `colRef` **{Object}**: (required) the db collection reference
-- `query` **{Object}**: (required) the req.query object
+- `colRef` **{Object}**: (required) the db collection reference (`let colRef = db.collection('users')`)
+- `query` **{Object}**: (required) the `req.query` object
 
+> See [options and query examples](https://github.com/fabiantoth/streamdb/blob/ef21f2bfe016630ddb386289818856a30f164d7c/lib/api/chainQuery.js#L2)
+	
 Returns: 
 - Promise. Query results
 
