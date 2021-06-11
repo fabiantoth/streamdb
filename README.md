@@ -370,7 +370,7 @@ Creating new collections scaffolds a new Router file with the following routes y
 
 <br>
 
-**Sample Route From Router Template:**
+**Example GET (all documents) route in template:**
 <p align="left"> 
   <img src="https://github.com/fabiantoth/streamdb/blob/d27c090c08cbf4c7974fe925180b93d71fc53c59/assets/get-route.svg" alt="route template" style="max-height: 420px;">
 </p>
