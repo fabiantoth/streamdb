@@ -17,6 +17,11 @@ All notable changes to this project will be documented in this file.
 </details>
 <br>
 
+## Version 0.1.7  - (June 10, 2021)
+
+- [Added]: [`populate()`](docs/api.md#populatearr) to [`chainQuery()`](docs/api.md#streamdbchainquerycolref-query) helper
+
+
 ## Version 0.1.5  - (June 8, 2021)
 
 ### Release notes:
