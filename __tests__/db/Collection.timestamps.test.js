@@ -1,5 +1,5 @@
-const streamDb = require('../../lib/index')
-const Schema = streamDb.Schema
+const streamdb = require('../../lib/index')
+const Schema = streamdb.Schema
 
 let db
 let usersRef
@@ -7,13 +7,13 @@ let groupsRef
 let detailsRef
 
 beforeAll(async (done) => {
-    await streamDb.createDb({ dbName: 'test-ts', initSchemas: false })
-    db = new streamDb.DB('test-ts')
+    await streamdb.createDb({ dbName: 'test-ts', initSchemas: false })
+    db = new streamdb.DB('test-ts')
     const collections = await db.addCollections(['users', 'groups', 'details'])
   
     // case strict: false, only created_at timestamp true
     const User = new Schema({
-        id: streamDb.Types.$incr,
+        id: streamdb.Types.$incr,
         name: String,
         age: Number,
         tags: []
@@ -31,7 +31,7 @@ beforeAll(async (done) => {
   
     // case strict: true, both timestamps true
     const Group = new Schema({
-        id: streamDb.Types.$incr,
+        id: streamdb.Types.$incr,
         title: String,
         level: Number,
         tags: []
@@ -50,7 +50,7 @@ beforeAll(async (done) => {
   
     // case strict: false, only updated_at timestamp true
     const Detail = new Schema({
-        id: streamDb.Types.$incr,
+        id: streamdb.Types.$incr,
         username: String,
         followers: Number,
         tags: []
@@ -70,7 +70,7 @@ beforeAll(async (done) => {
 })
 
 afterAll(async (done) => {
-    const deleted = await streamDb.deleteDb('test-ts')
+    const deleted = await streamdb.deleteDb('test-ts')
     done()
 })
 

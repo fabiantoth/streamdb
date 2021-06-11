@@ -1,6 +1,6 @@
-const streamDb = require('../../../../lib/index')
-const DB = streamDb.DB
-const Schema = streamDb.Schema
+const streamdb = require('../../../../lib/index')
+const DB = streamdb.DB
+const Schema = streamdb.Schema
 
 const dbSettings = {
     dbName: 'sp-primitives',
@@ -14,7 +14,7 @@ let db
 let usersRef
 
 beforeAll(async (done) => {
-    await streamDb.createDb(dbSettings)
+    await streamdb.createDb(dbSettings)
     db = new DB('sp-primitives')
 
     await db.addCollection('users')
@@ -24,7 +24,7 @@ beforeAll(async (done) => {
         num: Number,
         bool: Boolean,
         date: Date,
-        any: streamDb.Types.Any,
+        any: streamdb.Types.Any,
         strType: {
             type: String,
             minLength: 2,
@@ -40,7 +40,7 @@ beforeAll(async (done) => {
             startsAfter: new Date(2020, 10, 10)
         },
         anyType: {
-            type: streamDb.Types.Any,
+            type: streamdb.Types.Any,
             anyOf: [Number,Boolean]
         }
     })
@@ -52,7 +52,7 @@ beforeAll(async (done) => {
 })
 
 afterAll(async (done) => {
-    const deleted = await streamDb.deleteDb('sp-primitives')
+    const deleted = await streamdb.deleteDb('sp-primitives')
     done()
 })
 

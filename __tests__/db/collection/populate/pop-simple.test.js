@@ -1,6 +1,6 @@
-const streamDb = require('../../../../lib/index')
-const DB = streamDb.DB
-const Schema = streamDb.Schema
+const streamdb = require('../../../../lib/index')
+const DB = streamdb.DB
+const Schema = streamdb.Schema
 
 const dbSettings = {
     dbName: 'pop-simple',
@@ -17,7 +17,7 @@ let articlesRef
 let usersRef
 
 beforeAll(async (done) => {
-    await streamDb.createDb(dbSettings)
+    await streamdb.createDb(dbSettings)
     db = new DB('pop-simple')
 
     await db.addCollection('groups')
@@ -73,7 +73,7 @@ beforeAll(async (done) => {
 })
 
 afterAll(async (done) => {
-    const deleted = await streamDb.deleteDb('pop-simple')
+    const deleted = await streamdb.deleteDb('pop-simple')
     done()
 })
 
@@ -96,6 +96,33 @@ test('0 -> setup: #document add parent documents', async (done) => {
 test('1 -> Collection.populate(): #ref should populate $ref embed', async (done) => {
     let userRes = await usersRef.where('id != $undefined').populate(['ref', 'refsArr', 'articleRef']).find()
     let res = userRes.data
+    expect.objectContaining({
+        id: expect(res[0].id).toBe(1),
+        refsArr: expect(res[0].refsArr).toEqual(expect.arrayContaining([
+            { id: 1, title: 'Group 1' },
+            { id: 2, title: 'Group 2' },
+            { id: 3, title: 'Group 3' },
+            { id: 4, title: 'Group 4' }
+        ])),
+        articleRef: expect(res[0].articleRef).toEqual(expect.objectContaining({ id: 1, title: 'Article 1' }))
+    })
+    expect.objectContaining({
+        id: expect(res[1].id).toBe(2),
+        refsArr: expect(res[1].refsArr).toEqual(expect.arrayContaining([
+            { id: 1, title: 'Group 1' },
+            { id: 2, title: 'Group 2' }
+        ])),
+        articleRef: expect(res[1].articleRef).toEqual(expect.objectContaining({ id: 2, title: 'Article 2' }))
+    })
+    done()
+})
+
+test('2 -> Collection.chainQuery(): use populate in chainQuery helper', async (done) => {
+    const query = { where: 'id,!=,$undefined', populate: ['ref', 'refsArr', 'articleRef']}
+    usersRef = streamdb.chainQuery(usersRef, query)
+    let userRes = await usersRef.find()
+    let res = userRes.data
+
     expect.objectContaining({
         id: expect(res[0].id).toBe(1),
         refsArr: expect(res[0].refsArr).toEqual(expect.arrayContaining([

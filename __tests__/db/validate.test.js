@@ -1,13 +1,13 @@
 const validate = require('../../lib/db/validate')
-const streamDb = require('../../lib/index')
+const streamdb = require('../../lib/index')
 
 beforeAll(async (done) => {
-    const existsMeta = await streamDb.createDb({ dbName: 'validate-db' })
+    const existsMeta = await streamdb.createDb({ dbName: 'validate-db' })
     done()
 })
 
 afterAll(async (done) => {
-    const deleted = await streamDb.deleteDb('validate-db')
+    const deleted = await streamdb.deleteDb('validate-db')
     done()
 })
 

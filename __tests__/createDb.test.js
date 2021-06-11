@@ -1,5 +1,5 @@
 const createDb = require('../lib/createDb.js')
-const streamDB = require('../lib/index')
+const streamdb = require('../lib/index')
 
 const defaultMeta = {
     dbName: 'streamDB',
@@ -57,8 +57,8 @@ const customMeta = {
 }
 
 afterAll(async (done) => {
-    const deletedDefault = await streamDB.deleteDb('streamDB')
-    const deletedCustom = await streamDB.deleteDb('customDB')
+    const deletedDefault = await streamdb.deleteDb('streamDB')
+    const deletedCustom = await streamdb.deleteDb('customDB')
    
     done()
 })

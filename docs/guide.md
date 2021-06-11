@@ -291,6 +291,7 @@ The chainQuery helper method is used for chaining the following in any (logical)
 - ``sort()``
 - ``limit()``
 - ``offset()``
+- ``populate()``
 
 A query written in JS:
 	

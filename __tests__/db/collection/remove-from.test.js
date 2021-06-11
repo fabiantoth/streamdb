@@ -1,6 +1,6 @@
-const streamDb = require('../../../lib/index')
-const DB = streamDb.DB
-const Schema = streamDb.Schema
+const streamdb = require('../../../lib/index')
+const DB = streamdb.DB
+const Schema = streamdb.Schema
 
 // ==> these use case tests are for 'schema' validation models only
 
@@ -17,7 +17,7 @@ let groupsRef
 let usersRef
 
 beforeAll(async (done) => {
-    await streamDb.createDb(dbSettings)
+    await streamdb.createDb(dbSettings)
     db = new DB('remove-from-test')
 
     await db.addCollection('groups')
@@ -51,7 +51,7 @@ beforeAll(async (done) => {
 })
 
 afterAll(async (done) => {
-    const deleted = await streamDb.deleteDb('remove-from-test')
+    const deleted = await streamdb.deleteDb('remove-from-test')
     done()
 })
 

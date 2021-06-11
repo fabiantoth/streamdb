@@ -1,15 +1,15 @@
-const streamDb = require('../../lib/index')
+const streamdb = require('../../lib/index')
 
 let db
 
 beforeAll(async (done) => {
-    const schemDB = await streamDb.createDb({ dbName: 'schema-create-collections' })
-    db = new streamDb.DB('schema-create-collections')
+    const schemDB = await streamdb.createDb({ dbName: 'schema-create-collections' })
+    db = new streamdb.DB('schema-create-collections')
     done()
 })
 
 afterAll(async (done) => {
-    const deleted1 = await streamDb.deleteDb('schema-create-collections')
+    const deleted1 = await streamdb.deleteDb('schema-create-collections')
     done()
 })
 

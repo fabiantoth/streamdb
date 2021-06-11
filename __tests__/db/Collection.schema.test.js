@@ -1,5 +1,5 @@
-const streamDb = require('../../lib/index')
-const Schema = streamDb.Schema
+const streamdb = require('../../lib/index')
+const Schema = streamdb.Schema
 
 const dbSettings = {
     dbName: 'schemaDB',
@@ -14,13 +14,13 @@ let db
 let usersRef
 
 beforeAll(async (done) => {
-    const schemaDB = await streamDb.createDb(dbSettings)
-    db = new streamDb.DB('schemaDB')
+    const schemaDB = await streamdb.createDb(dbSettings)
+    db = new streamdb.DB('schemaDB')
 
     const usersMeta = await db.addCollection('users')
   
     const User = new Schema({
-        id: streamDb.Types.$incr,
+        id: streamdb.Types.$incr,
         name: String,
         email: String,
         numTags: [Number],
@@ -47,7 +47,7 @@ beforeAll(async (done) => {
 })
 
 afterAll(async (done) => {
-    const deleted = await streamDb.deleteDb('schemaDB')
+    const deleted = await streamdb.deleteDb('schemaDB')
     done()
 })
 
